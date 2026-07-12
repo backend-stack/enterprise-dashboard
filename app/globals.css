@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/* ----------------------------------------------------------------------------
+   Dashboard theme — mirrors the reference admin panel's "light editorial"
+   system: pure-white cards on a whisper-cool grey canvas, near-black ink as
+   the primary accent, deep navy + warm orange for charts and highlights.
+   Components reference these via Tailwind arbitrary values,
+   e.g. `bg-[var(--ad-paper)] text-[var(--ad-ink)]`.
+---------------------------------------------------------------------------- */
+
+:root {
+  /* Surfaces */
+  --ad-paper: #ffffff;        /* cards / panels — pure white */
+  --ad-cream: #f4f5f7;        /* app canvas — barely-there cool grey */
+  --ad-panel: #f7f8fa;        /* inset surfaces inside cards */
+  --ad-panel-2: #fbfbfc;      /* extra-subtle inset / hover */
+  --ad-line: #ececf0;         /* hairline borders */
+  --ad-line-strong: #e2e2e7;  /* slightly stronger divider */
+
+  /* Ink / text */
+  --ad-ink: #15161a;
+  --ad-ink-soft: #41434a;
+  --ad-muted: #82858e;
+
+  /* Accent = ink (brand primary is near-black, not blue) */
+  --ad-accent: #15161a;
+  --ad-accent-contrast: #ffffff;
+
+  /* Semantic */
+  --ad-positive: #1f7a4d;
+  --ad-positive-bg: #e7f3ec;
+  --ad-negative: #b4452f;
+  --ad-negative-bg: #f7e9e5;
+  --ad-pending: #8a6d1f;
+  --ad-pending-bg: #f6efdb;
+
+  /* Brand accent palette — deep navy + warm orange */
+  --ad-navy: #233d4d;
+  --ad-navy-soft: #34566a;
+  --ad-navy-bg: #e9eff2;
+  --ad-orange: #fe7f2d;
+  --ad-orange-soft: #ff9550;
+  --ad-orange-bg: #fff1e7;
+  --ad-mist: #eaecf0;
+
+  /* Elevation */
+  --ad-shadow-card: 0 1px 2px rgba(20, 21, 26, 0.04),
+    0 8px 24px -12px rgba(20, 21, 26, 0.1);
+  --ad-shadow-float: 0 2px 6px rgba(20, 21, 26, 0.05),
+    0 18px 40px -20px rgba(20, 21, 26, 0.16);
+
+  /* Shape */
+  --ad-radius-card: 1.5rem;
+  --ad-radius-lg: 1.75rem;
+  --ad-radius-sm: 1rem;
+}
+
+body {
+  background-color: var(--ad-cream);
+  color: var(--ad-ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+}
+
+.ad-display {
+  letter-spacing: -0.01em;
+}
+
+/* Thin, unobtrusive scrollbars inside panels. */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--ad-line);
+  border-radius: 999px;
+}
