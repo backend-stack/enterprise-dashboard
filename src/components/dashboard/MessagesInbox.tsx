@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Bot, Building2, Terminal } from "lucide-react";
+import { Bot, Building2 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { useAuth } from "@/lib/auth-context";
 import { maskPhone } from "@/components/dashboard/AgentBubble";
@@ -27,14 +27,6 @@ interface Conversation {
   tenantName: string;
   messages: CiMessage[]; // oldest first
   lastAt: number; // unix seconds
-}
-
-interface ApiLogEntry {
-  id: number;
-  method: string;
-  path: string;
-  status: number;
-  at: string;
 }
 
 function fmtTime(unixSec: number): string {
@@ -132,40 +124,23 @@ export function MessagesInbox() {
   const { getToken } = useAuth();
   const [convos, setConvos] = useState<Conversation[] | null>(null);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
-  const [log, setLog] = useState<ApiLogEntry[]>([]);
   const [notConfigured, setNotConfigured] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   const [stale, setStale] = useState(false);
 
-  const logSeq = useRef(0);
   const reqSeq = useRef(0);
   const threadRef = useRef<HTMLDivElement>(null);
   const lastMsgCount = useRef(0);
   const lastKeyScrolled = useRef<string | null>(null);
 
   const authed = useCallback(
-    async (path: string, viaLog: boolean) => {
+    async (path: string) => {
       const token = await getToken();
       const res = await fetch(path, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         cache: "no-store",
       });
-      if (viaLog) {
-        logSeq.current += 1;
-        setLog((prev) =>
-          [
-            {
-              id: logSeq.current,
-              method: "GET",
-              path: path.replace(/^\/api\/ci/, "/api/v1"),
-              status: res.status,
-              at: new Date().toISOString(),
-            },
-            ...prev,
-          ].slice(0, 30)
-        );
-      }
       const json = (await res.json().catch(() => null)) as Record<string, unknown> | null;
       if (res.status === 503) {
         setNotConfigured(true);
@@ -179,17 +154,16 @@ export function MessagesInbox() {
     [getToken]
   );
 
-  /* One full snapshot: the tenant list, then every tenant's feed. Background
-     polls skip the activity log so it doesn't drown the interesting calls. */
+  /* One full snapshot: the tenant list, then every tenant's feed. */
   const refresh = useCallback(
-    async (viaLog: boolean) => {
+    async () => {
       const seq = ++reqSeq.current;
       try {
-        const t = await authed("/api/ci/tenants", viaLog);
+        const t = await authed("/api/ci/tenants");
         const tenants = (t.tenants as CiTenant[]) ?? [];
         const feeds = await Promise.all(
           tenants.map(async (tenant) => {
-            const d = await authed(`/api/ci/tenants/${tenant.id}/data`, viaLog).catch(() => null);
+            const d = await authed(`/api/ci/tenants/${tenant.id}/data`).catch(() => null);
             return { tenant, messages: ((d?.messages as CiMessage[]) ?? []).filter(Boolean) };
           })
         );
@@ -211,9 +185,9 @@ export function MessagesInbox() {
 
   // Boot + live poll (paused while the tab is hidden).
   useEffect(() => {
-    void refresh(true);
+    void refresh();
     const id = setInterval(() => {
-      if (document.visibilityState === "visible") void refresh(false);
+      if (document.visibilityState === "visible") void refresh();
     }, POLL_MS);
     return () => clearInterval(id);
   }, [refresh]);
@@ -388,40 +362,6 @@ export function MessagesInbox() {
           )}
         </Card>
       </div>
-
-      {/* API activity log */}
-      <Card className="overflow-hidden">
-        <div className="flex items-center gap-2 border-b border-[var(--ad-line)] px-4 py-3">
-          <Terminal size={14} className="text-[var(--ad-muted)]" />
-          <p className="text-[13px] font-semibold text-[var(--ad-ink)]">API activity</p>
-          <p className="text-[11px] text-[var(--ad-muted)]">
-            live reads against the Contextual Intelligence tenants API
-          </p>
-        </div>
-        <div className="max-h-[220px] overflow-y-auto p-2 font-mono text-[12px]">
-          {log.map((e) => (
-            <div key={e.id} className="flex items-center gap-3 rounded-lg px-3 py-1.5 hover:bg-[var(--ad-panel-2)]">
-              <span className="w-12 shrink-0 font-bold text-[var(--ad-slate)]">{e.method}</span>
-              <span className="min-w-0 flex-1 truncate text-[var(--ad-ink-soft)]">{e.path}</span>
-              <span
-                className={`shrink-0 font-semibold ${
-                  e.status < 300 ? "text-[var(--ad-positive)]" : "text-[var(--ad-critical-deep)]"
-                }`}
-              >
-                {e.status}
-              </span>
-              <span className="shrink-0 text-[var(--ad-muted)]">
-                {new Date(e.at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}
-              </span>
-            </div>
-          ))}
-          {!log.length ? (
-            <p className="px-3 py-3 text-sm text-[var(--ad-muted)] [font-family:inherit]">
-              No calls yet.
-            </p>
-          ) : null}
-        </div>
-      </Card>
     </div>
   );
 }
