@@ -94,7 +94,7 @@ export default async function MessagesPage() {
         />
       </div>
 
-      <div className="mt-4 grid gap-4 xl:grid-cols-[1.5fr_1fr] sm:mt-6 sm:gap-6">
+      <div className="mt-4 grid gap-4 xl:grid-cols-[1.5fr_1fr] sm:mt-6 sm:gap-6 [&>*]:min-w-0">
         {byDay ? (
           <GroupedBarChart
             title="Message volume"
@@ -122,24 +122,26 @@ export default async function MessagesPage() {
               </Link>
             }
           />
-          <ul className="flex flex-col px-4 pb-4">
+          <ul className="flex max-h-[340px] flex-col overflow-y-auto px-4 pb-4">
             {(threads ?? []).slice(0, 7).map((t) => (
               <li key={t.phone}>
                 <Link
                   href={`/dashboard/imessage?thread=${encodeURIComponent(t.phone)}`}
-                  className="flex items-start gap-3 rounded-[var(--ad-radius-sm)] px-2 py-3 transition-colors hover:bg-[var(--ad-panel-2)]"
+                  className="flex items-center gap-2.5 rounded-[var(--ad-radius-sm)] px-2 py-2 transition-colors hover:bg-[var(--ad-panel-2)]"
                 >
-                  <Avatar name={t.name ?? t.phone.slice(-2)} size={34} />
+                  <Avatar name={t.name ?? t.phone.slice(-2)} size={28} />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-baseline justify-between gap-2">
-                      <p className="truncate text-sm font-medium text-[var(--ad-ink)]">
+                      <p className="truncate text-[13px] font-medium text-[var(--ad-ink)]">
                         {t.name ?? maskPhone(t.phone)}
                       </p>
                       <span className="shrink-0 text-[10px] text-[var(--ad-muted)]">
                         {fmtWhen(t.lastAt)}
                       </span>
                     </div>
-                    <p className="truncate text-xs text-[var(--ad-muted)]">{t.lastText || "…"}</p>
+                    <p className="truncate text-xs text-[var(--ad-muted)]">
+                      {(t.lastText || "…").slice(0, 80)}
+                    </p>
                   </div>
                 </Link>
               </li>
