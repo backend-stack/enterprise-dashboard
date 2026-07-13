@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { BadgeCheck, Check, CreditCard, Download, ExternalLink, Sparkles } from "lucide-react";
+import { BadgeCheck, Check, CreditCard, Download, Sparkles } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge";
@@ -52,17 +52,6 @@ export default function BillingPage() {
       <PageHeader
         title="Billing"
         subtitle="Your plan, invoices and payment method - powered by Stripe."
-        action={
-          <button
-            type="button"
-            onClick={() => callStripe("/api/stripe/portal")}
-            className="flex items-center gap-2 rounded-full bg-[var(--ad-ink)] px-6 py-3 text-sm font-semibold text-white shadow-[var(--ad-shadow-card)] transition-opacity hover:opacity-90 disabled:opacity-50"
-            disabled={busy !== null}
-          >
-            <ExternalLink size={15} />
-            Manage in Stripe
-          </button>
-        }
       />
 
       {notice ? (

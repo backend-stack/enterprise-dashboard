@@ -219,8 +219,8 @@ export default function SupportPage() {
             <ul className="flex flex-col gap-4 px-6 pb-6 text-[13px] leading-relaxed text-[var(--ad-ink-soft)]">
               <li>
                 <span className="font-semibold text-[var(--ad-ink)]">Billing:</span>{" "}
-                invoices and payment methods are self-serve under{" "}
-                <span className="font-medium">Billing → Manage in Stripe</span>.
+                invoices and payment methods are self-serve on the{" "}
+                <span className="font-medium">Billing</span> page.
               </li>
               <li>
                 <span className="font-semibold text-[var(--ad-ink)]">Venue details:</span>{" "}
