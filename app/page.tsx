@@ -21,6 +21,21 @@ const CONNECTIONS = [
   { image: "/logo/brands/brex.svg", text: "Brex" },
 ];
 
+const STATS = [
+  {
+    value: "$5-10k",
+    label: "lost every month to missed customers at most locations.",
+  },
+  {
+    value: "Not enough",
+    label: "a website and a booking platform no longer cover it.",
+  },
+  {
+    value: "Social \u2260 growth",
+    label: "social media alone doesn't acquire new customers.",
+  },
+];
+
 const POINTS = [
   {
     icon: PhoneCall,
@@ -83,14 +98,19 @@ export default function Home() {
       {/* ── The problem + the three points ─────────────────────────────── */}
       <section className="border-t border-[var(--ad-line)] px-6 py-20 sm:py-28">
         <div className="mx-auto max-w-5xl">
-          <p className="mx-auto max-w-2xl text-center text-2xl font-medium leading-snug tracking-tight text-[var(--ad-ink)] sm:text-3xl">
-            Most businesses lose{" "}
-            <span className="whitespace-nowrap">$5,000 to $10,000</span> a month
-            to missed customers.
-          </p>
-          <p className="mx-auto mt-4 max-w-md text-center text-base leading-relaxed text-[var(--ad-muted)]">
-            A website and a booking platform aren&apos;t enough anymore.
-          </p>
+          {/* Stats row - the problem in three numbers. */}
+          <div className="grid gap-12 sm:grid-cols-3 sm:gap-8">
+            {STATS.map((stat) => (
+              <div key={stat.value} className="text-center">
+                <p className="ad-display text-4xl font-semibold tracking-tight text-[var(--ad-ink)] sm:text-5xl">
+                  {stat.value}
+                </p>
+                <p className="mx-auto mt-3 max-w-[240px] text-sm leading-relaxed text-[var(--ad-muted)]">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
+          </div>
 
           {/* Case-study style block: featured point with a visual, then the
               other two side by side inside one bordered frame. */}
