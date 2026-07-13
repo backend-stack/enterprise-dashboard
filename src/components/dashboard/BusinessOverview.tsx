@@ -141,7 +141,7 @@ export function OverviewView({ ci, loading }: { ci: CiBundle | null; loading: bo
           bg="var(--ad-slate-bg)"
           fg="var(--ad-slate)"
           value={n(bookingCount)}
-          label="Special Bookings"
+          label="Bookings"
           sub="via your assistant"
         />
         <TintKpi
@@ -149,7 +149,7 @@ export function OverviewView({ ci, loading }: { ci: CiBundle | null; loading: bo
           bg="var(--ad-critical-bg)"
           fg="var(--ad-critical-deep)"
           value={n(requestCount)}
-          label="Requests"
+          label="Special Requests"
           sub="customer inquiries"
         />
       </div>
@@ -178,7 +178,7 @@ export function OverviewView({ ci, loading }: { ci: CiBundle | null; loading: bo
         <div className="grid gap-4 xl:grid-cols-2 sm:gap-6">
           <Card>
             <CardHeader
-              title="Special Bookings"
+              title="Bookings"
               action={
                 <span className="rounded-full border border-[var(--ad-line)] px-3 py-1 text-xs text-[var(--ad-ink-soft)]">
                   {formatNumber(bookingCount ?? 0)} total
@@ -217,14 +217,14 @@ export function OverviewView({ ci, loading }: { ci: CiBundle | null; loading: bo
               </ul>
             ) : (
               <p className="px-6 pb-6 text-sm text-[var(--ad-muted)]">
-                No special bookings yet - reservations your assistant takes will appear here.
+                No bookings yet - reservations your assistant takes will appear here.
               </p>
             )}
           </Card>
 
           <Card>
             <CardHeader
-              title="Requests"
+              title="Special Requests"
               action={
                 <span className="rounded-full border border-[var(--ad-line)] px-3 py-1 text-xs text-[var(--ad-ink-soft)]">
                   {formatNumber(requestCount ?? 0)} total
@@ -256,7 +256,7 @@ export function OverviewView({ ci, loading }: { ci: CiBundle | null; loading: bo
               </ul>
             ) : (
               <p className="px-6 pb-6 text-sm text-[var(--ad-muted)]">
-                No requests yet - customer inquiries your assistant collects will appear here.
+                No special requests yet - customer inquiries your assistant collects will appear here.
               </p>
             )}
           </Card>
