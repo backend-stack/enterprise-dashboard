@@ -13,10 +13,12 @@ import {
   Users,
   CreditCard,
   Settings,
-  LifeBuoy,
   PanelLeftClose,
   PanelLeftOpen,
   Radio,
+  Search,
+  Sparkles,
+  UserPlus,
   Zap,
 } from "lucide-react";
 import { useEffect, useState, type ComponentType } from "react";
@@ -58,7 +60,7 @@ const BUSINESS_NAV: NavItem[] = [
 /* Brand mark — a bolt glyph on an ink tile + wordmark. */
 function BrandMark({ collapsed = false }: { collapsed?: boolean }) {
   const tile = (
-    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--ad-ink)] shadow-[var(--ad-shadow-card)]">
+    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--ad-ink)] shadow-[var(--ad-shadow-card)]">
       <Zap size={18} className="text-white" fill="currentColor" strokeWidth={0} />
     </span>
   );
@@ -78,7 +80,7 @@ function BrandMark({ collapsed = false }: { collapsed?: boolean }) {
   );
 }
 
-/* Brand + nav + help — shared between the desktop rail and mobile drawer. */
+/* Brand + search + nav + upgrade card — shared between rail and drawer. */
 function SidebarPanel({
   pathname,
   nav,
@@ -92,18 +94,17 @@ function SidebarPanel({
   collapsed?: boolean;
   onToggle?: () => void;
 }) {
-  const rowBase = `group relative flex items-center rounded-xl text-[14px] transition-all duration-200 ${
-    collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3.5 py-2.5"
+  const rowBase = `group relative flex items-center rounded-[10px] text-[13.5px] transition-all duration-200 ${
+    collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5"
   }`;
-  const activeCls =
-    "bg-[var(--ad-navy)] font-semibold text-white shadow-[0_8px_20px_-10px_rgba(35,61,77,0.75)]";
+  const activeCls = "bg-[var(--ad-panel)] font-semibold text-[var(--ad-ink)]";
   const idleCls =
-    "font-medium text-[var(--ad-ink-soft)] hover:bg-[var(--ad-panel)] hover:text-[var(--ad-ink)]";
+    "font-medium text-[var(--ad-ink-soft)] hover:bg-[var(--ad-panel-2)] hover:text-[var(--ad-ink)]";
 
   return (
     <>
       <div
-        className={`flex items-center pb-5 ${collapsed ? "flex-col gap-3 px-2" : "justify-between px-4"}`}
+        className={`flex items-center pb-4 ${collapsed ? "flex-col gap-3 px-2" : "justify-between px-4"}`}
       >
         <BrandMark collapsed={collapsed} />
         {onToggle ? (
@@ -119,16 +120,36 @@ function SidebarPanel({
         ) : null}
       </div>
 
-      <div className={`mb-4 h-px bg-[var(--ad-line)] ${collapsed ? "mx-2" : "mx-4"}`} />
+      {/* Global search — lives in the sidebar like the reference. */}
+      {collapsed ? (
+        <div className="mb-4 h-px bg-[var(--ad-line)] mx-2" />
+      ) : (
+        <div className="mb-4 px-3">
+          <label className="relative flex h-10 items-center">
+            <Search
+              size={15}
+              className="pointer-events-none absolute left-3 text-[var(--ad-muted)]"
+            />
+            <input
+              type="text"
+              placeholder="Search anything…"
+              className="h-full w-full rounded-xl border border-[var(--ad-line)] bg-[var(--ad-panel-2)] pl-9 pr-12 text-[13px] text-[var(--ad-ink)] placeholder:text-[var(--ad-muted)] focus:border-[var(--ad-accent)] focus:outline-none"
+            />
+            <kbd className="absolute right-2.5 rounded-md border border-[var(--ad-line)] bg-[var(--ad-paper)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--ad-muted)]">
+              ⌘K
+            </kbd>
+          </label>
+        </div>
+      )}
 
       <nav
-        className={`flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto [scrollbar-width:thin] ${
+        className={`flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto [scrollbar-width:thin] ${
           collapsed ? "px-2" : "px-3"
         }`}
       >
         {collapsed ? null : (
-          <p className="mb-1 px-3.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--ad-muted)]">
-            Menu
+          <p className="mb-1.5 px-3 text-[11px] font-semibold text-[var(--ad-muted)]">
+            Main Menu
           </p>
         )}
         {nav.map(({ label, href, icon: Icon, badge }) => {
@@ -144,24 +165,20 @@ function SidebarPanel({
               className={`${rowBase} ${active ? activeCls : idleCls}`}
             >
               <Icon
-                size={19}
+                size={18}
                 strokeWidth={active ? 2.2 : 1.8}
                 className={
                   active
-                    ? "text-white"
+                    ? "text-[var(--ad-ink)]"
                     : "text-[var(--ad-muted)] transition-colors group-hover:text-[var(--ad-ink-soft)]"
                 }
               />
               {collapsed ? null : <span className="flex-1">{label}</span>}
               {badge ? (
                 collapsed ? (
-                  <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[var(--ad-orange)]" />
+                  <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[var(--ad-negative)]" />
                 ) : (
-                  <span
-                    className={`flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[11px] font-semibold ${
-                      active ? "bg-white/20 text-white" : "bg-[var(--ad-orange)] text-white"
-                    }`}
-                  >
+                  <span className="flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[var(--ad-negative)] px-1 text-[10px] font-bold text-white">
                     {badge}
                   </span>
                 )
@@ -171,21 +188,41 @@ function SidebarPanel({
         })}
       </nav>
 
-      <div className={`mt-auto pt-4 ${collapsed ? "px-2" : "px-3"}`}>
-        <div className="mx-1 mb-3 h-px bg-[var(--ad-line)]" />
+      <div className={`mt-auto pt-3 ${collapsed ? "px-2" : "px-3"}`}>
         <Link
           href="/dashboard/settings"
           onClick={onNavigate}
-          title={collapsed ? "Help & support" : undefined}
+          title={collapsed ? "Invite member" : undefined}
           className={`${rowBase} ${idleCls}`}
         >
-          <LifeBuoy
-            size={19}
+          <UserPlus
+            size={18}
             strokeWidth={1.8}
             className="text-[var(--ad-muted)] transition-colors group-hover:text-[var(--ad-ink-soft)]"
           />
-          {collapsed ? null : <span>Help & support</span>}
+          {collapsed ? null : <span>Invite member</span>}
         </Link>
+
+        {/* Upgrade card — dark tile pinned above the account row. */}
+        {collapsed ? null : (
+          <div className="mt-3 rounded-2xl bg-[var(--ad-ink)] p-4 text-white">
+            <span className="inline-block rounded-md bg-white/15 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em]">
+              Upgrade
+            </span>
+            <p className="mt-2 text-[12.5px] leading-snug text-white/85">
+              Get more features with the premium plan.
+            </p>
+            <Link
+              href="/dashboard/billing"
+              onClick={onNavigate}
+              className="mt-3 flex h-9 items-center justify-center gap-1.5 rounded-full bg-white text-[12.5px] font-semibold text-[var(--ad-ink)] transition-opacity hover:opacity-90"
+            >
+              <Sparkles size={13} />
+              Upgrade Now
+            </Link>
+          </div>
+        )}
+
         <AccountBlock collapsed={collapsed} />
       </div>
     </>
@@ -224,9 +261,7 @@ function AccountBlock({ collapsed }: { collapsed: boolean }) {
         <p className="truncate text-[13px] font-semibold text-[var(--ad-ink)]">
           {user?.name ?? "Account"}
         </p>
-        <p className="truncate text-[10px] font-medium uppercase tracking-[0.1em] text-[var(--ad-muted)]">
-          {roleLine}
-        </p>
+        <p className="truncate text-[11px] text-[var(--ad-muted)]">{roleLine}</p>
       </div>
       <button
         type="button"
@@ -285,7 +320,7 @@ export function Sidebar({
       {/* Desktop: static rail — collapses to an icon-only column. */}
       <aside
         className={`hidden h-full shrink-0 flex-col border-r border-[var(--ad-line)] bg-[var(--ad-paper)] py-5 transition-[width] duration-200 lg:flex ${
-          collapsed ? "w-[76px]" : "w-[256px]"
+          collapsed ? "w-[76px]" : "w-[264px]"
         }`}
       >
         <SidebarPanel
@@ -311,7 +346,7 @@ export function Sidebar({
           }`}
         />
         <aside
-          className={`absolute left-0 top-0 flex h-full w-[270px] max-w-[82%] flex-col border-r border-[var(--ad-line)] bg-[var(--ad-paper)] py-6 shadow-[var(--ad-shadow-float)] transition-transform duration-300 ${
+          className={`absolute left-0 top-0 flex h-full w-[280px] max-w-[85%] flex-col overflow-y-auto border-r border-[var(--ad-line)] bg-[var(--ad-paper)] py-6 shadow-[var(--ad-shadow-float)] transition-transform duration-300 ${
             open ? "translate-x-0" : "-translate-x-full"
           }`}
         >

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { MoreVertical } from "lucide-react";
 
 /* Rounded editorial surface — the building block for every panel. */
 export function Card({
@@ -19,26 +20,25 @@ export function Card({
 
 export function CardHeader({
   title,
-  accent = "var(--ad-accent)",
+  accent,
   action,
 }: {
   title: string;
-  /** Small color swatch before the title. */
+  /** Kept for API compatibility — headers are now plain bold titles. */
   accent?: string;
   action?: ReactNode;
 }) {
+  void accent;
   return (
-    <div className="flex items-center justify-between px-5 pt-5 pb-3">
-      <div className="flex items-center gap-2.5">
-        <span
-          className="h-4 w-1.5 rounded-full"
-          style={{ backgroundColor: accent }}
-        />
-        <h3 className="text-[15px] font-semibold text-[var(--ad-ink)]">
-          {title}
-        </h3>
-      </div>
-      {action}
+    <div className="flex items-center justify-between gap-3 px-5 pt-5 pb-3">
+      <h3 className="text-[15px] font-semibold tracking-tight text-[var(--ad-ink)]">
+        {title}
+      </h3>
+      {action ?? (
+        <span className="flex h-7 w-7 items-center justify-center rounded-lg text-[var(--ad-muted)]">
+          <MoreVertical size={15} />
+        </span>
+      )}
     </div>
   );
 }

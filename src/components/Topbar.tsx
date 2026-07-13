@@ -3,12 +3,22 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, Check, ChevronRight, LayoutDashboard, Menu, Search, Share2 } from "lucide-react";
+import {
+  Bell,
+  Bookmark,
+  CalendarDays,
+  Check,
+  ChevronRight,
+  LayoutDashboard,
+  Mail,
+  Menu,
+  Share2,
+} from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
-/* Slim breadcrumb topbar — Dashboard / <Section>, global search, alerts and
-   a working Share button (copies the current URL). The account block lives
-   at the bottom of the sidebar, like the reference design. */
+/* Slim breadcrumb topbar — Dashboard / <Section> on the left, an icon
+   cluster with count badges plus a working Share button (copies the current
+   URL) on the right. Search lives in the sidebar, like the reference. */
 
 const SECTION_LABELS: Record<string, string> = {
   messages: "Messages",
@@ -21,6 +31,31 @@ const SECTION_LABELS: Record<string, string> = {
   billing: "Billing",
   settings: "Settings",
 };
+
+function IconButton({
+  label,
+  badge,
+  children,
+}: {
+  label: string;
+  badge?: number;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      className="relative flex h-9 w-9 items-center justify-center rounded-lg text-[var(--ad-ink-soft)] transition-colors hover:bg-[var(--ad-panel)]"
+    >
+      {children}
+      {badge ? (
+        <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[var(--ad-negative)] px-1 text-[9px] font-bold text-white">
+          {badge}
+        </span>
+      ) : null}
+    </button>
+  );
+}
 
 export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
   const { demoMode } = useAuth();
@@ -51,7 +86,7 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
       </button>
 
       {/* Breadcrumb */}
-      <nav className="hidden items-center gap-1.5 text-sm md:flex">
+      <nav className="flex items-center gap-1.5 text-sm">
         <Link
           href="/dashboard"
           className="flex items-center gap-1.5 font-medium text-[var(--ad-ink-soft)] hover:text-[var(--ad-ink)]"
@@ -67,33 +102,27 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
         ) : null}
       </nav>
 
-      {/* Search */}
-      <label className="relative ml-auto flex h-9 w-full max-w-xs items-center">
-        <Search size={15} className="pointer-events-none absolute left-3 text-[var(--ad-muted)]" />
-        <input
-          type="text"
-          placeholder="Search anything…"
-          className="h-full w-full rounded-lg border border-[var(--ad-line)] bg-[var(--ad-panel)] pl-9 pr-12 text-[13px] text-[var(--ad-ink)] placeholder:text-[var(--ad-muted)] focus:border-[var(--ad-ink-soft)] focus:outline-none"
-        />
-        <kbd className="absolute right-2.5 hidden rounded-md border border-[var(--ad-line)] bg-[var(--ad-paper)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--ad-muted)] sm:block">
-          ⌘K
-        </kbd>
-      </label>
-
-      <div className="flex shrink-0 items-center gap-2">
+      <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-1.5">
         {demoMode ? (
-          <span className="hidden rounded-full bg-[var(--ad-orange-bg)] px-3 py-1 text-[11px] font-semibold text-[var(--ad-orange)] md:block">
+          <span className="mr-1 hidden rounded-full bg-[var(--ad-orange-bg)] px-3 py-1 text-[11px] font-semibold text-[var(--ad-orange)] md:block">
             Demo data
           </span>
         ) : null}
-        <button
-          type="button"
-          aria-label="Notifications"
-          className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--ad-line)] text-[var(--ad-ink-soft)] hover:bg-[var(--ad-panel)]"
-        >
-          <Bell size={16} />
-          <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-[var(--ad-orange)]" />
-        </button>
+        <div className="hidden items-center gap-1 sm:flex">
+          <IconButton label="Inbox" badge={3}>
+            <Mail size={16} />
+          </IconButton>
+          <IconButton label="Calendar">
+            <CalendarDays size={16} />
+          </IconButton>
+          <IconButton label="Notifications" badge={16}>
+            <Bell size={16} />
+          </IconButton>
+          <IconButton label="Saved">
+            <Bookmark size={16} />
+          </IconButton>
+        </div>
+        <span className="mx-1 hidden h-5 w-px bg-[var(--ad-line-strong)] sm:block" />
         <button
           type="button"
           onClick={share}

@@ -41,10 +41,10 @@ export function Shell({ children }: { children: ReactNode }) {
           {/* Soft brand wash behind the page header, like the reference. */}
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-44"
+            className="pointer-events-none absolute inset-x-0 top-0 h-52"
             style={{
               background:
-                "linear-gradient(180deg, rgba(254,127,45,0.10) 0%, rgba(35,61,77,0.04) 45%, transparent 100%)",
+                "radial-gradient(120% 100% at 85% 0%, rgba(249,115,22,0.16) 0%, rgba(244,114,182,0.10) 35%, rgba(107,61,242,0.05) 60%, transparent 100%)",
             }}
           />
           <div className="relative px-4 py-6 sm:px-8 sm:py-8">

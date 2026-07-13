@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
-/* Minimal hairline table used across pages — header row in muted caps,
-   hover highlight on body rows. */
+/* Reference-style table — header row as a filled light band with rounded
+   ends, hairline dividers between body rows, hover highlight. */
 export function DataTable({
   headers,
   children,
@@ -10,14 +10,16 @@ export function DataTable({
   children: ReactNode;
 }) {
   return (
-    <div className="overflow-x-auto px-2 pb-3">
+    <div className="overflow-x-auto px-4 pb-4">
       <table className="w-full min-w-[560px] border-separate border-spacing-0 text-sm">
         <thead>
           <tr>
-            {headers.map((h) => (
+            {headers.map((h, i) => (
               <th
                 key={h}
-                className="border-b border-[var(--ad-line)] px-3 pb-2.5 pt-1 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--ad-muted)]"
+                className={`bg-[var(--ad-panel)] px-3 py-2.5 text-left text-[12px] font-semibold text-[var(--ad-ink-soft)] ${
+                  i === 0 ? "rounded-l-lg" : ""
+                } ${i === headers.length - 1 ? "rounded-r-lg" : ""}`}
               >
                 {h}
               </th>
@@ -45,7 +47,7 @@ export function Td({
 }) {
   return (
     <td
-      className={`border-b border-[var(--ad-line)] px-3 py-3 align-middle text-[var(--ad-ink-soft)] ${className}`}
+      className={`border-b border-[var(--ad-line)] px-3 py-3.5 align-middle text-[var(--ad-ink-soft)] ${className}`}
     >
       {children}
     </td>

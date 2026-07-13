@@ -1,13 +1,14 @@
 import type { ReactNode } from "react";
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, MoreVertical } from "lucide-react";
 
-/* KPI tile — flat white enterprise card: muted label + small accent icon
-   tile, big number, delta chip, optional sparkline drawn from real data. */
+/* KPI tile — reference-style card: label + kebab up top, big number, bright
+   trend chip underneath, and a glowing accent icon or live sparkline on the
+   right edge. */
 
 function Sparkline({ data, color }: { data: number[]; color: string }) {
   if (data.length < 2) return null;
   const w = 96;
-  const h = 30;
+  const h = 34;
   const max = Math.max(...data, 1);
   const min = Math.min(...data, 0);
   const range = max - min || 1;
@@ -51,60 +52,64 @@ export function Kpi({
   delta?: number;
   deltaLabel?: string;
   tone?: "navy" | "orange" | "ink";
-  /** Kept for API compatibility — adds a subtle accent keyline. */
+  /** Kept for API compatibility — no longer changes the visual. */
   emphasis?: boolean;
   /** Real series to draw as a small sparkline. */
   spark?: number[];
 }) {
-  const toneBg = `var(--ad-${tone}-bg)`;
-  const toneFg = `var(--ad-${tone})`;
+  const toneBg = tone === "ink" ? "var(--ad-panel)" : `var(--ad-${tone}-bg)`;
+  const toneFg = tone === "ink" ? "var(--ad-ink)" : `var(--ad-${tone})`;
   const up = (delta ?? 0) >= 0;
+  void emphasis;
 
   return (
-    <div
-      className="relative flex-1 overflow-hidden rounded-[var(--ad-radius-card)] border border-[var(--ad-line)] bg-[var(--ad-paper)] p-5 shadow-[var(--ad-shadow-card)] sm:p-6"
-    >
-      {emphasis ? (
-        <span
-          className="absolute inset-x-0 top-0 h-[3px]"
-          style={{ background: `linear-gradient(90deg, ${toneFg}, transparent 70%)` }}
-        />
-      ) : null}
-
+    <div className="relative flex-1 overflow-hidden rounded-[var(--ad-radius-card)] border border-[var(--ad-line)] bg-[var(--ad-paper)] p-5 shadow-[var(--ad-shadow-card)]">
       <div className="flex items-start justify-between gap-3">
-        <span className="text-[13px] font-medium text-[var(--ad-muted)]">{label}</span>
-        <span
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
-          style={{ backgroundColor: toneBg, color: toneFg }}
-        >
-          {icon}
+        <span className="text-[13.5px] font-medium text-[var(--ad-ink-soft)]">{label}</span>
+        <span className="-mr-1.5 -mt-1 flex h-7 w-7 items-center justify-center rounded-lg text-[var(--ad-muted)]">
+          <MoreVertical size={15} />
         </span>
       </div>
 
-      <div className="ad-display mt-2 text-[2rem] font-semibold leading-none tracking-tight text-[var(--ad-ink)] sm:text-[2.25rem]">
-        {value}
-      </div>
+      <div className="mt-3 flex items-end justify-between gap-3">
+        <div className="min-w-0">
+          <div className="ad-display text-[2rem] font-semibold leading-none tracking-tight text-[var(--ad-ink)] sm:text-[2.15rem]">
+            {value}
+          </div>
+          <div className="mt-3 flex min-h-[20px] items-center gap-1.5">
+            {delta !== undefined ? (
+              <>
+                <span
+                  className="flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[11px] font-bold"
+                  style={
+                    up
+                      ? { backgroundColor: "var(--ad-positive-bg)", color: "var(--ad-positive)" }
+                      : { backgroundColor: "var(--ad-negative-bg)", color: "var(--ad-negative)" }
+                  }
+                >
+                  {up ? <ArrowUpRight size={11} strokeWidth={2.5} /> : <ArrowDownRight size={11} strokeWidth={2.5} />}
+                  {Math.abs(delta).toFixed(0)}%
+                </span>
+                <span className="whitespace-nowrap text-[11.5px] text-[var(--ad-muted)]">{deltaLabel}</span>
+              </>
+            ) : null}
+          </div>
+        </div>
 
-      <div className="mt-3 flex min-h-[30px] items-end justify-between gap-2">
-        {delta !== undefined ? (
-          <span className="flex items-center gap-1.5">
-            <span
-              className="flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[11px] font-semibold"
-              style={
-                up
-                  ? { backgroundColor: "var(--ad-positive-bg)", color: "var(--ad-positive)" }
-                  : { backgroundColor: "var(--ad-negative-bg)", color: "var(--ad-negative)" }
-              }
-            >
-              {up ? <ArrowUpRight size={11} /> : <ArrowDownRight size={11} />}
-              {Math.abs(delta).toFixed(1)}%
-            </span>
-            <span className="text-[11px] text-[var(--ad-muted)]">{deltaLabel}</span>
-          </span>
+        {spark ? (
+          <Sparkline data={spark} color={toneFg} />
         ) : (
-          <span />
+          <span
+            className="mb-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+            style={{
+              backgroundColor: toneFg,
+              color: "#fff",
+              boxShadow: `0 0 0 5px ${toneBg}`,
+            }}
+          >
+            {icon}
+          </span>
         )}
-        {spark ? <Sparkline data={spark} color={toneFg} /> : null}
       </div>
     </div>
   );

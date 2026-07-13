@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { Zap } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { SignupShader } from "@/components/ui/SignupShader";
 
 /* Shared sign-in / sign-up card. In demo mode (no Firebase keys yet) the
    form is browsable and a "Continue in demo mode" shortcut opens the
@@ -60,8 +61,9 @@ export function AuthCard({ mode }: { mode: "signin" | "signup" }) {
     "h-12 w-full rounded-xl border border-[var(--ad-line)] bg-[var(--ad-panel)] px-4 text-sm text-[var(--ad-ink)] placeholder:text-[var(--ad-muted)] focus:border-[var(--ad-ink-soft)] focus:outline-none";
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="relative flex min-h-screen items-center justify-center p-4">
+      <SignupShader />
+      <div className="relative z-10 w-full max-w-md">
         {/* Brand */}
         <div className="mb-8 flex flex-col items-center gap-3">
           <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--ad-ink)] shadow-[var(--ad-shadow-card)]">

@@ -74,7 +74,7 @@ export default async function OverviewPage() {
   if (viewer.kind === "user" && !viewer.isAdmin) {
     return (
       <>
-        <PageHeader title="Overview" subtitle="Your business at a glance." />
+        <PageHeader title="Welcome back" subtitle="Your business at a glance." />
         <BusinessHome />
         <div className="grid gap-4 sm:grid-cols-2">
           <QuickLink
@@ -122,7 +122,7 @@ export default async function OverviewPage() {
   return (
     <>
       <PageHeader
-        title="Overview"
+        title="Welcome back"
         subtitle="Live from your platform database — members, events, venues and activity."
         action={
           <span className="flex items-center gap-2 rounded-full border border-[var(--ad-line)] bg-[var(--ad-paper)] px-4 py-2 text-xs font-medium text-[var(--ad-ink-soft)] shadow-[var(--ad-shadow-card)]">
