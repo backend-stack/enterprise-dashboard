@@ -44,30 +44,27 @@ export default async function StoreTrafficPage() {
         subtitle="Live from Firestore · venue engagement across the platform."
       />
 
-      <Card className="p-1.5">
-        <CardHeader title="Venues" accent="var(--ad-orange)" />
-        <div className="flex flex-col gap-4 p-4 pt-1 lg:flex-row">
-          <Kpi
-            icon={<Store size={17} />}
-            label="Venues live"
-            value={formatNumber(venues.filter((v) => v.live).length)}
-            tone="navy"
-            emphasis
-          />
-          <Kpi
-            icon={<Heart size={17} />}
-            label="Customer likes"
-            value={formatNumber(totalLikes)}
-            tone="orange"
-          />
-          <Kpi
-            icon={<Layers size={17} />}
-            label="Categories"
-            value={formatNumber(topCategories.length)}
-            tone="navy"
-          />
-        </div>
-      </Card>
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Kpi
+          icon={<Store size={16} />}
+          label="Venues live"
+          value={formatNumber(venues.filter((v) => v.live).length)}
+          tone="navy"
+          emphasis
+        />
+        <Kpi
+          icon={<Heart size={16} />}
+          label="Customer likes"
+          value={formatNumber(totalLikes)}
+          tone="orange"
+        />
+        <Kpi
+          icon={<Layers size={16} />}
+          label="Categories"
+          value={formatNumber(topCategories.length)}
+          tone="navy"
+        />
+      </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.2fr_1fr] sm:mt-6 sm:gap-6">
         {/* Most-liked venues — horizontal bars */}

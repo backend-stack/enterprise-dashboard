@@ -52,36 +52,33 @@ export default async function CustomersPage() {
         subtitle={`Live from Firestore · ${formatNumber(stats.total)} members on the platform.`}
       />
 
-      <Card className="p-1.5">
-        <CardHeader title="Member base" accent="var(--ad-orange)" />
-        <div className="flex flex-col gap-4 p-4 pt-1 xl:flex-row">
-          <Kpi
-            icon={<Users size={17} />}
-            label="Total members"
-            value={formatNumber(stats.total)}
-            tone="navy"
-            emphasis
-          />
-          <Kpi
-            icon={<CircleCheck size={17} />}
-            label="Approved"
-            value={formatNumber(stats.approved)}
-            tone="navy"
-          />
-          <Kpi
-            icon={<Clock size={17} />}
-            label="Pending review"
-            value={formatNumber(stats.pending)}
-            tone="orange"
-          />
-          <Kpi
-            icon={<UserPlus size={17} />}
-            label="New this week"
-            value={formatNumber(stats.newThisWeek)}
-            tone="orange"
-          />
-        </div>
-      </Card>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <Kpi
+          icon={<Users size={16} />}
+          label="Total members"
+          value={formatNumber(stats.total)}
+          tone="navy"
+          emphasis
+        />
+        <Kpi
+          icon={<CircleCheck size={16} />}
+          label="Approved"
+          value={formatNumber(stats.approved)}
+          tone="navy"
+        />
+        <Kpi
+          icon={<Clock size={16} />}
+          label="Pending review"
+          value={formatNumber(stats.pending)}
+          tone="orange"
+        />
+        <Kpi
+          icon={<UserPlus size={16} />}
+          label="New this week"
+          value={formatNumber(stats.newThisWeek)}
+          tone="orange"
+        />
+      </div>
 
       <div className="mt-4 sm:mt-6">
         <Card className="p-1.5">

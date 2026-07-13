@@ -124,50 +124,48 @@ export default async function OverviewPage() {
       <PageHeader
         title="Overview"
         subtitle="Live from your platform database — members, events, venues and activity."
+        action={
+          <span className="flex items-center gap-2 rounded-full border border-[var(--ad-line)] bg-[var(--ad-paper)] px-4 py-2 text-xs font-medium text-[var(--ad-ink-soft)] shadow-[var(--ad-shadow-card)]">
+            <CalendarDays size={13} className="text-[var(--ad-muted)]" />
+            {new Date(Date.now() - 6 * 86400_000).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+            {" – "}
+            {new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+          </span>
+        }
       />
 
       {/* Live business section — renders only for business accounts. */}
       <BusinessHome />
 
       {/* KPI strip */}
-      <Card className="p-1.5">
-        <CardHeader
-          title="Platform"
-          accent="var(--ad-orange)"
-          action={
-            <span className="rounded-full border border-[var(--ad-line)] px-3 py-1 text-xs text-[var(--ad-ink-soft)]">
-              Live
-            </span>
-          }
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <Kpi
+          icon={<Users size={16} />}
+          label="Total members"
+          value={formatNumber(stats.total)}
+          tone="navy"
+          emphasis
         />
-        <div className="flex flex-col gap-4 p-4 pt-1 xl:flex-row">
-          <Kpi
-            icon={<Users size={17} />}
-            label="Total members"
-            value={formatNumber(stats.total)}
-            tone="navy"
-            emphasis
-          />
-          <Kpi
-            icon={<CircleCheck size={17} />}
-            label="Approved"
-            value={formatNumber(stats.approved)}
-            tone="navy"
-          />
-          <Kpi
-            icon={<UserPlus size={17} />}
-            label="New this week"
-            value={formatNumber(stats.newThisWeek)}
-            tone="orange"
-          />
-          <Kpi
-            icon={<Store size={17} />}
-            label="Venues live"
-            value={formatNumber(venueData?.venues.length ?? 0)}
-            tone="orange"
-          />
-        </div>
-      </Card>
+        <Kpi
+          icon={<CircleCheck size={16} />}
+          label="Approved"
+          value={formatNumber(stats.approved)}
+          tone="navy"
+        />
+        <Kpi
+          icon={<UserPlus size={16} />}
+          label="New this week"
+          value={formatNumber(stats.newThisWeek)}
+          tone="orange"
+          spark={signups?.map((d) => d.signups)}
+        />
+        <Kpi
+          icon={<Store size={16} />}
+          label="Venues live"
+          value={formatNumber(venueData?.venues.length ?? 0)}
+          tone="orange"
+        />
+      </div>
 
       {/* Signups chart + events */}
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.5fr_1fr] sm:mt-6 sm:gap-6">

@@ -244,37 +244,37 @@ export default function AssistantPage() {
       />
 
       {/* KPIs */}
-      <Card className="p-1.5">
-        <CardHeader title="Performance" accent="var(--ad-orange)" />
-        <div className="flex flex-col gap-4 p-4 pt-1 xl:flex-row">
-          <Kpi
-            icon={<MessageSquare size={17} />}
-            label="Conversations"
-            value={stats ? String(stats.conversations ?? 0) : "…"}
-            tone="navy"
-            emphasis
-          />
-          <Kpi
-            icon={<CalendarDays size={17} />}
-            label="Bookings"
-            value={stats ? String(stats.bookings ?? 0) : "…"}
-            tone="orange"
-          />
-          <Kpi
-            icon={<TrendingUp size={17} />}
-            label="Conversion rate"
-            value={stats?.conversion_rate != null ? `${Math.round(stats.conversion_rate * 100)}%` : "…"}
-            tone="navy"
-          />
-          <Kpi
-            icon={<Flag size={17} />}
-            label="Open inquiries"
-            value={stats ? String(stats.inquiries ?? 0) : "…"}
-            tone="orange"
-          />
-        </div>
-        {/* Secondary stat strip */}
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 px-6 pb-5 text-xs text-[var(--ad-ink-soft)]">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <Kpi
+          icon={<MessageSquare size={16} />}
+          label="Conversations"
+          value={stats ? String(stats.conversations ?? 0) : "…"}
+          tone="navy"
+          emphasis
+        />
+        <Kpi
+          icon={<CalendarDays size={16} />}
+          label="Bookings"
+          value={stats ? String(stats.bookings ?? 0) : "…"}
+          tone="orange"
+        />
+        <Kpi
+          icon={<TrendingUp size={16} />}
+          label="Conversion rate"
+          value={stats?.conversion_rate != null ? `${Math.round(stats.conversion_rate * 100)}%` : "…"}
+          tone="navy"
+        />
+        <Kpi
+          icon={<Flag size={16} />}
+          label="Open inquiries"
+          value={stats ? String(stats.inquiries ?? 0) : "…"}
+          tone="orange"
+        />
+      </div>
+
+      {/* Secondary stat strip */}
+      <Card className="mt-4">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 px-6 py-4 text-xs text-[var(--ad-ink-soft)]">
           <span className="flex items-center gap-1.5">
             <Gauge size={13} className="text-[var(--ad-muted)]" />
             Reply time p50{" "}

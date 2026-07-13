@@ -63,30 +63,27 @@ export default async function ConversionsPage() {
         subtitle="Live from Firestore · how RSVP applications turn into confirmed guests."
       />
 
-      <Card className="p-1.5">
-        <CardHeader title="RSVP pipeline" accent="var(--ad-orange)" />
-        <div className="flex flex-col gap-4 p-4 pt-1 lg:flex-row">
-          <Kpi
-            icon={<TrendingUp size={17} />}
-            label="RSVP applications"
-            value={formatNumber(rsvps.length)}
-            tone="orange"
-            emphasis
-          />
-          <Kpi
-            icon={<CircleCheck size={17} />}
-            label="Confirmed"
-            value={formatNumber(converted)}
-            tone="navy"
-          />
-          <Kpi
-            icon={<CalendarDays size={17} />}
-            label="Seats filled"
-            value={totalCapacity ? `${formatNumber(totalGoing)} / ${formatNumber(totalCapacity)}` : "—"}
-            tone="navy"
-          />
-        </div>
-      </Card>
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Kpi
+          icon={<TrendingUp size={16} />}
+          label="RSVP applications"
+          value={formatNumber(rsvps.length)}
+          tone="orange"
+          emphasis
+        />
+        <Kpi
+          icon={<CircleCheck size={16} />}
+          label="Confirmed"
+          value={formatNumber(converted)}
+          tone="navy"
+        />
+        <Kpi
+          icon={<CalendarDays size={16} />}
+          label="Seats filled"
+          value={totalCapacity ? `${formatNumber(totalGoing)} / ${formatNumber(totalCapacity)}` : "—"}
+          tone="navy"
+        />
+      </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_1.4fr] sm:mt-6 sm:gap-6">
         <Funnel stages={funnelStages} />

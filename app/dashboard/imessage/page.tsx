@@ -86,15 +86,12 @@ export default async function IMessagePage({
         subtitle="Live from Firestore · every conversation the Clo agent is handling."
       />
 
-      <Card className="p-1.5">
-        <CardHeader title="Agent activity" accent="var(--ad-orange)" />
-        <div className="flex flex-col gap-4 p-4 pt-1 xl:flex-row">
-          <Kpi icon={<MessageCircle size={17} />} label="Agent messages" value={formatNumber(stats.totalMemories)} tone="navy" emphasis />
-          <Kpi icon={<Phone size={17} />} label="Active threads" value={formatNumber(stats.uniquePhones)} tone="navy" />
-          <Kpi icon={<Send size={17} />} label="Delivered" value={formatNumber(delivered)} tone="orange" />
-          <Kpi icon={<ShieldAlert size={17} />} label="Skipped sends" value={formatNumber(skipped)} tone="orange" />
-        </div>
-      </Card>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <Kpi icon={<MessageCircle size={16} />} label="Agent messages" value={formatNumber(stats.totalMemories)} tone="navy" emphasis />
+        <Kpi icon={<Phone size={16} />} label="Active threads" value={formatNumber(stats.uniquePhones)} tone="navy" />
+        <Kpi icon={<Send size={16} />} label="Delivered" value={formatNumber(delivered)} tone="orange" />
+        <Kpi icon={<ShieldAlert size={16} />} label="Skipped sends" value={formatNumber(skipped)} tone="orange" />
+      </div>
 
       {allSkipped ? (
         <div

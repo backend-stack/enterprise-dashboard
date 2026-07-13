@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
+  LogOut,
   MessageSquare,
   MessageCircle,
   TrendingUp,
@@ -19,6 +20,8 @@ import {
   Zap,
 } from "lucide-react";
 import { useEffect, useState, type ComponentType } from "react";
+import { useRouter } from "next/navigation";
+import { Avatar } from "@/components/ui/Avatar";
 import { useAuth } from "@/lib/auth-context";
 
 const SIDEBAR_COLLAPSED_KEY = "dash:sidebarCollapsed";
@@ -183,8 +186,58 @@ function SidebarPanel({
           />
           {collapsed ? null : <span>Help & support</span>}
         </Link>
+        <AccountBlock collapsed={collapsed} />
       </div>
     </>
+  );
+}
+
+/* Signed-in account — avatar, name, role line and sign-out, pinned to the
+   sidebar bottom like the reference design. */
+function AccountBlock({ collapsed }: { collapsed: boolean }) {
+  const { user, business, isAdmin, signOut } = useAuth();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/signin");
+  };
+
+  const roleLine = business
+    ? business.businessName
+    : isAdmin
+      ? "Administrator"
+      : "Member";
+
+  if (collapsed) {
+    return (
+      <div className="mt-3 flex justify-center border-t border-[var(--ad-line)] pt-3">
+        <Avatar name={business?.businessName ?? user?.name ?? "?"} size={34} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-3 flex items-center gap-3 border-t border-[var(--ad-line)] px-2 pt-3.5">
+      <Avatar name={business?.businessName ?? user?.name ?? "?"} size={36} />
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-[13px] font-semibold text-[var(--ad-ink)]">
+          {user?.name ?? "Account"}
+        </p>
+        <p className="truncate text-[10px] font-medium uppercase tracking-[0.1em] text-[var(--ad-muted)]">
+          {roleLine}
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={handleSignOut}
+        aria-label="Sign out"
+        title="Sign out"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[var(--ad-muted)] hover:bg-[var(--ad-panel)] hover:text-[var(--ad-ink)]"
+      >
+        <LogOut size={15} />
+      </button>
+    </div>
   );
 }
 
@@ -231,8 +284,8 @@ export function Sidebar({
     <>
       {/* Desktop: static rail — collapses to an icon-only column. */}
       <aside
-        className={`hidden shrink-0 flex-col rounded-[var(--ad-radius-lg)] border border-[var(--ad-line)] bg-[var(--ad-paper)] py-6 shadow-[var(--ad-shadow-card)] transition-[width] duration-200 lg:flex ${
-          collapsed ? "w-[76px]" : "w-[260px]"
+        className={`hidden h-full shrink-0 flex-col border-r border-[var(--ad-line)] bg-[var(--ad-paper)] py-5 transition-[width] duration-200 lg:flex ${
+          collapsed ? "w-[76px]" : "w-[256px]"
         }`}
       >
         <SidebarPanel

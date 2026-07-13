@@ -59,38 +59,37 @@ export function BusinessHome() {
 
   return (
     <div className="mb-4 flex flex-col gap-4 sm:mb-6 sm:gap-6">
-      <Card className="p-1.5">
-        <CardHeader
-          title={business.businessName}
-          accent="var(--ad-navy)"
-          action={
-            <span className="rounded-full border border-[var(--ad-line)] px-3 py-1 text-xs text-[var(--ad-ink-soft)]">
-              Live from your account
-            </span>
-          }
-        />
-        <div className="flex flex-col gap-4 p-4 pt-1 xl:flex-row">
+      <div>
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <h2 className="text-[15px] font-semibold text-[var(--ad-ink)]">
+            {business.businessName}
+          </h2>
+          <span className="rounded-full border border-[var(--ad-line)] bg-[var(--ad-paper)] px-3 py-1 text-xs text-[var(--ad-ink-soft)]">
+            Live from your account
+          </span>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-3">
           <Kpi
-            icon={<Store size={17} />}
+            icon={<Store size={16} />}
             label="Your venues"
             value={data?.totals ? formatNumber(data.totals.venues) : "…"}
             tone="navy"
             emphasis
           />
           <Kpi
-            icon={<BadgeCheck size={17} />}
+            icon={<BadgeCheck size={16} />}
             label="Live on the platform"
             value={data?.totals ? formatNumber(data.totals.liveVenues) : "…"}
             tone="navy"
           />
           <Kpi
-            icon={<Heart size={17} />}
+            icon={<Heart size={16} />}
             label="Customer likes"
             value={data?.totals ? formatNumber(data.totals.likes) : "…"}
             tone="orange"
           />
         </div>
-      </Card>
+      </div>
 
       {data?.venues.length ? (
         <Card className="p-1.5">

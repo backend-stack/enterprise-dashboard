@@ -65,36 +65,33 @@ export default async function VendorsPage() {
         subtitle={`Live from Firestore · ${vendors.length} partner${vendors.length === 1 ? "" : "s"} in lunaPartners`}
       />
 
-      <Card className="p-1.5">
-        <CardHeader title="Partner network" accent="var(--ad-orange)" />
-        <div className="flex flex-col gap-4 p-4 pt-1 xl:flex-row">
-          <Kpi
-            icon={<Store size={17} />}
-            label="Vendors"
-            value={formatNumber(vendors.length)}
-            tone="navy"
-            emphasis
-          />
-          <Kpi
-            icon={<CircleCheck size={17} />}
-            label="Approved"
-            value={formatNumber(approved)}
-            tone="navy"
-          />
-          <Kpi
-            icon={<MapPin size={17} />}
-            label="Venues linked"
-            value={formatNumber(venuesLinked)}
-            tone="orange"
-          />
-          <Kpi
-            icon={<Inbox size={17} />}
-            label="Pending applications"
-            value={formatNumber(pendingApps)}
-            tone="orange"
-          />
-        </div>
-      </Card>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <Kpi
+          icon={<Store size={16} />}
+          label="Vendors"
+          value={formatNumber(vendors.length)}
+          tone="navy"
+          emphasis
+        />
+        <Kpi
+          icon={<CircleCheck size={16} />}
+          label="Approved"
+          value={formatNumber(approved)}
+          tone="navy"
+        />
+        <Kpi
+          icon={<MapPin size={16} />}
+          label="Venues linked"
+          value={formatNumber(venuesLinked)}
+          tone="orange"
+        />
+        <Kpi
+          icon={<Inbox size={16} />}
+          label="Pending applications"
+          value={formatNumber(pendingApps)}
+          tone="orange"
+        />
+      </div>
 
       <div className="mt-4 sm:mt-6">
         <Card className="p-1.5">

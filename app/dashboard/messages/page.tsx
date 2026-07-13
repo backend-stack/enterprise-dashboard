@@ -64,36 +64,35 @@ export default async function MessagesPage() {
         }
       />
 
-      <Card className="p-1.5">
-        <CardHeader title="Messaging" accent="var(--ad-orange)" />
-        <div className="flex flex-col gap-4 p-4 pt-1 xl:flex-row">
-          <Kpi
-            icon={<MessageSquare size={17} />}
-            label="Customer texts"
-            value={formatNumber(stats.totalMemories)}
-            tone="navy"
-            emphasis
-          />
-          <Kpi
-            icon={<Phone size={17} />}
-            label="Active threads"
-            value={formatNumber(stats.uniquePhones)}
-            tone="navy"
-          />
-          <Kpi
-            icon={<Send size={17} />}
-            label="Platform sends"
-            value={formatNumber(stats.smsTotal)}
-            tone="orange"
-          />
-          <Kpi
-            icon={<Inbox size={17} />}
-            label="Delivered"
-            value={formatNumber(delivered)}
-            tone="orange"
-          />
-        </div>
-      </Card>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <Kpi
+          icon={<MessageSquare size={16} />}
+          label="Customer texts"
+          value={formatNumber(stats.totalMemories)}
+          tone="navy"
+          emphasis
+          spark={byDay?.map((d) => d.inbound)}
+        />
+        <Kpi
+          icon={<Phone size={16} />}
+          label="Active threads"
+          value={formatNumber(stats.uniquePhones)}
+          tone="navy"
+        />
+        <Kpi
+          icon={<Send size={16} />}
+          label="Platform sends"
+          value={formatNumber(stats.smsTotal)}
+          tone="orange"
+          spark={byDay?.map((d) => d.outbound)}
+        />
+        <Kpi
+          icon={<Inbox size={16} />}
+          label="Delivered"
+          value={formatNumber(delivered)}
+          tone="orange"
+        />
+      </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.5fr_1fr] sm:mt-6 sm:gap-6">
         {byDay ? (
