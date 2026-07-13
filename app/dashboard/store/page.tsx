@@ -81,9 +81,9 @@ export default async function StoreTrafficPage() {
                     {formatNumber(v.likes)}
                   </span>
                 </div>
-                <div className="h-6 overflow-hidden rounded-lg bg-[var(--ad-panel)]">
+                <div className="h-6 overflow-hidden rounded-xl bg-[var(--ad-panel)]">
                   <div
-                    className="h-full rounded-lg bg-[var(--ad-navy)]"
+                    className="h-full rounded-xl bg-[var(--ad-navy)]"
                     style={{ width: `${Math.max((v.likes / maxLikes) * 100, 3)}%` }}
                   />
                 </div>
@@ -125,7 +125,7 @@ export default async function StoreTrafficPage() {
                 <Td className="font-medium text-[var(--ad-ink)]">
                   {v.name}
                   {!v.live ? (
-                    <span className="ml-2 rounded-md bg-[var(--ad-panel)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--ad-muted)]">
+                    <span className="ml-2 rounded-lg bg-[var(--ad-panel)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--ad-muted)]">
                       removed
                     </span>
                   ) : null}

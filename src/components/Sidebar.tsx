@@ -60,7 +60,7 @@ const BUSINESS_NAV: NavItem[] = [
 /* Brand mark — the Contextual Intelligence pixel mark on an ink tile. */
 function BrandMark({ collapsed = false }: { collapsed?: boolean }) {
   const tile = (
-    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--ad-ink)] shadow-[var(--ad-shadow-card)]">
+    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--ad-ink)] shadow-[var(--ad-shadow-card)]">
       <Image
         src="/logo/ci/ci-mark.png"
         alt="Contextual Intelligence"
@@ -100,7 +100,7 @@ function SidebarPanel({
   collapsed?: boolean;
   onToggle?: () => void;
 }) {
-  const rowBase = `group relative flex items-center rounded-[10px] text-[13.5px] transition-all duration-200 ${
+  const rowBase = `group relative flex items-center rounded-xl text-[13.5px] transition-all duration-200 ${
     collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5"
   }`;
   const activeCls = "bg-[var(--ad-panel)] font-semibold text-[var(--ad-ink)]";
@@ -119,7 +119,7 @@ function SidebarPanel({
             onClick={onToggle}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             title={collapsed ? "Expand" : "Collapse"}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[var(--ad-muted)] hover:bg-[var(--ad-panel)] hover:text-[var(--ad-ink)]"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-[var(--ad-muted)] hover:bg-[var(--ad-panel)] hover:text-[var(--ad-ink)]"
           >
             {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
           </button>
@@ -141,7 +141,7 @@ function SidebarPanel({
               placeholder="Search anything…"
               className="h-full w-full rounded-xl border border-[var(--ad-line)] bg-[var(--ad-panel-2)] pl-9 pr-12 text-[13px] text-[var(--ad-ink)] placeholder:text-[var(--ad-muted)] focus:border-[var(--ad-accent)] focus:outline-none"
             />
-            <kbd className="absolute right-2.5 rounded-md border border-[var(--ad-line)] bg-[var(--ad-paper)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--ad-muted)]">
+            <kbd className="absolute right-2.5 rounded-lg border border-[var(--ad-line)] bg-[var(--ad-paper)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--ad-muted)]">
               ⌘K
             </kbd>
           </label>
@@ -212,7 +212,7 @@ function SidebarPanel({
         {/* Upgrade card — dark tile pinned above the account row. */}
         {collapsed ? null : (
           <div className="mt-3 rounded-2xl bg-[var(--ad-ink)] p-4 text-white">
-            <span className="inline-block rounded-md bg-white/15 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em]">
+            <span className="inline-block rounded-lg bg-white/15 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em]">
               Upgrade
             </span>
             <p className="mt-2 text-[12.5px] leading-snug text-white/85">
@@ -274,7 +274,7 @@ function AccountBlock({ collapsed }: { collapsed: boolean }) {
         onClick={handleSignOut}
         aria-label="Sign out"
         title="Sign out"
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[var(--ad-muted)] hover:bg-[var(--ad-panel)] hover:text-[var(--ad-ink)]"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-[var(--ad-muted)] hover:bg-[var(--ad-panel)] hover:text-[var(--ad-ink)]"
       >
         <LogOut size={15} />
       </button>

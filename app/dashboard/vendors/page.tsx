@@ -117,7 +117,7 @@ export default async function VendorsPage() {
                     <span>
                       {v.businessName}
                       {v.isAdmin ? (
-                        <span className="ml-2 rounded-md bg-[var(--ad-navy-bg)] px-1.5 py-0.5 text-[10px] font-semibold text-[var(--ad-navy)]">
+                        <span className="ml-2 rounded-lg bg-[var(--ad-navy-bg)] px-1.5 py-0.5 text-[10px] font-semibold text-[var(--ad-navy)]">
                           admin
                         </span>
                       ) : null}

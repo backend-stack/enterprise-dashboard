@@ -494,7 +494,7 @@ function MiniStat({
   return (
     <div className="flex items-center gap-2.5">
       <span
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
         style={{ backgroundColor: bg, color: fg }}
       >
         {icon}
@@ -801,7 +801,7 @@ function EngagementDonut({
             {arcs.map((a, i) => (
               <li
                 key={a.name}
-                className="flex cursor-default items-center gap-2 rounded-lg px-2 py-1.5 text-xs transition-colors hover:bg-[var(--ad-panel-2)]"
+                className="flex cursor-default items-center gap-2 rounded-xl px-2 py-1.5 text-xs transition-colors hover:bg-[var(--ad-panel-2)]"
                 onMouseEnter={() => setActive(i)}
                 onMouseLeave={() => setActive((p) => (p === i ? null : p))}
               >

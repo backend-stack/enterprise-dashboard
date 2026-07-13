@@ -131,7 +131,7 @@ export default function SupportPage() {
                         }`}
                       >
                         <span
-                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
                           style={{ backgroundColor: bg, color: fg }}
                         >
                           <Icon size={17} />
@@ -194,7 +194,7 @@ export default function SupportPage() {
                 href="mailto:clo@contextualintelligence.co"
                 className="flex items-center gap-4 rounded-xl border border-[var(--ad-line)] bg-[var(--ad-panel)] p-4 transition-colors hover:bg-[var(--ad-panel-2)]"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--ad-navy-bg)] text-[var(--ad-navy)]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--ad-navy-bg)] text-[var(--ad-navy)]">
                   <Mail size={17} />
                 </span>
                 <span className="min-w-0">

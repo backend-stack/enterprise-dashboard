@@ -32,9 +32,9 @@ export function Funnel({ stages }: { stages: FunnelStage[] }) {
                   </span>
                 </span>
               </div>
-              <div className="h-7 overflow-hidden rounded-lg bg-[var(--ad-panel)]">
+              <div className="h-7 overflow-hidden rounded-xl bg-[var(--ad-panel)]">
                 <div
-                  className="h-full rounded-lg transition-all"
+                  className="h-full rounded-xl transition-all"
                   style={{
                     width: `${Math.max(pct, 2)}%`,
                     background: last

@@ -7,20 +7,18 @@ import { useState, type FormEvent } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { HeroShader } from "@/components/ui/HeroShader";
 
-/* Sign-in / sign-up — the contextualintelligence.co split layout: form on
-   the left, the animated fluted-glass shader inset as a rounded panel on the
-   right. Email/password + Google (this dashboard's auth), with the demo-mode
-   shortcut kept for keyless local review. Spacing on an 8pt grid. */
-export function AuthCard({ mode }: { mode: "signin" | "signup" }) {
-  const { demoMode, signInEmail, signUpEmail, signInGoogle } = useAuth();
+/* Sign-in — the contextualintelligence.co split layout: form on the left,
+   the animated fluted-glass shader inset as a rounded panel on the right.
+   Account creation lives on contextualintelligence.co/partners; this screen
+   only signs existing accounts in (email/password + Google, plus the
+   demo-mode shortcut for keyless local review). Spacing on an 8pt grid. */
+export function AuthCard() {
+  const { demoMode, signInEmail, signInGoogle } = useAuth();
   const router = useRouter();
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-
-  const isSignup = mode === "signup";
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -31,8 +29,7 @@ export function AuthCard({ mode }: { mode: "signin" | "signup" }) {
     }
     setBusy(true);
     try {
-      if (isSignup) await signUpEmail(name, email, password);
-      else await signInEmail(email, password);
+      await signInEmail(email, password);
       router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Authentication failed.");
@@ -69,7 +66,7 @@ export function AuthCard({ mode }: { mode: "signin" | "signup" }) {
           {/* Top bar — CI mark left, flow switch right. */}
           <div className="flex shrink-0 items-center justify-between">
             <Link href="/" aria-label="Contextual Intelligence home" className="flex items-center">
-              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--ad-ink)]">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--ad-ink)]">
                 <Image
                   src="/logo/ci/ci-mark.png"
                   alt="Contextual Intelligence"
@@ -79,12 +76,12 @@ export function AuthCard({ mode }: { mode: "signin" | "signup" }) {
                 />
               </span>
             </Link>
-            <Link
-              href={isSignup ? "/signin" : "/signup"}
+            <a
+              href="https://www.contextualintelligence.co/partners"
               className="text-sm text-[var(--ad-muted)] transition-colors hover:text-[var(--ad-ink)]"
             >
-              {isSignup ? "Sign in" : "Create account"}
-            </Link>
+              Create account
+            </a>
           </div>
 
           {/* Body — centered form column. */}
@@ -94,12 +91,10 @@ export function AuthCard({ mode }: { mode: "signin" | "signup" }) {
                 Business dashboard
               </p>
               <h1 className="ad-display text-3xl font-semibold leading-[1.05] tracking-tight text-[var(--ad-ink)] sm:text-4xl">
-                {isSignup ? "Create your account." : "Welcome back."}
+                Welcome back.
               </h1>
               <p className="mt-3 text-sm leading-relaxed text-[var(--ad-ink-soft)]">
-                {isSignup
-                  ? "Set up your workspace — venues, live assistant and bookings in one place."
-                  : "Sign in to see your venues, conversations and bookings."}
+                Sign in to see your venues, conversations and bookings.
               </p>
 
               {demoMode ? (
@@ -117,16 +112,6 @@ export function AuthCard({ mode }: { mode: "signin" | "signup" }) {
               ) : null}
 
               <form onSubmit={submit} className="mt-8 flex flex-col gap-4">
-                {isSignup ? (
-                  <input
-                    type="text"
-                    placeholder="Full name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className={inputCls}
-                    autoComplete="name"
-                  />
-                ) : null}
                 <input
                   type="email"
                   placeholder="Work email"
@@ -142,7 +127,7 @@ export function AuthCard({ mode }: { mode: "signin" | "signup" }) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={inputCls}
-                  autoComplete={isSignup ? "new-password" : "current-password"}
+                  autoComplete="current-password"
                   required={!demoMode}
                 />
                 <button
@@ -150,7 +135,7 @@ export function AuthCard({ mode }: { mode: "signin" | "signup" }) {
                   disabled={busy}
                   className="mt-2 h-12 rounded-full bg-[var(--ad-ink)] text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
                 >
-                  {busy ? "One moment…" : isSignup ? "Create account" : "Sign in"}
+                  {busy ? "One moment…" : "Sign in"}
                 </button>
               </form>
 
@@ -180,29 +165,21 @@ export function AuthCard({ mode }: { mode: "signin" | "signup" }) {
               ) : null}
 
               <p className="mt-6 text-sm text-[var(--ad-muted)]">
-                {isSignup ? (
-                  <>
-                    Already have an account?{" "}
-                    <Link href="/signin" className="text-[var(--ad-ink)] underline underline-offset-2">
-                      Sign in
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    New here?{" "}
-                    <Link href="/signup" className="text-[var(--ad-ink)] underline underline-offset-2">
-                      Create an account
-                    </Link>
-                  </>
-                )}
+                New here?{" "}
+                <a
+                  href="https://www.contextualintelligence.co/partners"
+                  className="text-[var(--ad-ink)] underline underline-offset-2"
+                >
+                  Sign up as a partner
+                </a>
               </p>
 
-              <Link
-                href="/signup/business"
+              <a
+                href="https://www.contextualintelligence.co/partners"
                 className="mt-6 flex h-12 w-full items-center justify-center rounded-full border border-dashed border-[var(--ad-line-strong)] text-sm font-semibold text-[var(--ad-navy)] transition-colors hover:bg-[var(--ad-navy-bg)]"
               >
                 Are you a business? Join the partner platform →
-              </Link>
+              </a>
             </div>
           </div>
 

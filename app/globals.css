@@ -64,10 +64,10 @@
   --ad-shadow-float: 0 2px 6px rgba(20, 21, 26, 0.05),
     0 18px 40px -20px rgba(20, 21, 26, 0.16);
 
-  /* Shape — crisp SaaS rounding */
-  --ad-radius-card: 1rem;
-  --ad-radius-lg: 1.25rem;
-  --ad-radius-sm: 0.75rem;
+  /* Shape — soft, modern rounding: every surface is a rounded rectangle */
+  --ad-radius-card: 1.25rem;
+  --ad-radius-lg: 1.5rem;
+  --ad-radius-sm: 1rem;
 }
 
 body {

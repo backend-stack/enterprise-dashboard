@@ -35,7 +35,7 @@ export function CardHeader({
         {title}
       </h3>
       {action ?? (
-        <span className="flex h-7 w-7 items-center justify-center rounded-lg text-[var(--ad-muted)]">
+        <span className="flex h-7 w-7 items-center justify-center rounded-xl text-[var(--ad-muted)]">
           <MoreVertical size={15} />
         </span>
       )}

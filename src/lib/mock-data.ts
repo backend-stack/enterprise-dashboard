@@ -161,13 +161,14 @@ export const ACTIVITY: ActivityItem[] = [
   { id: "a-01", text: "Campaign “Summer Drop” sent", detail: "2,180 messages · SMS + WhatsApp", time: "12m ago", kind: "message" },
   { id: "a-02", text: "Jordan Lee converted", detail: "$184.00 · Flagship — 5th Ave", time: "2h ago", kind: "conversion" },
   { id: "a-03", text: "Foot-traffic spike detected", detail: "+38% vs. usual · SoMa District", time: "3h ago", kind: "visit" },
-  { id: "a-04", text: "Invoice paid", detail: "Growth plan · $500.00", time: "6h ago", kind: "billing" },
+  { id: "a-04", text: "Invoice paid", detail: "Enterprise plan · $499.00", time: "6h ago", kind: "billing" },
   { id: "a-05", text: "Campaign “VIP Preview” scheduled", detail: "840 recipients · Saturday 10 AM", time: "8h ago", kind: "message" },
 ];
 
-/* Billing plans — every paid plan carries a one-time $2,000 initiation fee
-   billed with the first invoice. */
+/* Billing — one enterprise plan: $2,000 one-time initiation fee billed with
+   the first invoice, then $499/month. */
 export const INITIATION_FEE = 200_000; // cents, one-time
+export const ENTERPRISE_MONTHLY = 49_900; // cents / month
 
 export interface Plan {
   id: string;
@@ -183,28 +184,19 @@ export interface Plan {
 
 export const PLANS: Plan[] = [
   {
-    id: "starter",
-    name: "Starter",
-    price: 30_000,
-    setupFee: INITIATION_FEE,
-    blurb: "For a single storefront getting going.",
-    features: ["1 store location", "5,000 messages / mo", "Basic analytics", "Email support"],
-  },
-  {
-    id: "growth",
-    name: "Growth",
-    price: 50_000,
-    setupFee: INITIATION_FEE,
-    blurb: "For growing teams with multiple locations.",
-    features: ["Up to 10 locations", "50,000 messages / mo", "Conversion funnels", "Priority support"],
-    current: true,
-  },
-  {
     id: "enterprise",
     name: "Enterprise",
-    price: null,
-    blurb: "Advanced controls, SSO and dedicated support.",
-    features: ["Unlimited locations", "Unlimited messages", "Custom reports & API", "Dedicated CSM"],
+    price: ENTERPRISE_MONTHLY,
+    setupFee: INITIATION_FEE,
+    blurb: "Everything your business needs — venues, AI assistant, bookings and priority support.",
+    features: [
+      "All your venues on the platform",
+      "AI assistant — calls, texts & bookings",
+      "Customer engagement analytics",
+      "Priority support with tickets",
+      "Stripe-powered billing & invoices",
+      "Team member access",
+    ],
   },
 ];
 
@@ -216,9 +208,9 @@ export interface Invoice {
 }
 
 export const INVOICES: Invoice[] = [
-  { id: "INV-2026-007", period: "Jul 2026", amount: 50_000, status: "due" },
-  { id: "INV-2026-006", period: "Jun 2026", amount: 50_000, status: "paid" },
-  { id: "INV-2026-005", period: "May 2026", amount: 50_000, status: "paid" },
+  { id: "INV-2026-007", period: "Jul 2026", amount: 49_900, status: "due" },
+  { id: "INV-2026-006", period: "Jun 2026", amount: 49_900, status: "paid" },
+  { id: "INV-2026-005", period: "May 2026", amount: 49_900, status: "paid" },
   // First invoice = $2,000 initiation + first month.
-  { id: "INV-2026-004", period: "Apr 2026", amount: 250_000, status: "paid" },
+  { id: "INV-2026-004", period: "Apr 2026", amount: 249_900, status: "paid" },
 ];

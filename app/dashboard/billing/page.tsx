@@ -1,20 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { Check, CreditCard, Download, ExternalLink } from "lucide-react";
+import { BadgeCheck, Check, CreditCard, Download, ExternalLink, Sparkles } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { DataTable, Td, Tr } from "@/components/dashboard/DataTable";
 import { INVOICES, PLANS } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/format";
+import { useAuth } from "@/lib/auth-context";
 
-/* Billing — Stripe-backed. The buttons call /api/stripe/* routes which
-   return 503 with a friendly message until STRIPE_SECRET_KEY is in .env;
-   the UI surfaces that as a banner instead of failing silently. */
+/* Billing — one enterprise plan: $2,000 one-time initiation + $499/month.
+   The featured card starts Stripe Checkout (initiation fee rides the first
+   invoice); the breakdown card spells out exactly what gets charged when.
+   Stripe buttons 503 with a friendly notice until keys are in .env. */
 export default function BillingPage() {
+  const { business } = useAuth();
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+
+  const plan = PLANS[0];
+  // planChosen on the business profile marks an already-subscribed account.
+  const isCurrent = Boolean(business?.plan);
 
   const callStripe = async (path: string, body?: object) => {
     setBusy(path + JSON.stringify(body ?? {}));
@@ -38,16 +45,18 @@ export default function BillingPage() {
     }
   };
 
+  const firstInvoice = (plan.price ?? 0) + (plan.setupFee ?? 0);
+
   return (
     <>
       <PageHeader
         title="Billing"
-        subtitle="Plans, invoices and payment method — powered by Stripe."
+        subtitle="Your plan, invoices and payment method — powered by Stripe."
         action={
           <button
             type="button"
             onClick={() => callStripe("/api/stripe/portal")}
-            className="flex items-center gap-2 rounded-full bg-[var(--ad-ink)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--ad-shadow-card)] transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-full bg-[var(--ad-ink)] px-6 py-3 text-sm font-semibold text-white shadow-[var(--ad-shadow-card)] transition-opacity hover:opacity-90 disabled:opacity-50"
             disabled={busy !== null}
           >
             <ExternalLink size={15} />
@@ -57,104 +66,138 @@ export default function BillingPage() {
       />
 
       {notice ? (
-        <div className="mb-5 rounded-[var(--ad-radius-sm)] border border-[var(--ad-line)] bg-[var(--ad-orange-bg)] px-4 py-3 text-sm text-[var(--ad-ink-soft)]">
+        <div className="mb-6 rounded-[var(--ad-radius-sm)] border border-[var(--ad-line)] bg-[var(--ad-orange-bg)] px-4 py-3 text-sm text-[var(--ad-ink-soft)]">
           {notice}
         </div>
       ) : null}
 
-      {/* Plans */}
-      <Card>
-        <CardHeader title="Plans" accent="var(--ad-orange)" />
-        <div className="grid gap-4 p-6 pt-0 lg:grid-cols-3">
-          {PLANS.map((plan) => (
-            <div
-              key={plan.id}
-              className="flex flex-col rounded-[var(--ad-radius-sm)] border p-6"
-              style={{
-                backgroundColor: plan.current ? "var(--ad-navy)" : "var(--ad-panel)",
-                color: plan.current ? "#fff" : "var(--ad-ink)",
-                borderColor: plan.current ? "var(--ad-navy)" : "var(--ad-line)",
-                boxShadow: "var(--ad-shadow-card)",
-              }}
-            >
-              <div className="mb-1 flex items-center justify-between">
-                <span className="text-[15px] font-semibold">{plan.name}</span>
-                {plan.current ? (
-                  <span className="rounded-full bg-white/16 px-2.5 py-1 text-[11px] font-semibold" style={{ backgroundColor: "rgba(255,255,255,0.16)" }}>
-                    Current plan
-                  </span>
-                ) : null}
-              </div>
-              <p
-                className="mb-5 text-xs"
-                style={{ opacity: plan.current ? 0.75 : 1, color: plan.current ? "#fff" : "var(--ad-muted)" }}
-              >
-                {plan.blurb}
-              </p>
-              <div className="mb-2 flex items-baseline gap-1">
-                <span className="ad-display text-[2.25rem] font-semibold leading-none tracking-tight">
-                  {plan.price !== null ? formatMoney(plan.price) : "Custom"}
+      {/* Plan + payment breakdown */}
+      <div className="grid gap-4 xl:grid-cols-[1.5fr_1fr] sm:gap-6">
+        {/* Featured plan */}
+        <div
+          className="relative overflow-hidden rounded-[var(--ad-radius-card)] p-8 text-white shadow-[var(--ad-shadow-card)]"
+          style={{ background: "linear-gradient(130deg, #4c22cf 0%, #6b3df2 55%, #8a63f6 100%)" }}
+        >
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-16 -top-24 h-64 w-64 rounded-full"
+            style={{ background: "rgba(255,255,255,0.10)" }}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-24 right-24 h-48 w-48 rounded-full"
+            style={{ background: "rgba(255,255,255,0.07)" }}
+          />
+
+          <div className="relative">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em]">
+                  <Sparkles size={12} />
+                  Enterprise
                 </span>
-                {plan.price !== null ? (
-                  <span
-                    className="text-xs"
-                    style={{ opacity: plan.current ? 0.75 : 1, color: plan.current ? "#fff" : "var(--ad-muted)" }}
-                  >
-                    / month
-                  </span>
-                ) : null}
+                <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/80">{plan.blurb}</p>
               </div>
-              <p
-                className="mb-5 min-h-[16px] text-xs"
-                style={{ opacity: plan.current ? 0.75 : 1, color: plan.current ? "#fff" : "var(--ad-muted)" }}
-              >
-                {plan.setupFee
-                  ? `+ ${formatMoney(plan.setupFee)} one-time initiation fee`
-                  : plan.price === null
-                    ? "Pricing tailored to your business"
-                    : ""}
-              </p>
-              <ul className="mb-6 flex flex-col gap-2">
-                {plan.features.map((f) => (
-                  <li key={f} className="flex items-center gap-2 text-[13px]">
-                    <Check
-                      size={14}
-                      style={{ color: plan.current ? "var(--ad-orange-soft)" : "var(--ad-positive)" }}
-                    />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              {plan.price === null ? (
-                <a
-                  href="mailto:sales@example.com?subject=Enterprise%20plan"
-                  className="mt-auto rounded-full bg-[var(--ad-ink)] px-5 py-2.5 text-center text-sm font-semibold text-white shadow-[var(--ad-shadow-card)] transition-opacity hover:opacity-90"
-                >
-                  Contact sales
-                </a>
-              ) : (
-                <button
-                  type="button"
-                  disabled={plan.current || busy !== null}
-                  onClick={() => callStripe("/api/stripe/checkout", { plan: plan.id })}
-                  className={`mt-auto rounded-full px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-90 disabled:cursor-not-allowed ${
-                    plan.current
-                      ? "bg-white/10 text-white/60"
-                      : "bg-[var(--ad-ink)] text-white shadow-[var(--ad-shadow-card)]"
-                  }`}
-                >
-                  {plan.current ? "Active" : "Upgrade"}
-                </button>
-              )}
+              {isCurrent ? (
+                <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-xs font-semibold">
+                  <BadgeCheck size={14} /> Current plan
+                </span>
+              ) : null}
             </div>
-          ))}
+
+            <div className="mt-6 flex items-baseline gap-2">
+              <span className="ad-display text-5xl font-semibold leading-none tracking-tight">
+                {formatMoney(plan.price ?? 0)}
+              </span>
+              <span className="text-sm text-white/75">/ month</span>
+            </div>
+            <p className="mt-2 text-[13px] text-white/75">
+              + {formatMoney(plan.setupFee ?? 0)} one-time initiation fee on your first invoice
+            </p>
+
+            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+              {plan.features.map((f) => (
+                <li key={f} className="flex items-center gap-2 text-[13px] text-white/90">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/15">
+                    <Check size={12} strokeWidth={2.5} />
+                  </span>
+                  {f}
+                </li>
+              ))}
+            </ul>
+
+            <button
+              type="button"
+              disabled={isCurrent || busy !== null}
+              onClick={() => callStripe("/api/stripe/checkout", { plan: plan.id })}
+              className={`mt-8 h-12 w-full rounded-full text-sm font-semibold transition-opacity hover:opacity-90 disabled:cursor-not-allowed sm:w-auto sm:px-10 ${
+                isCurrent ? "bg-white/15 text-white/70" : "bg-white text-[var(--ad-navy)]"
+              }`}
+            >
+              {isCurrent ? "You're on Enterprise" : "Get Enterprise"}
+            </button>
+          </div>
         </div>
-      </Card>
+
+        {/* What you'll pay */}
+        <Card>
+          <CardHeader title="What you'll pay" />
+          <div className="flex flex-col px-6 pb-6">
+            <div className="flex items-start justify-between gap-4 py-4">
+              <div>
+                <p className="text-sm font-semibold text-[var(--ad-ink)]">Initiation fee</p>
+                <p className="mt-1 text-xs leading-relaxed text-[var(--ad-muted)]">
+                  One-time onboarding — venue setup, assistant training and go-live.
+                </p>
+              </div>
+              <span className="shrink-0 text-sm font-semibold text-[var(--ad-ink)]">
+                {formatMoney(plan.setupFee ?? 0)}
+              </span>
+            </div>
+            <div className="h-px bg-[var(--ad-line)]" />
+            <div className="flex items-start justify-between gap-4 py-4">
+              <div>
+                <p className="text-sm font-semibold text-[var(--ad-ink)]">Enterprise plan</p>
+                <p className="mt-1 text-xs leading-relaxed text-[var(--ad-muted)]">
+                  Billed monthly. Cancel any time from the Stripe portal.
+                </p>
+              </div>
+              <span className="shrink-0 text-sm font-semibold text-[var(--ad-ink)]">
+                {formatMoney(plan.price ?? 0)} / mo
+              </span>
+            </div>
+
+            <div className="mt-2 rounded-[var(--ad-radius-sm)] bg-[var(--ad-navy-bg)] p-5">
+              <div className="flex items-baseline justify-between">
+                <span className="text-[13px] font-medium text-[var(--ad-ink-soft)]">Due today</span>
+                <span className="ad-display text-2xl font-semibold tracking-tight text-[var(--ad-ink)]">
+                  {formatMoney(firstInvoice)}
+                </span>
+              </div>
+              <p className="mt-1 text-right text-[11.5px] text-[var(--ad-muted)]">
+                then {formatMoney(plan.price ?? 0)}/month
+              </p>
+            </div>
+
+            <p className="mt-4 text-xs leading-relaxed text-[var(--ad-muted)]">
+              Checkout and receipts are handled by Stripe. Need something
+              different?{" "}
+              <a
+                href="mailto:clo@contextualintelligence.co?subject=Enterprise%20pricing"
+                className="font-semibold text-[var(--ad-navy)] hover:underline"
+              >
+                Talk to us
+              </a>
+              .
+            </p>
+          </div>
+        </Card>
+      </div>
 
       {/* Payment method + invoices */}
       <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_1.6fr] sm:mt-6 sm:gap-6">
         <Card>
-          <CardHeader title="Payment method" accent="var(--ad-navy)" />
+          <CardHeader title="Payment method" />
           <div className="px-6 pb-6">
             <div className="flex items-center gap-4 rounded-[var(--ad-radius-sm)] border border-[var(--ad-line)] bg-[var(--ad-panel)] p-5">
               <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--ad-navy-bg)] text-[var(--ad-navy)]">
@@ -171,7 +214,7 @@ export default function BillingPage() {
               type="button"
               onClick={() => callStripe("/api/stripe/portal")}
               disabled={busy !== null}
-              className="mt-4 w-full rounded-full border border-[var(--ad-line)] px-5 py-2.5 text-sm font-semibold text-[var(--ad-ink-soft)] transition-colors hover:bg-[var(--ad-panel)] disabled:opacity-50"
+              className="mt-4 w-full rounded-full border border-[var(--ad-line)] px-6 py-3 text-sm font-semibold text-[var(--ad-ink-soft)] transition-colors hover:bg-[var(--ad-panel)] disabled:opacity-50"
             >
               Update payment method
             </button>
@@ -179,7 +222,7 @@ export default function BillingPage() {
         </Card>
 
         <Card>
-          <CardHeader title="Invoices" accent="var(--ad-orange)" />
+          <CardHeader title="Invoices" />
           <DataTable headers={["Invoice", "Period", "Amount", "Status", ""]}>
             {INVOICES.map((inv) => (
               <Tr key={inv.id}>
@@ -197,7 +240,7 @@ export default function BillingPage() {
                   <button
                     type="button"
                     aria-label={`Download ${inv.id}`}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--ad-muted)] hover:bg-[var(--ad-panel)] hover:text-[var(--ad-ink)]"
+                    className="flex h-8 w-8 items-center justify-center rounded-xl text-[var(--ad-muted)] hover:bg-[var(--ad-panel)] hover:text-[var(--ad-ink)]"
                   >
                     <Download size={15} />
                   </button>

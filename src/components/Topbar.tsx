@@ -45,7 +45,7 @@ function IconButton({
     <button
       type="button"
       aria-label={label}
-      className="relative flex h-9 w-9 items-center justify-center rounded-lg text-[var(--ad-ink-soft)] transition-colors hover:bg-[var(--ad-panel)]"
+      className="relative flex h-9 w-9 items-center justify-center rounded-xl text-[var(--ad-ink-soft)] transition-colors hover:bg-[var(--ad-panel)]"
     >
       {children}
       {badge ? (
@@ -80,7 +80,7 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
         type="button"
         onClick={onMenuClick}
         aria-label="Open menu"
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--ad-line)] text-[var(--ad-ink-soft)] hover:bg-[var(--ad-panel)] lg:hidden"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[var(--ad-line)] text-[var(--ad-ink-soft)] hover:bg-[var(--ad-panel)] lg:hidden"
       >
         <Menu size={17} />
       </button>
@@ -126,7 +126,7 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
         <button
           type="button"
           onClick={share}
-          className="flex h-9 items-center gap-1.5 rounded-lg border border-[var(--ad-line)] px-3.5 text-[13px] font-semibold text-[var(--ad-ink-soft)] transition-colors hover:bg-[var(--ad-panel)]"
+          className="flex h-9 items-center gap-1.5 rounded-xl border border-[var(--ad-line)] px-3.5 text-[13px] font-semibold text-[var(--ad-ink-soft)] transition-colors hover:bg-[var(--ad-panel)]"
         >
           {copied ? <Check size={14} className="text-[var(--ad-positive)]" /> : <Share2 size={14} />}
           {copied ? "Copied" : "Share"}

@@ -164,7 +164,7 @@ function Bar({
         {value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value}
       </span>
       <div
-        className="w-full rounded-md transition-all duration-200"
+        className="w-full rounded-lg transition-all duration-200"
         style={{
           height: `${Math.max(heightPct, value > 0 ? 3 : 1.5)}%`,
           backgroundColor: color,

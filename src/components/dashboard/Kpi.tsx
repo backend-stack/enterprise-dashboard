@@ -66,7 +66,7 @@ export function Kpi({
     <div className="relative flex-1 overflow-hidden rounded-[var(--ad-radius-card)] border border-[var(--ad-line)] bg-[var(--ad-paper)] p-6 shadow-[var(--ad-shadow-card)]">
       <div className="flex items-start justify-between gap-3">
         <span className="text-[13.5px] font-medium text-[var(--ad-ink-soft)]">{label}</span>
-        <span className="-mr-1.5 -mt-1 flex h-7 w-7 items-center justify-center rounded-lg text-[var(--ad-muted)]">
+        <span className="-mr-1.5 -mt-1 flex h-7 w-7 items-center justify-center rounded-xl text-[var(--ad-muted)]">
           <MoreVertical size={15} />
         </span>
       </div>
