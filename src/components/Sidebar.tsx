@@ -15,6 +15,7 @@ import {
   LifeBuoy,
   PanelLeftClose,
   PanelLeftOpen,
+  Radio,
   Zap,
 } from "lucide-react";
 import { useEffect, useState, type ComponentType } from "react";
@@ -32,6 +33,7 @@ const NAV: NavItem[] = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "Messages", href: "/dashboard/messages", icon: MessageSquare, badge: 3 },
   { label: "iMessage Agent", href: "/dashboard/imessage", icon: MessageCircle },
+  { label: "Live Assistant", href: "/dashboard/assistant", icon: Radio },
   { label: "Conversions", href: "/dashboard/conversions", icon: TrendingUp },
   { label: "Store Traffic", href: "/dashboard/store", icon: Footprints },
   { label: "Vendors", href: "/dashboard/vendors", icon: Store },
