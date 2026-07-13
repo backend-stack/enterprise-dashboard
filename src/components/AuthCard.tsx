@@ -84,9 +84,9 @@ export function AuthCard() {
             </a>
           </div>
 
-          {/* Body - centered form column. */}
-          <div className="flex flex-1 flex-col justify-center py-8">
-            <div className="w-full max-w-sm">
+          {/* Body - form column centered in the half, text centered too. */}
+          <div className="flex flex-1 flex-col items-center justify-center py-8">
+            <div className="w-full max-w-sm text-center">
               <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--ad-muted)]">
                 Contextual Intelligence for Partners
               </p>
