@@ -49,9 +49,10 @@ const ADMIN_NAV: NavItem[] = [
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
-/** What a business account sees — only its own data. */
+/** What a business account sees — its own data plus what the agent sends. */
 const BUSINESS_NAV: NavItem[] = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
+  { label: "iMessage Agent", href: "/dashboard/imessage", icon: MessageCircle },
   { label: "Live Assistant", href: "/dashboard/assistant", icon: Radio },
   { label: "Billing", href: "/dashboard/billing", icon: CreditCard },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },

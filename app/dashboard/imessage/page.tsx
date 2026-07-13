@@ -1,6 +1,5 @@
 import { AlertTriangle, MessageCircle, Phone, Send, ShieldAlert } from "lucide-react";
 import { redirect } from "next/navigation";
-import { AdminOnly } from "@/components/AdminOnly";
 import { getViewer } from "@/lib/server-auth";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { CollapsibleCard, CollapsibleRow } from "@/components/ui/Collapsible";
@@ -49,19 +48,23 @@ export default async function IMessagePage({
 }) {
   const viewer = await getViewer();
   if (viewer.kind === "anonymous") redirect("/signin");
-  if (viewer.kind === "user" && !viewer.isAdmin) return <AdminOnly title="iMessage Agent" />;
+
+  /* Businesses may see everything the agent SENDS (message bodies, delivery
+     results, masked recipients) — but the Inbox with customers' private
+     conversation threads stays admin-only. */
+  const adminView = !(viewer.kind === "user" && !viewer.isAdmin);
 
   const { thread: threadParam } = await searchParams;
 
   const [threads, messagesByPhone, campaigns, smsLog, stats] = await Promise.all([
-    fetchAgentThreads().catch(() => null),
-    fetchAllThreadMessages().catch(() => null),
+    adminView ? fetchAgentThreads().catch(() => null) : Promise.resolve(null),
+    adminView ? fetchAllThreadMessages().catch(() => null) : Promise.resolve(null),
     fetchSmsCampaigns().catch(() => null),
     fetchSmsLog(15).catch(() => null),
     fetchIMessageStats().catch(() => null),
   ]);
 
-  if (!threads || !stats) {
+  if (!stats || (adminView && !threads)) {
     return (
       <>
         <PageHeader title="iMessage Agent" subtitle="Conversations handled by the Clo agent." />
@@ -83,7 +86,11 @@ export default async function IMessagePage({
     <>
       <PageHeader
         title="iMessage Agent"
-        subtitle="Live from Firestore · every conversation the Clo agent is handling."
+        subtitle={
+          adminView
+            ? "Live from Firestore · every conversation the Clo agent is handling."
+            : "Every message the agent is sending customers, with delivery results."
+        }
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -116,20 +123,22 @@ export default async function IMessagePage({
       ) : null}
 
       <div className="mt-4 flex flex-col gap-4 sm:mt-6 sm:gap-5">
-        {/* ── Module 1: Inbox ─────────────────────────────────────────────── */}
-        <CollapsibleCard
-          title="Inbox"
-          meta="Customer conversations, one thread per phone number — click a thread to read it"
-          accent="var(--ad-navy)"
-          badge={`${threads.length} conversation${threads.length === 1 ? "" : "s"}`}
-          defaultOpen
-        >
-          <AgentInbox
-            threads={threads}
-            messagesByPhone={messagesByPhone ?? {}}
-            initialPhone={threadParam ?? null}
-          />
-        </CollapsibleCard>
+        {/* ── Module 1: Inbox — private threads, platform admins only ─────── */}
+        {adminView && threads ? (
+          <CollapsibleCard
+            title="Inbox"
+            meta="Customer conversations, one thread per phone number — click a thread to read it"
+            accent="var(--ad-navy)"
+            badge={`${threads.length} conversation${threads.length === 1 ? "" : "s"}`}
+            defaultOpen
+          >
+            <AgentInbox
+              threads={threads}
+              messagesByPhone={messagesByPhone ?? {}}
+              initialPhone={threadParam ?? null}
+            />
+          </CollapsibleCard>
+        ) : null}
 
         {/* ── Module 2: What's being sent ─────────────────────────────────── */}
         <CollapsibleCard
@@ -137,6 +146,7 @@ export default async function IMessagePage({
           meta="Each distinct outgoing message, with delivery results — tap one to read it"
           accent="var(--ad-orange)"
           badge={`${campaigns?.length ?? 0} message${(campaigns?.length ?? 0) === 1 ? "" : "s"}`}
+          defaultOpen={!adminView}
         >
           <div className="flex flex-col gap-3 p-4">
             {(campaigns ?? []).map((c) => {
