@@ -32,7 +32,7 @@ const STATS = [
   },
   {
     value: "Social \u2260 growth",
-    label: "social media alone doesn't acquire new customers.",
+    label: "social alone doesn't bring in new customers.",
   },
 ];
 
@@ -102,10 +102,10 @@ export default function Home() {
           <div className="grid gap-12 sm:grid-cols-3 sm:gap-8">
             {STATS.map((stat) => (
               <div key={stat.value} className="text-center">
-                <p className="ad-display text-4xl font-semibold tracking-tight text-[var(--ad-ink)] sm:text-5xl">
+                <p className="ad-display whitespace-nowrap text-3xl font-semibold tracking-tight text-[var(--ad-ink)] sm:text-4xl">
                   {stat.value}
                 </p>
-                <p className="mx-auto mt-3 max-w-[240px] text-sm leading-relaxed text-[var(--ad-muted)]">
+                <p className="mx-auto mt-3 max-w-[250px] text-sm leading-relaxed text-[var(--ad-muted)]">
                   {stat.label}
                 </p>
               </div>
