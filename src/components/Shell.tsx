@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { Clock } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { Topbar } from "@/components/Topbar";
 import { useAuth } from "@/lib/auth-context";
@@ -16,6 +16,10 @@ export function Shell({ children }: { children: ReactNode }) {
   const [navOpen, setNavOpen] = useState(false);
   const { user, business, loading, demoMode } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+  // The Messages inbox is a full-height workspace; keep the approval notice
+  // off that tab so it doesn't crowd the conversation view.
+  const hideApprovalNotice = pathname.startsWith("/dashboard/chats");
 
   useEffect(() => {
     if (!demoMode && !loading && !user) router.replace("/signin");
@@ -38,7 +42,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
         <main className="relative min-h-0 flex-1 overflow-y-auto bg-[var(--ad-paper)] lg:rounded-[var(--ad-radius-lg)]">
           <div className="relative px-4 py-6 sm:px-8 sm:py-8">
-            {business && !business.approved ? (
+            {business && !business.approved && !hideApprovalNotice ? (
               <div
                 className="mb-6 flex items-center gap-3 rounded-[var(--ad-radius-sm)] px-4 py-3.5 text-sm text-white shadow-[0_10px_24px_-12px_rgba(35,61,77,0.7)]"
                 style={{
