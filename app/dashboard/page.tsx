@@ -20,11 +20,11 @@ import {
 } from "@/lib/platform-data";
 import { formatNumber } from "@/lib/format";
 
-/* Overview — live platform metrics from Firestore on every load. */
+/* Overview - live platform metrics from Firestore on every load. */
 export const dynamic = "force-dynamic";
 
 function fmtDate(iso: string): string {
-  if (!iso) return "—";
+  if (!iso) return "-";
   return new Date(iso).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -33,11 +33,11 @@ function fmtDate(iso: string): string {
 }
 
 function fmtWhen(iso: string): string {
-  if (!iso) return "—";
+  if (!iso) return "-";
   return new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 }
 
-/* Business accounts get a scoped overview — their venues plus quick links.
+/* Business accounts get a scoped overview - their venues plus quick links.
    Platform-wide metrics below are rendered for admins only. */
 function QuickLink({
   href,
@@ -88,7 +88,7 @@ export default async function OverviewPage() {
             href="/dashboard/support"
             icon={<LifeBuoy size={19} />}
             title="Support"
-            blurb="Open a ticket — billing, listings, assistant or anything else"
+            blurb="Open a ticket - billing, listings, assistant or anything else"
           />
           <QuickLink
             href="/dashboard/billing"
@@ -118,7 +118,7 @@ export default async function OverviewPage() {
         <PageHeader title="Overview" subtitle="Live platform metrics." />
         <BusinessHome />
         <Card className="p-8 text-sm text-[var(--ad-muted)]">
-          Firebase Admin credentials aren&apos;t configured — add FIREBASE_PROJECT_ID,
+          Firebase Admin credentials aren&apos;t configured - add FIREBASE_PROJECT_ID,
           FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY to .env to load live data.
         </Card>
       </>
@@ -132,7 +132,7 @@ export default async function OverviewPage() {
     <>
       <PageHeader
         title="Welcome back"
-        subtitle="Live from your platform database — members, events, venues and activity."
+        subtitle="Live from your platform database - members, events, venues and activity."
         action={
           <span className="flex items-center gap-2 rounded-full border border-[var(--ad-line)] bg-[var(--ad-paper)] px-4 py-2 text-xs font-medium text-[var(--ad-ink-soft)] shadow-[var(--ad-shadow-card)]">
             <CalendarDays size={13} className="text-[var(--ad-muted)]" />
@@ -143,7 +143,7 @@ export default async function OverviewPage() {
         }
       />
 
-      {/* Live business section — renders only for business accounts. */}
+      {/* Live business section - renders only for business accounts. */}
       <BusinessHome />
 
       {/* KPI strip */}
@@ -195,7 +195,7 @@ export default async function OverviewPage() {
               { label: "Approved", value: formatNumber(weekApproved), dotColor: "var(--ad-orange)" },
               {
                 label: "Approval rate",
-                value: weekSignups ? `${Math.round((weekApproved / weekSignups) * 100)}%` : "—",
+                value: weekSignups ? `${Math.round((weekApproved / weekSignups) * 100)}%` : "-",
               },
             ]}
           />
@@ -268,7 +268,7 @@ export default async function OverviewPage() {
                   <p className="truncate text-sm font-medium text-[var(--ad-ink)]">
                     {a.actor} · {a.action}
                   </p>
-                  <p className="truncate text-xs text-[var(--ad-muted)]">{a.target || "—"}</p>
+                  <p className="truncate text-xs text-[var(--ad-muted)]">{a.target || "-"}</p>
                 </div>
                 <span className="shrink-0 text-[11px] text-[var(--ad-muted)]">{fmtWhen(a.at)}</span>
               </li>

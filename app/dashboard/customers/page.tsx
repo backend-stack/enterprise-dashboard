@@ -11,11 +11,11 @@ import { DataTable, Td, Tr } from "@/components/dashboard/DataTable";
 import { fetchRecentUsers, fetchUserStats } from "@/lib/platform-data";
 import { formatNumber } from "@/lib/format";
 
-/* Customers — live member base from the users collection. */
+/* Customers - live member base from the users collection. */
 export const dynamic = "force-dynamic";
 
 function fmtDate(iso: string): string {
-  if (!iso) return "—";
+  if (!iso) return "-";
   return new Date(iso).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -38,7 +38,7 @@ export default async function CustomersPage() {
       <>
         <PageHeader title="Customers" subtitle="Live member base." />
         <Card className="p-8 text-sm text-[var(--ad-muted)]">
-          Firebase Admin credentials aren&apos;t configured — add FIREBASE_PROJECT_ID,
+          Firebase Admin credentials aren&apos;t configured - add FIREBASE_PROJECT_ID,
           FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY to .env to load live data.
         </Card>
       </>
@@ -101,7 +101,7 @@ export default async function CustomersPage() {
                       {u.name}
                     </span>
                   </Td>
-                  <Td>{u.instagram ? `@${u.instagram.replace(/^@/, "")}` : "—"}</Td>
+                  <Td>{u.instagram ? `@${u.instagram.replace(/^@/, "")}` : "-"}</Td>
                   <Td>
                     <StatusBadge
                       tone={

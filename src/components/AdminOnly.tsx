@@ -19,8 +19,8 @@ export function AdminOnly({ title }: { title: string }) {
           </p>
           <p className="mt-1.5 max-w-lg text-sm leading-relaxed text-[var(--ad-muted)]">
             It shows data across every business on the platform. Everything about{" "}
-            <em>your</em> business — venues, live conversations, bookings and
-            customers — is on your Overview and Live Assistant pages.
+            <em>your</em> business - venues, live conversations, bookings and
+            customers - is on your Overview and Live Assistant pages.
           </p>
         </div>
         <div className="flex gap-3">

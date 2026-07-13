@@ -69,7 +69,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Business address is required." }, { status: 400 });
   }
 
-  // One business profile per account — re-registering just returns the
+  // One business profile per account - re-registering just returns the
   // existing profile instead of duplicating it.
   const existing = await db
     .collection("lunaPartners")

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { MoreVertical } from "lucide-react";
 
-/* Rounded editorial surface — the building block for every panel. */
+/* Rounded editorial surface - the building block for every panel. */
 export function Card({
   children,
   className = "",
@@ -24,7 +24,7 @@ export function CardHeader({
   action,
 }: {
   title: string;
-  /** Kept for API compatibility — headers are now plain bold titles. */
+  /** Kept for API compatibility - headers are now plain bold titles. */
   accent?: string;
   action?: ReactNode;
 }) {

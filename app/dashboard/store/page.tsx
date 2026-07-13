@@ -10,7 +10,7 @@ import { DataTable, Td, Tr } from "@/components/dashboard/DataTable";
 import { fetchVenueEngagement } from "@/lib/platform-data";
 import { formatNumber } from "@/lib/format";
 
-/* Store Traffic — live venue engagement across the platform. */
+/* Store Traffic - live venue engagement across the platform. */
 export const dynamic = "force-dynamic";
 
 export default async function StoreTrafficPage() {
@@ -25,7 +25,7 @@ export default async function StoreTrafficPage() {
       <>
         <PageHeader title="Store Traffic" subtitle="Live venue engagement." />
         <Card className="p-8 text-sm text-[var(--ad-muted)]">
-          Firebase Admin credentials aren&apos;t configured — add FIREBASE_PROJECT_ID,
+          Firebase Admin credentials aren&apos;t configured - add FIREBASE_PROJECT_ID,
           FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY to .env to load live data.
         </Card>
       </>
@@ -67,7 +67,7 @@ export default async function StoreTrafficPage() {
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.2fr_1fr] sm:mt-6 sm:gap-6">
-        {/* Most-liked venues — horizontal bars */}
+        {/* Most-liked venues - horizontal bars */}
         <Card>
           <CardHeader title="Most-liked venues" accent="var(--ad-navy)" />
           <div className="flex flex-col gap-3 px-6 pb-6">
@@ -133,7 +133,7 @@ export default async function StoreTrafficPage() {
                 <Td className="capitalize">{v.category}</Td>
                 <Td>
                   <span className="block max-w-[340px] truncate" title={v.location}>
-                    {v.location || "—"}
+                    {v.location || "-"}
                   </span>
                 </Td>
                 <Td>

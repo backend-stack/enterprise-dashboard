@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 
-/* Stripe webhook receiver — verifies the signature with
+/* Stripe webhook receiver - verifies the signature with
    STRIPE_WEBHOOK_SECRET and acknowledges subscription lifecycle events.
    Extend the switch below to sync subscription state to your database. */
 export async function POST(req: Request) {

@@ -1,4 +1,4 @@
-/* Sample analytics data — stands in for Firestore / Stripe / POS feeds while
+/* Sample analytics data - stands in for Firestore / Stripe / POS feeds while
    the dashboard is reviewed UI-first. Every page reads from here so swapping
    in live data later is a single-file change. */
 
@@ -57,7 +57,7 @@ export const HOURS: HourPoint[] = [
   { label: "8p", visitors: 78, walkIns: 17 },
 ];
 
-/* Conversion funnel — message → store visit → purchase. */
+/* Conversion funnel - message → store visit → purchase. */
 export interface FunnelStage {
   label: string;
   value: number;
@@ -83,7 +83,7 @@ export interface StoreLocation {
 }
 
 export const LOCATIONS: StoreLocation[] = [
-  { id: "st-01", name: "Flagship — 5th Ave", city: "New York, NY", visitors: 2841, conversions: 402, revenue: 1428800, trend: 11.2 },
+  { id: "st-01", name: "Flagship - 5th Ave", city: "New York, NY", visitors: 2841, conversions: 402, revenue: 1428800, trend: 11.2 },
   { id: "st-02", name: "SoMa District", city: "San Francisco, CA", visitors: 1988, conversions: 261, revenue: 972300, trend: 6.4 },
   { id: "st-03", name: "Magnificent Mile", city: "Chicago, IL", visitors: 1642, conversions: 199, revenue: 745900, trend: -2.1 },
   { id: "st-04", name: "Buckhead Village", city: "Atlanta, GA", visitors: 1247, conversions: 168, revenue: 588400, trend: 4.8 },
@@ -102,7 +102,7 @@ export interface Conversation {
 
 export const CONVERSATIONS: Conversation[] = [
   { id: "c-01", customer: "Maya Delgado", channel: "SMS", preview: "Is the summer line in-store at 5th Ave yet?", time: "2m ago", status: "open" },
-  { id: "c-02", customer: "Jordan Lee", channel: "WhatsApp", preview: "Thanks! Just picked up the jacket — love it.", time: "18m ago", status: "converted" },
+  { id: "c-02", customer: "Jordan Lee", channel: "WhatsApp", preview: "Thanks! Just picked up the jacket - love it.", time: "18m ago", status: "converted" },
   { id: "c-03", customer: "Priya Raman", channel: "In-app", preview: "Can I reserve a fitting-room slot for 6pm?", time: "41m ago", status: "replied" },
   { id: "c-04", customer: "Sam Okafor", channel: "Email", preview: "Does the loyalty discount stack with the promo?", time: "1h ago", status: "open" },
   { id: "c-05", customer: "Elena Petrova", channel: "SMS", preview: "Reserved! See you Saturday at the SoMa store.", time: "2h ago", status: "converted" },
@@ -159,13 +159,13 @@ export interface ActivityItem {
 
 export const ACTIVITY: ActivityItem[] = [
   { id: "a-01", text: "Campaign “Summer Drop” sent", detail: "2,180 messages · SMS + WhatsApp", time: "12m ago", kind: "message" },
-  { id: "a-02", text: "Jordan Lee converted", detail: "$184.00 · Flagship — 5th Ave", time: "2h ago", kind: "conversion" },
+  { id: "a-02", text: "Jordan Lee converted", detail: "$184.00 · Flagship - 5th Ave", time: "2h ago", kind: "conversion" },
   { id: "a-03", text: "Foot-traffic spike detected", detail: "+38% vs. usual · SoMa District", time: "3h ago", kind: "visit" },
   { id: "a-04", text: "Invoice paid", detail: "Enterprise plan · $499.00", time: "6h ago", kind: "billing" },
   { id: "a-05", text: "Campaign “VIP Preview” scheduled", detail: "840 recipients · Saturday 10 AM", time: "8h ago", kind: "message" },
 ];
 
-/* Billing — one enterprise plan: $2,000 one-time initiation fee billed with
+/* Billing - one enterprise plan: $2,000 one-time initiation fee billed with
    the first invoice, then $499/month. */
 export const INITIATION_FEE = 200_000; // cents, one-time
 export const ENTERPRISE_MONTHLY = 49_900; // cents / month
@@ -188,10 +188,10 @@ export const PLANS: Plan[] = [
     name: "Enterprise",
     price: ENTERPRISE_MONTHLY,
     setupFee: INITIATION_FEE,
-    blurb: "Everything your business needs — venues, AI assistant, bookings and priority support.",
+    blurb: "Everything your business needs - venues, AI assistant, bookings and priority support.",
     features: [
       "All your venues on the platform",
-      "AI assistant — calls, texts & bookings",
+      "AI assistant - calls, texts & bookings",
       "Customer engagement analytics",
       "Priority support with tickets",
       "Stripe-powered billing & invoices",

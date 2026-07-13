@@ -35,7 +35,7 @@ interface NavItem {
   badge?: number;
 }
 
-/** Platform-wide (cross-business) sections — admins only. */
+/** Platform-wide (cross-business) sections - admins only. */
 const ADMIN_NAV: NavItem[] = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "Messages", href: "/dashboard/messages", icon: MessageSquare, badge: 3 },
@@ -48,7 +48,7 @@ const ADMIN_NAV: NavItem[] = [
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
-/** What a business account sees — its own data plus what the agent sends. */
+/** What a business account sees - its own data plus what the agent sends. */
 const BUSINESS_NAV: NavItem[] = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "iMessage Agent", href: "/dashboard/imessage", icon: MessageCircle },
@@ -57,7 +57,7 @@ const BUSINESS_NAV: NavItem[] = [
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
-/* Brand mark — the Contextual Intelligence pixel mark on an ink tile. */
+/* Brand mark - the Contextual Intelligence pixel mark on an ink tile. */
 function BrandMark({ collapsed = false }: { collapsed?: boolean }) {
   const tile = (
     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--ad-ink)] shadow-[var(--ad-shadow-card)]">
@@ -75,18 +75,18 @@ function BrandMark({ collapsed = false }: { collapsed?: boolean }) {
     <div className="flex items-center gap-3 px-1">
       {tile}
       <div className="flex flex-col">
-        <span className="ad-display text-[15px] font-semibold leading-tight text-[var(--ad-ink)]">
-          Contextual
+        <span className="ad-display text-[14px] font-semibold leading-tight text-[var(--ad-ink)]">
+          Contextual Intelligence
         </span>
         <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--ad-muted)]">
-          Intelligence
+          for Partners
         </span>
       </div>
     </div>
   );
 }
 
-/* Brand + search + nav + upgrade card — shared between rail and drawer. */
+/* Brand + search + nav + upgrade card - shared between rail and drawer. */
 function SidebarPanel({
   pathname,
   nav,
@@ -126,7 +126,7 @@ function SidebarPanel({
         ) : null}
       </div>
 
-      {/* Global search — lives in the sidebar like the reference. */}
+      {/* Global search - lives in the sidebar like the reference. */}
       {collapsed ? (
         <div className="mb-4 h-px bg-[var(--ad-line)] mx-2" />
       ) : (
@@ -209,7 +209,7 @@ function SidebarPanel({
           {collapsed ? null : <span>Invite member</span>}
         </Link>
 
-        {/* Upgrade card — dark tile pinned above the account row. */}
+        {/* Upgrade card - dark tile pinned above the account row. */}
         {collapsed ? null : (
           <div className="mt-3 rounded-2xl bg-[var(--ad-ink)] p-4 text-white">
             <span className="inline-block rounded-lg bg-white/15 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em]">
@@ -235,7 +235,7 @@ function SidebarPanel({
   );
 }
 
-/* Signed-in account — avatar, name, role line and sign-out, pinned to the
+/* Signed-in account - avatar, name, role line and sign-out, pinned to the
    sidebar bottom like the reference design. */
 function AccountBlock({ collapsed }: { collapsed: boolean }) {
   const { user, business, isAdmin, signOut } = useAuth();
@@ -323,7 +323,7 @@ export function Sidebar({
 
   return (
     <>
-      {/* Desktop: static rail — collapses to an icon-only column. */}
+      {/* Desktop: static rail - collapses to an icon-only column. */}
       <aside
         className={`hidden h-full shrink-0 flex-col border-r border-[var(--ad-line)] bg-[var(--ad-paper)] py-5 transition-[width] duration-200 lg:flex ${
           collapsed ? "w-[76px]" : "w-[264px]"

@@ -11,21 +11,21 @@ import { DataTable, Td, Tr } from "@/components/dashboard/DataTable";
 import { fetchVendorApplications, fetchVendors } from "@/lib/vendors";
 import { formatNumber } from "@/lib/format";
 
-/* Live page — reads lunaPartners + partnerApplications from Firestore on
+/* Live page - reads lunaPartners + partnerApplications from Firestore on
    every request via the Admin SDK. */
 export const dynamic = "force-dynamic";
 
 function NotConfigured() {
   return (
     <Card className="p-8 text-sm text-[var(--ad-muted)]">
-      Firebase Admin credentials aren&apos;t configured — add FIREBASE_PROJECT_ID,
+      Firebase Admin credentials aren&apos;t configured - add FIREBASE_PROJECT_ID,
       FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY to .env to load live vendors.
     </Card>
   );
 }
 
 function fmtDate(iso: string): string {
-  if (!iso) return "—";
+  if (!iso) return "-";
   return new Date(iso).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -125,14 +125,14 @@ export default async function VendorsPage() {
                   </span>
                 </Td>
                 <Td>
-                  {v.email || "—"}
+                  {v.email || "-"}
                   {v.phone ? (
                     <span className="block text-xs text-[var(--ad-muted)]">{v.phone}</span>
                   ) : null}
                 </Td>
-                <Td>{v.address || "—"}</Td>
-                <Td>{v.visitorsPerWeek !== null ? formatNumber(v.visitorsPerWeek) : "—"}</Td>
-                <Td>{v.avgMonthlySpend !== null ? `$${formatNumber(v.avgMonthlySpend)}` : "—"}</Td>
+                <Td>{v.address || "-"}</Td>
+                <Td>{v.visitorsPerWeek !== null ? formatNumber(v.visitorsPerWeek) : "-"}</Td>
+                <Td>{v.avgMonthlySpend !== null ? `$${formatNumber(v.avgMonthlySpend)}` : "-"}</Td>
                 <Td>{v.venueCount}</Td>
                 <Td>
                   <StatusBadge tone={v.stripeConnected ? "positive" : "neutral"}>
@@ -178,12 +178,12 @@ export default async function VendorsPage() {
                     ) : null}
                   </Td>
                   <Td>
-                    {a.email || "—"}
+                    {a.email || "-"}
                     {a.phone ? (
                       <span className="block text-xs text-[var(--ad-muted)]">{a.phone}</span>
                     ) : null}
                   </Td>
-                  <Td>{a.city || "—"}</Td>
+                  <Td>{a.city || "-"}</Td>
                   <Td>{a.locations}</Td>
                   <Td>{formatNumber(a.weeklyVisitors)}</Td>
                   <Td>${formatNumber(a.avgSpend)}</Td>

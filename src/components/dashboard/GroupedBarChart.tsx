@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Card, CardHeader } from "@/components/ui/Card";
 
-/* Pure-CSS interactive grouped bar chart — no chart library, matching the
+/* Pure-CSS interactive grouped bar chart - no chart library, matching the
    reference dashboard. Two series (navy + orange) per bucket, hover tooltip
    with exact numbers, dashed y-axis gridlines. */
 

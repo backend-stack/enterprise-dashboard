@@ -10,7 +10,7 @@ import { INVOICES, PLANS } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/format";
 import { useAuth } from "@/lib/auth-context";
 
-/* Billing — one enterprise plan: $2,000 one-time initiation + $499/month.
+/* Billing - one enterprise plan: $2,000 one-time initiation + $499/month.
    The featured card starts Stripe Checkout (initiation fee rides the first
    invoice); the breakdown card spells out exactly what gets charged when.
    Stripe buttons 503 with a friendly notice until keys are in .env. */
@@ -51,7 +51,7 @@ export default function BillingPage() {
     <>
       <PageHeader
         title="Billing"
-        subtitle="Your plan, invoices and payment method — powered by Stripe."
+        subtitle="Your plan, invoices and payment method - powered by Stripe."
         action={
           <button
             type="button"
@@ -147,7 +147,7 @@ export default function BillingPage() {
               <div>
                 <p className="text-sm font-semibold text-[var(--ad-ink)]">Initiation fee</p>
                 <p className="mt-1 text-xs leading-relaxed text-[var(--ad-muted)]">
-                  One-time onboarding — venue setup, assistant training and go-live.
+                  One-time onboarding - venue setup, assistant training and go-live.
                 </p>
               </div>
               <span className="shrink-0 text-sm font-semibold text-[var(--ad-ink)]">

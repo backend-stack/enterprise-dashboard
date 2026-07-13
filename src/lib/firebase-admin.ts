@@ -3,7 +3,7 @@ import { cert, getApps, initializeApp, type App } from "firebase-admin/app";
 import { getAuth, type Auth } from "firebase-admin/auth";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
 
-/* Server-side Firestore via the Admin SDK — used by the Vendors and iMessage
+/* Server-side Firestore via the Admin SDK - used by the Vendors and iMessage
    pages to read live data. Credentials come from the FIREBASE_* (non-public)
    env vars; returns null until they're set so pages can render a friendly
    "not configured" state instead of crashing. */

@@ -7,12 +7,12 @@ import { AgentBubble, maskPhone, statusInfo } from "@/components/dashboard/Agent
 import type { AgentThread, ThreadMessage } from "@/lib/imessage";
 
 /* Two-pane team inbox. All messages arrive pre-fetched from the server, so
-   switching threads is instant — no navigation, no reload, no scroll jump.
+   switching threads is instant - no navigation, no reload, no scroll jump.
    Consecutive messages from the same side are visually grouped: the sender
    label shows once at the top of a run, the timestamp once at the bottom. */
 
 function fmtWhen(iso: string): string {
-  if (!iso) return "—";
+  if (!iso) return "-";
   return new Date(iso).toLocaleString("en-US", {
     month: "short",
     day: "numeric",
@@ -231,13 +231,13 @@ export function AgentInbox({
               ) : null}
             </div>
 
-            {/* Read-only composer — completes the iMessage look and states
+            {/* Read-only composer - completes the iMessage look and states
                 plainly why there's no reply box. */}
             <div className="border-t border-[var(--ad-line)] bg-[var(--ad-paper)] px-6 py-3">
               <div className="flex h-10 items-center gap-2.5 rounded-full border border-[var(--ad-line)] bg-[var(--ad-panel)] px-4">
                 <Lock size={13} className="shrink-0 text-[var(--ad-muted)]" />
                 <span className="truncate text-xs text-[var(--ad-muted)]">
-                  Read-only view — replies are sent by the Clo Agent from its phone line
+                  Read-only view - replies are sent by the Clo Agent from its phone line
                 </span>
               </div>
             </div>

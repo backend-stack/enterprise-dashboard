@@ -46,7 +46,7 @@ export interface BusinessProfile {
 interface AuthContextValue {
   user: DashUser | null;
   business: BusinessProfile | null;
-  /** Platform admin — may see cross-business data. */
+  /** Platform admin - may see cross-business data. */
   isAdmin: boolean;
   loading: boolean;
   demoMode: boolean;
@@ -160,7 +160,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const auth = getFirebaseAuth();
     if (!auth) {
       throw new Error(
-        "Firebase is not configured yet — add NEXT_PUBLIC_FIREBASE_* keys to .env"
+        "Firebase is not configured yet - add NEXT_PUBLIC_FIREBASE_* keys to .env"
       );
     }
     return auth;
@@ -176,7 +176,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     refreshBusiness,
     signInEmail: async (email, password) => {
       const cred = await signInWithEmailAndPassword(requireAuth(), email, password);
-      // Set the cookie before the caller navigates — the server checks it.
+      // Set the cookie before the caller navigates - the server checks it.
       writeSessionCookie(await cred.user.getIdToken());
     },
     signUpEmail: async (name, email, password) => {

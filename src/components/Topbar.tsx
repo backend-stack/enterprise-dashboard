@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
-/* Slim breadcrumb topbar — Dashboard / <Section> on the left, an icon
+/* Slim breadcrumb topbar - Dashboard / <Section> on the left, an icon
    cluster with count badges plus a working Share button (copies the current
    URL) on the right. Search lives in the sidebar, like the reference. */
 

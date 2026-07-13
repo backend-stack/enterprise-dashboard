@@ -113,7 +113,7 @@ export default function SettingsPage() {
             <p className="mt-1 text-xs leading-relaxed text-[var(--ad-muted)]">
               Add your keys to <code className="rounded bg-[var(--ad-panel)] px-1 py-0.5">.env</code>{" "}
               (see <code className="rounded bg-[var(--ad-panel)] px-1 py-0.5">.env.example</code>)
-              and restart the dev server — both integrations light up automatically,
+              and restart the dev server - both integrations light up automatically,
               no code changes needed.
             </p>
           </div>

@@ -6,14 +6,14 @@ import { getAdminAuth, isPlatformAdmin } from "@/lib/firebase-admin";
 
    The client keeps a `__session` cookie holding the Firebase ID token
    (refreshed by the auth context). Server components verify it here so
-   platform-wide data is only ever RENDERED for platform admins — business
+   platform-wide data is only ever RENDERED for platform admins - business
    accounts and anonymous requests never receive other tenants' data in the
    HTML/RSC payload. */
 
 export type Viewer =
   | { kind: "user"; uid: string; isAdmin: boolean }
   | { kind: "anonymous" }
-  | { kind: "unconfigured" }; // Firebase not set up (local demo) — no real data exists
+  | { kind: "unconfigured" }; // Firebase not set up (local demo) - no real data exists
 
 export async function getViewer(): Promise<Viewer> {
   const auth = getAdminAuth();

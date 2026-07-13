@@ -3,7 +3,7 @@ import { getAdminAuth, getAdminDb } from "@/lib/firebase-admin";
 
 export const runtime = "nodejs";
 
-/* Support tickets — sends the form as a structured email to the support
+/* Support tickets - sends the form as a structured email to the support
    inbox (clo@contextualintelligence.co) via Resend. Every ticket carries a
    generated id plus a category tag in the subject line, so the inbox can be
    filtered/triaged per problem type without any extra tooling. */
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   const key = process.env.RESEND_API_KEY;
   if (!key) {
     return NextResponse.json(
-      { error: "Support isn't configured yet — add RESEND_API_KEY to .env." },
+      { error: "Support isn't configured yet - add RESEND_API_KEY to .env." },
       { status: 503 }
     );
   }
@@ -66,7 +66,7 @@ export async function POST(req: Request) {
     );
   }
 
-  // Business context makes triage faster — resolved server-side, never trusted
+  // Business context makes triage faster - resolved server-side, never trusted
   // from the client.
   let businessName = "";
   let plan = "";
@@ -95,9 +95,9 @@ export async function POST(req: Request) {
   const text = [
     `Ticket:    ${id}`,
     `Category:  ${category}`,
-    `Business:  ${businessName || "—"}`,
-    `Plan:      ${plan || "—"}`,
-    `Account:   ${email || "—"} (uid ${uid})`,
+    `Business:  ${businessName || "-"}`,
+    `Plan:      ${plan || "-"}`,
+    `Account:   ${email || "-"} (uid ${uid})`,
     ``,
     `Subject:   ${subject}`,
     ``,
@@ -123,7 +123,7 @@ export async function POST(req: Request) {
     const detail = await res.text().catch(() => "");
     console.error("[support] resend failed:", res.status, detail.slice(0, 300));
     return NextResponse.json(
-      { error: "Couldn't send your ticket — please try again in a minute." },
+      { error: "Couldn't send your ticket - please try again in a minute." },
       { status: 502 }
     );
   }

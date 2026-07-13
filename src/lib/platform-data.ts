@@ -2,7 +2,7 @@ import "server-only";
 import { Timestamp } from "firebase-admin/firestore";
 import { getAdminDb, toIso } from "@/lib/firebase-admin";
 
-/* Live platform analytics for the main dashboard pages — users, events,
+/* Live platform analytics for the main dashboard pages - users, events,
    RSVPs, venues and messaging volume, all read via the Admin SDK. */
 
 function str(v: unknown): string {
@@ -259,7 +259,7 @@ export async function fetchVenueEngagement(): Promise<{
     };
   });
 
-  // Likes for venues no longer in eventsV2 are still real engagement —
+  // Likes for venues no longer in eventsV2 are still real engagement -
   // surface them as removed venues instead of silently dropping the counts.
   likeSnap.docs.forEach((d) => {
     if (liveIds.has(d.id)) return;

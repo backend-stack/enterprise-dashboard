@@ -7,7 +7,7 @@ import { useState, type FormEvent } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { HeroShader } from "@/components/ui/HeroShader";
 
-/* Sign-in — the contextualintelligence.co split layout: form on the left,
+/* Sign-in - the contextualintelligence.co split layout: form on the left,
    the animated fluted-glass shader inset as a rounded panel on the right.
    Account creation lives on contextualintelligence.co/partners; this screen
    only signs existing accounts in (email/password + Google, plus the
@@ -60,10 +60,10 @@ export function AuthCard() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Left — form. */}
+      {/* Left - form. */}
       <div className="flex w-full flex-col bg-[var(--ad-paper)] md:w-1/2">
         <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-6 py-6 md:mx-0 md:max-w-none md:px-8 md:py-8 lg:px-14 lg:py-10">
-          {/* Top bar — CI mark left, flow switch right. */}
+          {/* Top bar - CI mark left, flow switch right. */}
           <div className="flex shrink-0 items-center justify-between">
             <Link href="/" aria-label="Contextual Intelligence home" className="flex items-center">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--ad-ink)]">
@@ -84,11 +84,11 @@ export function AuthCard() {
             </a>
           </div>
 
-          {/* Body — centered form column. */}
+          {/* Body - centered form column. */}
           <div className="flex flex-1 flex-col justify-center py-8">
             <div className="w-full max-w-sm">
               <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--ad-muted)]">
-                Business dashboard
+                Contextual Intelligence for Partners
               </p>
               <h1 className="ad-display text-3xl font-semibold leading-[1.05] tracking-tight text-[var(--ad-ink)] sm:text-4xl">
                 Welcome back.
@@ -101,7 +101,7 @@ export function AuthCard() {
                 <div className="mt-6 rounded-xl bg-[var(--ad-orange-bg)] px-4 py-3 text-xs leading-relaxed text-[var(--ad-ink-soft)]">
                   <span className="font-semibold text-[var(--ad-orange)]">Demo mode.</span>{" "}
                   Firebase keys aren&apos;t in <code>.env</code> yet, so auth is
-                  simulated — any of the buttons below will open the dashboard.
+                  simulated - any of the buttons below will open the dashboard.
                 </div>
               ) : null}
 
@@ -208,7 +208,7 @@ export function AuthCard() {
         </div>
       </div>
 
-      {/* Right — animated line shader, inset as a rounded rectangle. */}
+      {/* Right - animated line shader, inset as a rounded rectangle. */}
       <div className="relative hidden p-4 md:sticky md:top-0 md:block md:h-screen md:w-1/2 lg:p-6">
         <div className="relative h-full w-full overflow-hidden rounded-3xl bg-[#efefef] shadow-[0_8px_40px_-24px_rgba(0,0,0,0.25)]">
           <HeroShader />
@@ -224,7 +224,7 @@ export function AuthCard() {
               </p>
               <p className="text-sm leading-relaxed text-black/70">
                 The business dashboard for your venues, live assistant and
-                customers — powered by Contextual Intelligence.
+                customers - powered by Contextual Intelligence.
               </p>
             </div>
           </div>

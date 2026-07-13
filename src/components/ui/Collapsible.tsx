@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 
-/* Collapsible card section — native <details>/<summary>, so it works in
+/* Collapsible card section - native <details>/<summary>, so it works in
    server components with zero JS. Header mirrors CardHeader (accent swatch +
    title) plus an optional meta line and a chevron that flips when open. */
 export function CollapsibleCard({
@@ -49,7 +49,7 @@ export function CollapsibleCard({
   );
 }
 
-/* Smaller inline collapsible row — for items inside a section (e.g. one
+/* Smaller inline collapsible row - for items inside a section (e.g. one
    outgoing message). */
 export function CollapsibleRow({
   summary,

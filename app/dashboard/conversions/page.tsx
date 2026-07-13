@@ -11,11 +11,11 @@ import { DataTable, Td, Tr } from "@/components/dashboard/DataTable";
 import { fetchEvents, fetchRsvps } from "@/lib/platform-data";
 import { formatNumber } from "@/lib/format";
 
-/* Conversions — live RSVP pipeline and event fill rates. */
+/* Conversions - live RSVP pipeline and event fill rates. */
 export const dynamic = "force-dynamic";
 
 function fmtWhen(iso: string): string {
-  if (!iso) return "—";
+  if (!iso) return "-";
   return new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 }
 
@@ -36,7 +36,7 @@ export default async function ConversionsPage() {
       <>
         <PageHeader title="Conversions" subtitle="Live RSVP pipeline." />
         <Card className="p-8 text-sm text-[var(--ad-muted)]">
-          Firebase Admin credentials aren&apos;t configured — add FIREBASE_PROJECT_ID,
+          Firebase Admin credentials aren&apos;t configured - add FIREBASE_PROJECT_ID,
           FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY to .env to load live data.
         </Card>
       </>
@@ -80,7 +80,7 @@ export default async function ConversionsPage() {
         <Kpi
           icon={<CalendarDays size={16} />}
           label="Seats filled"
-          value={totalCapacity ? `${formatNumber(totalGoing)} / ${formatNumber(totalCapacity)}` : "—"}
+          value={totalCapacity ? `${formatNumber(totalGoing)} / ${formatNumber(totalCapacity)}` : "-"}
           tone="navy"
         />
       </div>
@@ -103,7 +103,7 @@ export default async function ConversionsPage() {
                     <Td className="whitespace-nowrap">{fmtWhen(e.startsAt)}</Td>
                     <Td>{formatNumber(e.going)}</Td>
                     <Td>{formatNumber(e.pending)}</Td>
-                    <Td>{e.capacity ? formatNumber(e.capacity) : "—"}</Td>
+                    <Td>{e.capacity ? formatNumber(e.capacity) : "-"}</Td>
                     <Td>
                       <StatusBadge tone={fill >= 75 ? "positive" : fill > 0 ? "navy" : "neutral"}>
                         {fill}%

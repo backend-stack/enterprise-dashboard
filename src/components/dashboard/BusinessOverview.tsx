@@ -22,7 +22,7 @@ import { useAuth } from "@/lib/auth-context";
 import { formatNumber } from "@/lib/format";
 import type { CiData, CiStats, CiTenant } from "@/lib/ci";
 
-/* Business overview — reference-dashboard layout for vendor accounts:
+/* Business overview - reference-dashboard layout for vendor accounts:
    gradient welcome banner with headline stats, tinted KPI cards, a weekly
    conversation-activity chart (live CI feed), an engagement donut by venue,
    the venue table and recent bookings. Everything renders from real data;
@@ -44,7 +44,7 @@ interface Analytics {
   totals: { venues: number; liveVenues: number; likes: number } | null;
 }
 
-/* Categorical slots for the donut — validated (lightness band, chroma,
+/* Categorical slots for the donut - validated (lightness band, chroma,
    CVD ΔE 15.8+, ≥3:1 on white) in this order. "Other" is de-emphasis gray. */
 const DONUT_COLORS = ["#6b3df2", "#ea580c", "#0d9268", "#2a78d6"];
 const OTHER_COLOR = "#d5d8df";
@@ -98,13 +98,13 @@ export function BusinessOverview() {
         const json = await authed("/api/business/analytics");
         if (alive) setData(json);
       } catch {
-        /* analytics unavailable — empty states below handle it */
+        /* analytics unavailable - empty states below handle it */
       } finally {
         if (alive) setLoading(false);
       }
     })();
 
-    // Assistant feed is optional — skip silently when unconfigured.
+    // Assistant feed is optional - skip silently when unconfigured.
     (async () => {
       try {
         const t = await authed("/api/ci/tenants");
@@ -140,7 +140,7 @@ export function BusinessOverview() {
   );
 }
 
-/* Pure view — all layout, no data fetching. */
+/* Pure view - all layout, no data fetching. */
 export function OverviewView({
   businessName,
   approved,
@@ -201,7 +201,7 @@ export function OverviewView({
                     value:
                       stats.conversion_rate !== undefined
                         ? `${Math.round(stats.conversion_rate * 100)}%`
-                        : "—",
+                        : "-",
                     label: "Conversion",
                   },
                 ]
@@ -241,7 +241,7 @@ export function OverviewView({
             icon={<MessageSquare size={18} />}
             bg="var(--ad-positive-bg)"
             fg="var(--ad-positive)"
-            value={plan ?? "—"}
+            value={plan ?? "-"}
             label="Current plan"
             sub={approved ? "account approved" : "pending approval"}
           />
@@ -264,7 +264,7 @@ export function OverviewView({
           <Card className="flex flex-col items-start justify-center gap-2 p-8">
             <h3 className="text-[15px] font-semibold text-[var(--ad-ink)]">Conversation activity</h3>
             <p className="max-w-md text-sm text-[var(--ad-muted)]">
-              Your AI assistant isn&apos;t connected yet — once it&apos;s live,
+              Your AI assistant isn&apos;t connected yet - once it&apos;s live,
               daily conversations, bookings and conversion show up here.
             </p>
             <Link
@@ -372,7 +372,7 @@ export function OverviewView({
                       </span>
                     </span>
                   </Td>
-                  <Td className="capitalize">{v.category || "—"}</Td>
+                  <Td className="capitalize">{v.category || "-"}</Td>
                   <Td>
                     {v.location ? (
                       <span className="flex items-center gap-1">
@@ -380,7 +380,7 @@ export function OverviewView({
                         <span className="max-w-[180px] truncate">{v.location}</span>
                       </span>
                     ) : (
-                      "—"
+                      "-"
                     )}
                   </Td>
                   <Td className="font-semibold text-[var(--ad-ink)]">{formatNumber(v.likes)}</Td>
@@ -396,7 +396,7 @@ export function OverviewView({
             <p className="px-6 pb-6 text-sm text-[var(--ad-muted)]">
               {loading
                 ? "Loading your venues…"
-                : "No venues are linked to your account yet — once venues are added to your profile they'll appear here with live engagement numbers."}
+                : "No venues are linked to your account yet - once venues are added to your profile they'll appear here with live engagement numbers."}
             </p>
           )}
         </Card>
@@ -405,7 +405,7 @@ export function OverviewView({
   );
 }
 
-/* Assistant performance — what the bot handled for the business: today's
+/* Assistant performance - what the bot handled for the business: today's
    answered rate as a meter, the day's traffic split, median reply speed and
    reservations it has taken. */
 function AssistantPanel({ stats, line }: { stats: CiStats; line?: string }) {
@@ -462,7 +462,7 @@ function AssistantPanel({ stats, line }: { stats: CiStats; line?: string }) {
         <div className="mt-auto flex divide-x divide-[var(--ad-line)] rounded-[var(--ad-radius-sm)] border border-[var(--ad-line)] bg-[var(--ad-panel)]">
           <div className="flex-1 px-4 py-3">
             <div className="ad-display text-lg font-semibold leading-tight text-[var(--ad-ink)]">
-              {p50 != null ? `${(p50 / 1000).toFixed(1)}s` : "—"}
+              {p50 != null ? `${(p50 / 1000).toFixed(1)}s` : "-"}
             </div>
             <div className="text-[11px] text-[var(--ad-muted)]">Median reply time</div>
           </div>
@@ -599,7 +599,7 @@ function TintKpi({
   );
 }
 
-/* Single-series weekly bar chart — thin violet columns, 4px rounded tips,
+/* Single-series weekly bar chart - thin violet columns, 4px rounded tips,
    solid hairline gridlines, per-bar hover tooltip with the inbound/reply
    breakdown. */
 function ActivityChart({
@@ -710,7 +710,7 @@ function TipRow({ label, value, strong }: { label: string; value: number; strong
   );
 }
 
-/* Donut of likes by venue — top four venues in validated categorical slots,
+/* Donut of likes by venue - top four venues in validated categorical slots,
    remainder folded into a gray "Other". Legend rows carry names + counts so
    identity never rides on color alone. */
 function EngagementDonut({
@@ -819,7 +819,7 @@ function EngagementDonut({
         <p className="px-6 pb-6 text-sm text-[var(--ad-muted)]">
           {loading
             ? "Loading engagement…"
-            : "No customer likes yet — engagement per venue will appear here as customers interact with your listings."}
+            : "No customer likes yet - engagement per venue will appear here as customers interact with your listings."}
         </p>
       )}
     </Card>

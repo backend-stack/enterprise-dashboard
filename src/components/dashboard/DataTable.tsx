@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-/* Reference-style table — header row as a filled light band with rounded
+/* Reference-style table - header row as a filled light band with rounded
    ends, hairline dividers between body rows, hover highlight. */
 export function DataTable({
   headers,

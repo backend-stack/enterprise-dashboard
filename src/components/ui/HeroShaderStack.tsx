@@ -9,15 +9,15 @@ import {
 } from "shaders/react";
 
 /**
- * "Axion Studio" hero shader stack — a light fluted-glass flow, ported from
+ * "Axion Studio" hero shader stack - a light fluted-glass flow, ported from
  * dashboard-ref (the contextualintelligence.co sign-in panel).
  *
  * Flat sibling filters inside <Shader>, composited in order:
- *   Swirl       — white / light-grey flowing base
- *   ChromaFlow  — orange (#ff5f03) directional fluid flow over the base
- *   FlutedGlass — vertical glass ribs refracting everything beneath, with
+ *   Swirl       - white / light-grey flowing base
+ *   ChromaFlow  - orange (#ff5f03) directional fluid flow over the base
+ *   FlutedGlass - vertical glass ribs refracting everything beneath, with
  *                 chromatic aberration (the orange fringe)
- *   FilmGrain   — faint filmic grain on top
+ *   FilmGrain   - faint filmic grain on top
  */
 export function HeroShaderStack() {
   return (

@@ -3,10 +3,10 @@ import { getAdminDb, toIso } from "@/lib/firebase-admin";
 
 /* Live iMessage-agent data.
 
-   `agentMemories` — every text the iMessage/SMS agent has exchanged, keyed by
+   `agentMemories` - every text the iMessage/SMS agent has exchanged, keyed by
    the customer's phone number (kind "episode" = a message in the thread).
-   `contactProfiles` — phone → display name, filled in as the agent learns.
-   `smsLog` — outbound SMS/iMessage delivery log with per-message status. */
+   `contactProfiles` - phone → display name, filled in as the agent learns.
+   `smsLog` - outbound SMS/iMessage delivery log with per-message status. */
 
 export interface AgentThread {
   phone: string;
@@ -153,7 +153,7 @@ export async function fetchThreadMessages(phone: string): Promise<ThreadMessage[
 }
 
 /** Every thread's messages in one shot (2 Firestore reads total), keyed by
-    phone — lets the inbox switch conversations instantly client-side. */
+    phone - lets the inbox switch conversations instantly client-side. */
 export async function fetchAllThreadMessages(): Promise<Record<string, ThreadMessage[]> | null> {
   const db = getAdminDb();
   if (!db) return null;
@@ -200,7 +200,7 @@ export async function fetchAllThreadMessages(): Promise<Record<string, ThreadMes
   return byPhone;
 }
 
-/** One distinct outbound message (grouped by body) — "what is being sent". */
+/** One distinct outbound message (grouped by body) - "what is being sent". */
 export interface SmsCampaign {
   body: string;
   kind: string;

@@ -1,4 +1,4 @@
-/* Initials avatar on an ink tile — no remote images needed. */
+/* Initials avatar on an ink tile - no remote images needed. */
 export function Avatar({ name, size = 36 }: { name: string; size?: number }) {
   const initials = name
     .split(/\s+/)

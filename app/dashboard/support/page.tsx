@@ -15,7 +15,7 @@ import { Card, CardHeader } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { useAuth } from "@/lib/auth-context";
 
-/* Support — replaces the Live Assistant page. Businesses pick a common
+/* Support - replaces the Live Assistant page. Businesses pick a common
    problem category, describe the issue, and the ticket lands in
    clo@contextualintelligence.co (via Resend) tagged with a ticket id +
    category so triage is a mailbox filter, not detective work. */
@@ -76,7 +76,7 @@ export default function SupportPage() {
     <>
       <PageHeader
         title="Support"
-        subtitle="Tell us what's wrong — tickets go straight to the team and we reply to your email."
+        subtitle="Tell us what's wrong - tickets go straight to the team and we reply to your email."
       />
 
       <div className="grid gap-4 xl:grid-cols-[1.6fr_1fr] sm:gap-6">
@@ -152,7 +152,7 @@ export default function SupportPage() {
 
               <input
                 type="text"
-                placeholder="Subject — one line summary"
+                placeholder="Subject - one line summary"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 maxLength={150}
@@ -160,7 +160,7 @@ export default function SupportPage() {
                 className={inputCls}
               />
               <textarea
-                placeholder="Describe the problem — what happened, when, and what you expected."
+                placeholder="Describe the problem - what happened, when, and what you expected."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 maxLength={5000}

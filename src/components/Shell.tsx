@@ -7,7 +7,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { Topbar } from "@/components/Topbar";
 import { useAuth } from "@/lib/auth-context";
 
-/* The dashboard frame — enterprise layout: full-height sidebar flush left,
+/* The dashboard frame - enterprise layout: full-height sidebar flush left,
    slim breadcrumb topbar, and content cards sitting directly on the cool
    canvas with a soft brand-gradient wash behind the page title.
 
@@ -61,7 +61,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 </span>
                 <span className="leading-snug">
                   <strong className="font-semibold">{business.businessName}</strong>{" "}
-                  is pending approval — our team reviews new business profiles
+                  is pending approval - our team reviews new business profiles
                   within 1–2 business days. You already have full dashboard access.
                 </span>
               </div>

@@ -1,7 +1,7 @@
 import { Card, CardHeader } from "@/components/ui/Card";
 import type { FunnelStage } from "@/lib/mock-data";
 
-/* Horizontal conversion funnel — each stage is a navy bar scaled to the top
+/* Horizontal conversion funnel - each stage is a navy bar scaled to the top
    stage, with drop-off percentages between rows. */
 export function Funnel({ stages }: { stages: FunnelStage[] }) {
   const top = stages[0]?.value || 1;

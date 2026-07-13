@@ -13,11 +13,11 @@ import { fetchAgentThreads, fetchIMessageStats } from "@/lib/imessage";
 import { fetchMessagingByDay } from "@/lib/platform-data";
 import { formatNumber } from "@/lib/format";
 
-/* Messages — live messaging volume across the platform. */
+/* Messages - live messaging volume across the platform. */
 export const dynamic = "force-dynamic";
 
 function fmtWhen(iso: string): string {
-  if (!iso) return "—";
+  if (!iso) return "-";
   return new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric" });
 }
 
@@ -37,7 +37,7 @@ export default async function MessagesPage() {
       <>
         <PageHeader title="Messages" subtitle="Live messaging volume." />
         <Card className="p-8 text-sm text-[var(--ad-muted)]">
-          Firebase Admin credentials aren&apos;t configured — add FIREBASE_PROJECT_ID,
+          Firebase Admin credentials aren&apos;t configured - add FIREBASE_PROJECT_ID,
           FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY to .env to load live data.
         </Card>
       </>

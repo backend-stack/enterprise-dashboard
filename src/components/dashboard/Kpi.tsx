@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { ArrowDownRight, ArrowUpRight, MoreVertical } from "lucide-react";
 
-/* KPI tile — reference-style card: label + kebab up top, big number, bright
+/* KPI tile - reference-style card: label + kebab up top, big number, bright
    trend chip underneath, and a glowing accent icon or live sparkline on the
    right edge. */
 
@@ -52,7 +52,7 @@ export function Kpi({
   delta?: number;
   deltaLabel?: string;
   tone?: "navy" | "orange" | "ink";
-  /** Kept for API compatibility — no longer changes the visual. */
+  /** Kept for API compatibility - no longer changes the visual. */
   emphasis?: boolean;
   /** Real series to draw as a small sparkline. */
   spark?: number[];

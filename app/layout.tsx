@@ -4,9 +4,9 @@ import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Pulse — Enterprise Dashboard",
+  title: "Contextual Intelligence for Partners",
   description:
-    "Monitor messages, conversions, store traffic and revenue in one place.",
+    "The Contextual Intelligence partner dashboard - venues, AI assistant, bookings and billing in one place.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

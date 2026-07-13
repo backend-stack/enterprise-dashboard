@@ -1,7 +1,7 @@
 import "server-only";
 import { getAdminDb, toIso } from "@/lib/firebase-admin";
 
-/* Live vendor data — Luna partners (`lunaPartners`) plus inbound partner
+/* Live vendor data - Luna partners (`lunaPartners`) plus inbound partner
    applications (`partnerApplications`). */
 
 export interface Vendor {

@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error:
-          "No Stripe customer to open the portal for yet — set STRIPE_DEMO_CUSTOMER_ID or wire customer lookup to your user records.",
+          "No Stripe customer to open the portal for yet - set STRIPE_DEMO_CUSTOMER_ID or wire customer lookup to your user records.",
       },
       { status: 400 }
     );

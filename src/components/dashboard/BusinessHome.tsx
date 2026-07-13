@@ -8,7 +8,7 @@ import { useAuth } from "@/lib/auth-context";
 import { formatNumber } from "@/lib/format";
 
 /* Live "your business" section shown at the top of the Overview for business
-   accounts — their venues (from eventsV2 via lunaPartners.venueIds) and like
+   accounts - their venues (from eventsV2 via lunaPartners.venueIds) and like
    counts, straight from Firestore. Renders nothing for personal accounts. */
 
 interface Venue {
@@ -158,7 +158,7 @@ export function BusinessHome() {
         </Card>
       ) : !loading && data ? (
         <Card className="p-6 text-sm text-[var(--ad-muted)]">
-          No venues are linked to your account yet — once venues are added to
+          No venues are linked to your account yet - once venues are added to
           your profile they&apos;ll appear here with live engagement numbers.
         </Card>
       ) : null}

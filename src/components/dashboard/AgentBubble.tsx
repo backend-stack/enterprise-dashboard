@@ -1,6 +1,6 @@
 import { Bot } from "lucide-react";
 
-/* Blue outbound iMessage bubble, labeled as the Clo Agent. No hooks — safe
+/* Blue outbound iMessage bubble, labeled as the Clo Agent. No hooks - safe
    in both server and client components. */
 export function AgentBubble({ text, caption }: { text: string; caption?: string }) {
   return (
@@ -27,8 +27,8 @@ export const STATUS_INFO: Record<
 > = {
   sent: { label: "Sent", tone: "positive" },
   delivered: { label: "Delivered", tone: "positive" },
-  skipped_nophone: { label: "Skipped — no phone on file", tone: "orange" },
-  skipped_noconfig: { label: "Skipped — SMS sending not configured", tone: "orange" },
+  skipped_nophone: { label: "Skipped - no phone on file", tone: "orange" },
+  skipped_noconfig: { label: "Skipped - SMS sending not configured", tone: "orange" },
   failed: { label: "Failed", tone: "negative" },
   error: { label: "Error", tone: "negative" },
 };

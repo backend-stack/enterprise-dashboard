@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     mode: "subscription",
     line_items: [
       { price, quantity: 1 },
-      // One-time (non-recurring) price — billed once with the first invoice.
+      // One-time (non-recurring) price - billed once with the first invoice.
       ...(initiation ? [{ price: initiation, quantity: 1 }] : []),
     ],
     success_url: `${origin}/dashboard/billing?status=success`,
