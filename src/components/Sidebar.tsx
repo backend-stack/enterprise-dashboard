@@ -9,17 +9,13 @@ import {
   LogOut,
   MessageSquare,
   MessagesSquare,
-  TrendingUp,
-  Store,
   Footprints,
-  Users,
   CreditCard,
   Settings,
   PanelLeftClose,
   PanelLeftOpen,
   Search,
   Sparkles,
-  UserPlus,
 } from "lucide-react";
 import { useEffect, useState, type ComponentType } from "react";
 import { useRouter } from "next/navigation";
@@ -40,10 +36,7 @@ const ADMIN_NAV: NavItem[] = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "Messages", href: "/dashboard/chats", icon: MessagesSquare },
   { label: "Message Stats", href: "/dashboard/messages", icon: MessageSquare, badge: 3 },
-  { label: "Conversions", href: "/dashboard/conversions", icon: TrendingUp },
   { label: "Store Traffic", href: "/dashboard/store", icon: Footprints },
-  { label: "Vendors", href: "/dashboard/vendors", icon: Store },
-  { label: "Customers", href: "/dashboard/customers", icon: Users },
   { label: "Billing", href: "/dashboard/billing", icon: CreditCard },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
@@ -195,20 +188,6 @@ function SidebarPanel({
       </nav>
 
       <div className={`mt-auto pt-3 ${collapsed ? "px-2" : "px-3"}`}>
-        <Link
-          href="/dashboard/settings"
-          onClick={onNavigate}
-          title={collapsed ? "Invite member" : undefined}
-          className={`${rowBase} ${idleCls}`}
-        >
-          <UserPlus
-            size={18}
-            strokeWidth={1.8}
-            className="text-[var(--ad-muted)] transition-colors group-hover:text-[var(--ad-ink-soft)]"
-          />
-          {collapsed ? null : <span>Invite member</span>}
-        </Link>
-
         {/* Upgrade card - dark tile pinned above the account row. */}
         {collapsed ? null : (
           <div className="mt-3 rounded-2xl bg-[var(--ad-ink)] p-4 text-white">

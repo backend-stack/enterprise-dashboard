@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Bot, Building2 } from "lucide-react";
+import { Bot } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { useAuth } from "@/lib/auth-context";
 import { maskPhone } from "@/components/dashboard/AgentBubble";
@@ -121,7 +121,7 @@ function buildConversations(
 }
 
 export function MessagesInbox() {
-  const { getToken } = useAuth();
+  const { getToken, user, loading: authLoading } = useAuth();
   const [convos, setConvos] = useState<Conversation[] | null>(null);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [notConfigured, setNotConfigured] = useState(false);
@@ -183,14 +183,16 @@ export function MessagesInbox() {
     [authed]
   );
 
-  // Boot + live poll (paused while the tab is hidden).
+  // Boot + live poll (paused while the tab is hidden). Waits for Firebase to
+  // restore the session first - a fetch without an ID token is a guaranteed 401.
   useEffect(() => {
+    if (authLoading || !user) return;
     void refresh();
     const id = setInterval(() => {
       if (document.visibilityState === "visible") void refresh();
     }, POLL_MS);
     return () => clearInterval(id);
-  }, [refresh]);
+  }, [refresh, authLoading, user]);
 
   const selected = convos?.find((c) => c.key === selectedKey) ?? null;
 
@@ -232,7 +234,7 @@ export function MessagesInbox() {
       {/* Conversations + thread */}
       <div className="grid gap-4 lg:grid-cols-[340px_1fr]">
         {/* Conversation list - every tenant, one unified feed */}
-        <Card className="flex max-h-[600px] flex-col overflow-hidden">
+        <Card className="flex max-h-[min(560px,calc(100dvh-220px))] flex-col overflow-hidden">
           <div className="flex items-center justify-between gap-2 border-b border-[var(--ad-line)] px-4 py-3">
             <p className="text-[13px] font-semibold text-[var(--ad-ink)]">
               Conversations{convos ? ` · ${convos.length}` : ""}
@@ -258,16 +260,16 @@ export function MessagesInbox() {
                   key={c.key}
                   type="button"
                   onClick={() => setSelectedKey(c.key)}
-                  className={`flex items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors ${
+                  className={`flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-left transition-colors ${
                     active
                       ? "bg-[var(--ad-panel)] shadow-[var(--ad-shadow-card)]"
                       : "hover:bg-[var(--ad-panel-2)]"
                   }`}
                 >
-                  <DigitAvatar handle={c.phone} />
+                  <DigitAvatar handle={c.phone} size={28} />
                   <span className="min-w-0 flex-1">
                     <span className="flex items-baseline justify-between gap-2">
-                      <span className="truncate text-[13px] font-semibold text-[var(--ad-ink)]">
+                      <span className="truncate text-[12.5px] font-semibold text-[var(--ad-ink)]">
                         {maskPhone(c.phone)}
                       </span>
                       <span className="shrink-0 text-[10px] text-[var(--ad-muted)]">
@@ -275,11 +277,9 @@ export function MessagesInbox() {
                       </span>
                     </span>
                     <span className="block truncate text-[11px] text-[var(--ad-muted)]">
+                      <span className="font-medium text-[var(--ad-ink-soft)]">{c.tenantName}</span>
+                      {" · "}
                       {last ? `${last.role === "assistant" ? "→ " : ""}${last.text}` : "-"}
-                    </span>
-                    <span className="mt-0.5 flex items-center gap-1 text-[10px] font-medium text-[var(--ad-ink-soft)]">
-                      <Building2 size={10} />
-                      {c.tenantName}
                     </span>
                   </span>
                 </button>
@@ -295,7 +295,7 @@ export function MessagesInbox() {
         </Card>
 
         {/* Thread */}
-        <Card className="flex max-h-[600px] min-h-[420px] flex-col overflow-hidden">
+        <Card className="flex max-h-[min(560px,calc(100dvh-220px))] min-h-[320px] flex-col overflow-hidden">
           {selected ? (
             <>
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--ad-line)] px-4 py-3">
