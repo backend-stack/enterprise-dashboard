@@ -98,8 +98,8 @@ export function AuthCard() {
               </p>
 
               {demoMode ? (
-                <div className="mt-6 rounded-xl bg-[var(--ad-orange-bg)] px-4 py-3 text-xs leading-relaxed text-[var(--ad-ink-soft)]">
-                  <span className="font-semibold text-[var(--ad-orange)]">Demo mode.</span>{" "}
+                <div className="mt-6 rounded-xl bg-[var(--ad-slate-bg)] px-4 py-3 text-xs leading-relaxed text-[var(--ad-ink-soft)]">
+                  <span className="font-semibold text-[var(--ad-slate)]">Demo mode.</span>{" "}
                   Firebase keys aren&apos;t in <code>.env</code> yet, so auth is
                   simulated - any of the buttons below will open the dashboard.
                 </div>
@@ -209,8 +209,8 @@ export function AuthCard() {
       </div>
 
       {/* Right - animated line shader, inset as a rounded rectangle. */}
-      <div className="relative hidden p-4 md:sticky md:top-0 md:block md:h-screen md:w-1/2 lg:p-6">
-        <div className="relative h-full w-full overflow-hidden rounded-3xl bg-[#efefef] shadow-[0_8px_40px_-24px_rgba(0,0,0,0.25)]">
+      <div className="relative hidden bg-white p-4 md:sticky md:top-0 md:block md:h-screen md:w-1/2 lg:p-6">
+        <div className="relative h-full w-full overflow-hidden rounded-3xl bg-white shadow-[0_8px_40px_-24px_rgba(0,0,0,0.25)]">
           <HeroShader />
           <div
             aria-hidden

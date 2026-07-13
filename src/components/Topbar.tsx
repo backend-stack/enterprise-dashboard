@@ -75,7 +75,7 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
   };
 
   return (
-    <header className="flex h-14 shrink-0 items-center gap-3 border-b border-[var(--ad-line)] bg-[var(--ad-paper)] px-3 sm:gap-4 sm:px-6">
+    <header className="flex h-14 shrink-0 items-center gap-3 border-b border-[var(--ad-line)] bg-[var(--ad-paper)] px-3 sm:gap-4 sm:px-6 lg:rounded-[var(--ad-radius-lg)] lg:border lg:shadow-[var(--ad-shadow-card)]">
       <button
         type="button"
         onClick={onMenuClick}

@@ -325,7 +325,7 @@ export function Sidebar({
     <>
       {/* Desktop: static rail - collapses to an icon-only column. */}
       <aside
-        className={`hidden h-full shrink-0 flex-col border-r border-[var(--ad-line)] bg-[var(--ad-paper)] py-5 transition-[width] duration-200 lg:flex ${
+        className={`hidden h-full shrink-0 flex-col rounded-[var(--ad-radius-lg)] border border-[var(--ad-line)] bg-[var(--ad-paper)] py-6 shadow-[var(--ad-shadow-card)] transition-[width] duration-200 lg:flex ${
           collapsed ? "w-[76px]" : "w-[264px]"
         }`}
       >
@@ -352,7 +352,7 @@ export function Sidebar({
           }`}
         />
         <aside
-          className={`absolute left-0 top-0 flex h-full w-[280px] max-w-[85%] flex-col overflow-y-auto border-r border-[var(--ad-line)] bg-[var(--ad-paper)] py-6 shadow-[var(--ad-shadow-float)] transition-transform duration-300 ${
+          className={`absolute left-0 top-0 flex h-full w-[280px] max-w-[85%] flex-col overflow-y-auto rounded-r-[var(--ad-radius-lg)] border-r border-[var(--ad-line)] bg-[var(--ad-paper)] py-6 shadow-[var(--ad-shadow-float)] transition-transform duration-300 ${
             open ? "translate-x-0" : "-translate-x-full"
           }`}
         >

@@ -66,7 +66,7 @@ export default function BillingPage() {
       />
 
       {notice ? (
-        <div className="mb-6 rounded-[var(--ad-radius-sm)] border border-[var(--ad-line)] bg-[var(--ad-orange-bg)] px-4 py-3 text-sm text-[var(--ad-ink-soft)]">
+        <div className="mb-6 rounded-[var(--ad-radius-sm)] border border-[var(--ad-line)] bg-[var(--ad-slate-bg)] px-4 py-3 text-sm text-[var(--ad-ink-soft)]">
           {notice}
         </div>
       ) : null}

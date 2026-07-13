@@ -31,10 +31,10 @@ export function Shell({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[var(--ad-cream)]">
+    <div className="flex h-screen overflow-hidden bg-[var(--ad-cream)] lg:gap-4 lg:p-4">
       <Sidebar open={navOpen} onClose={() => setNavOpen(false)} />
 
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col lg:gap-4">
         <Topbar onMenuClick={() => setNavOpen(true)} />
 
         <main className="relative min-h-0 flex-1 overflow-y-auto">
@@ -44,16 +44,16 @@ export function Shell({ children }: { children: ReactNode }) {
             className="pointer-events-none absolute inset-x-0 top-0 h-52"
             style={{
               background:
-                "radial-gradient(120% 100% at 85% 0%, rgba(249,115,22,0.16) 0%, rgba(244,114,182,0.10) 35%, rgba(107,61,242,0.05) 60%, transparent 100%)",
+                "radial-gradient(120% 100% at 85% 0%, rgba(35,61,77,0.12) 0%, rgba(107,61,242,0.08) 45%, transparent 100%)",
             }}
           />
           <div className="relative px-4 py-6 sm:px-8 sm:py-8">
             {business && !business.approved ? (
               <div
-                className="mb-6 flex items-center gap-3 rounded-[var(--ad-radius-sm)] px-4 py-3.5 text-sm text-white shadow-[0_10px_24px_-12px_rgba(224,97,14,0.7)]"
+                className="mb-6 flex items-center gap-3 rounded-[var(--ad-radius-sm)] px-4 py-3.5 text-sm text-white shadow-[0_10px_24px_-12px_rgba(35,61,77,0.7)]"
                 style={{
                   background:
-                    "linear-gradient(135deg, var(--ad-orange) 0%, var(--ad-orange-deep) 100%)",
+                    "linear-gradient(135deg, var(--ad-slate) 0%, var(--ad-slate-deep) 100%)",
                 }}
               >
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/20">

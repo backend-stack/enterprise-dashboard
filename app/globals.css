@@ -58,6 +58,15 @@
   --ad-pink: #d55181;
   --ad-pink-bg: #fceef4;
 
+  /* Alerts & notifications: slate for informational notices, bright orange
+     reserved for CRITICAL alerts only. */
+  --ad-slate: #233d4d;
+  --ad-slate-deep: #16303e;
+  --ad-slate-bg: #e9eef2;
+  --ad-critical: #fe7f2d;
+  --ad-critical-deep: #ef6a12;
+  --ad-critical-bg: #fff1e6;
+
   /* Elevation */
   --ad-shadow-card: 0 1px 2px rgba(20, 21, 26, 0.04),
     0 8px 24px -12px rgba(20, 21, 26, 0.08);

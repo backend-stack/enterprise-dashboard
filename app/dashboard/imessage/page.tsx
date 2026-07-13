@@ -159,12 +159,13 @@ export default async function IMessagePage({
         <Kpi icon={<ShieldAlert size={16} />} label="Skipped sends" value={formatNumber(skipped)} tone="orange" />
       </div>
 
+      {/* Critical alert - customers aren't receiving anything. */}
       {allSkipped ? (
         <div
-          className="mt-4 flex items-start gap-3 rounded-[var(--ad-radius-sm)] px-4 py-3.5 text-sm text-white shadow-[0_10px_24px_-12px_rgba(224,97,14,0.7)] sm:mt-6"
+          className="mt-4 flex items-start gap-3 rounded-[var(--ad-radius-sm)] px-4 py-3.5 text-sm text-white shadow-[0_10px_24px_-12px_rgba(254,127,45,0.7)] sm:mt-6"
           style={{
             background:
-              "linear-gradient(135deg, var(--ad-orange) 0%, var(--ad-orange-deep) 100%)",
+              "linear-gradient(135deg, var(--ad-critical) 0%, var(--ad-critical-deep) 100%)",
           }}
         >
           <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/20">
