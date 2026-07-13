@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { AdminOnly } from "@/components/AdminOnly";
+import { getViewer } from "@/lib/server-auth";
 import { ArrowRight, Inbox, MessageSquare, Phone, Send } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -19,6 +22,10 @@ function fmtWhen(iso: string): string {
 }
 
 export default async function MessagesPage() {
+  const viewer = await getViewer();
+  if (viewer.kind === "anonymous") redirect("/signin");
+  if (viewer.kind === "user" && !viewer.isAdmin) return <AdminOnly title="Messages" />;
+
   const [stats, byDay, threads] = await Promise.all([
     fetchIMessageStats().catch(() => null),
     fetchMessagingByDay(14).catch(() => null),

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAdminAuth, getAdminDb } from "@/lib/firebase-admin";
+import { getAdminAuth, isPlatformAdmin } from "@/lib/firebase-admin";
 
 export const runtime = "nodejs";
 
@@ -16,20 +16,6 @@ export const runtime = "nodejs";
    Only the documented read-only GET paths are allowed. */
 
 const ALLOWED = /^tenants(\/[\w-]+\/(data|stats|customers))?$/;
-
-async function isPlatformAdmin(uid: string): Promise<boolean> {
-  const db = getAdminDb();
-  if (!db) return false;
-  try {
-    const [adminDoc, userDoc] = await Promise.all([
-      db.collection("admin").doc(uid).get(),
-      db.collection("users").doc(uid).get(),
-    ]);
-    return adminDoc.exists || userDoc.data()?.isAdmin === true;
-  } catch {
-    return false;
-  }
-}
 
 export async function GET(
   req: Request,

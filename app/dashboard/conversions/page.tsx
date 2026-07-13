@@ -1,4 +1,7 @@
 import { CalendarDays, CircleCheck, TrendingUp } from "lucide-react";
+import { redirect } from "next/navigation";
+import { AdminOnly } from "@/components/AdminOnly";
+import { getViewer } from "@/lib/server-auth";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge";
@@ -19,6 +22,10 @@ function fmtWhen(iso: string): string {
 const GOOD_STATUSES = new Set(["approved", "paid", "going", "confirmed"]);
 
 export default async function ConversionsPage() {
+  const viewer = await getViewer();
+  if (viewer.kind === "anonymous") redirect("/signin");
+  if (viewer.kind === "user" && !viewer.isAdmin) return <AdminOnly title="Conversions" />;
+
   const [rsvps, events] = await Promise.all([
     fetchRsvps().catch(() => null),
     fetchEvents().catch(() => null),

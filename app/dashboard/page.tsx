@@ -1,4 +1,7 @@
-import { CalendarDays, CircleCheck, MessageSquare, Store, UserPlus, Users } from "lucide-react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { ArrowRight, CalendarDays, CircleCheck, CreditCard, MessageSquare, Radio, Store, UserPlus, Users } from "lucide-react";
+import { getViewer } from "@/lib/server-auth";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge";
@@ -33,7 +36,64 @@ function fmtWhen(iso: string): string {
   return new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 }
 
+/* Business accounts get a scoped overview — their venues plus quick links.
+   Platform-wide metrics below are rendered for admins only. */
+function QuickLink({
+  href,
+  icon,
+  title,
+  blurb,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  title: string;
+  blurb: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group flex items-center gap-4 rounded-[var(--ad-radius-card)] border border-[var(--ad-line)] bg-[var(--ad-paper)] p-5 shadow-[var(--ad-shadow-card)] transition-colors hover:bg-[var(--ad-panel-2)]"
+    >
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--ad-navy-bg)] text-[var(--ad-navy)]">
+        {icon}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-sm font-semibold text-[var(--ad-ink)]">{title}</span>
+        <span className="block truncate text-xs text-[var(--ad-muted)]">{blurb}</span>
+      </span>
+      <ArrowRight size={16} className="shrink-0 text-[var(--ad-muted)] transition-transform group-hover:translate-x-0.5" />
+    </Link>
+  );
+}
+
 export default async function OverviewPage() {
+  const viewer = await getViewer();
+  if (viewer.kind === "anonymous") redirect("/signin");
+
+  // Business / non-admin accounts: only their own data, never platform-wide.
+  if (viewer.kind === "user" && !viewer.isAdmin) {
+    return (
+      <>
+        <PageHeader title="Overview" subtitle="Your business at a glance." />
+        <BusinessHome />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <QuickLink
+            href="/dashboard/assistant"
+            icon={<Radio size={19} />}
+            title="Live Assistant"
+            blurb="Real-time conversations, bookings and customers"
+          />
+          <QuickLink
+            href="/dashboard/billing"
+            icon={<CreditCard size={19} />}
+            title="Billing"
+            blurb="Plan, invoices and payment method"
+          />
+        </div>
+      </>
+    );
+  }
+
   const [stats, signups, events, rsvps, activity, venueData] = await Promise.all([
     fetchUserStats().catch(() => null),
     fetchSignupsByDay(7).catch(() => null),

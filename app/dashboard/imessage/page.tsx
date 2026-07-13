@@ -1,4 +1,7 @@
 import { AlertTriangle, MessageCircle, Phone, Send, ShieldAlert } from "lucide-react";
+import { redirect } from "next/navigation";
+import { AdminOnly } from "@/components/AdminOnly";
+import { getViewer } from "@/lib/server-auth";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { CollapsibleCard, CollapsibleRow } from "@/components/ui/Collapsible";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -44,6 +47,10 @@ export default async function IMessagePage({
 }: {
   searchParams: Promise<{ thread?: string }>;
 }) {
+  const viewer = await getViewer();
+  if (viewer.kind === "anonymous") redirect("/signin");
+  if (viewer.kind === "user" && !viewer.isAdmin) return <AdminOnly title="iMessage Agent" />;
+
   const { thread: threadParam } = await searchParams;
 
   const [threads, messagesByPhone, campaigns, smsLog, stats] = await Promise.all([

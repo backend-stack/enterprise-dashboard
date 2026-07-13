@@ -19,6 +19,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useEffect, useState, type ComponentType } from "react";
+import { useAuth } from "@/lib/auth-context";
 
 const SIDEBAR_COLLAPSED_KEY = "dash:sidebarCollapsed";
 
@@ -29,7 +30,8 @@ interface NavItem {
   badge?: number;
 }
 
-const NAV: NavItem[] = [
+/** Platform-wide (cross-business) sections — admins only. */
+const ADMIN_NAV: NavItem[] = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "Messages", href: "/dashboard/messages", icon: MessageSquare, badge: 3 },
   { label: "iMessage Agent", href: "/dashboard/imessage", icon: MessageCircle },
@@ -38,6 +40,14 @@ const NAV: NavItem[] = [
   { label: "Store Traffic", href: "/dashboard/store", icon: Footprints },
   { label: "Vendors", href: "/dashboard/vendors", icon: Store },
   { label: "Customers", href: "/dashboard/customers", icon: Users },
+  { label: "Billing", href: "/dashboard/billing", icon: CreditCard },
+  { label: "Settings", href: "/dashboard/settings", icon: Settings },
+];
+
+/** What a business account sees — only its own data. */
+const BUSINESS_NAV: NavItem[] = [
+  { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Live Assistant", href: "/dashboard/assistant", icon: Radio },
   { label: "Billing", href: "/dashboard/billing", icon: CreditCard },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
@@ -68,11 +78,13 @@ function BrandMark({ collapsed = false }: { collapsed?: boolean }) {
 /* Brand + nav + help — shared between the desktop rail and mobile drawer. */
 function SidebarPanel({
   pathname,
+  nav,
   onNavigate,
   collapsed = false,
   onToggle,
 }: {
   pathname: string;
+  nav: NavItem[];
   onNavigate?: () => void;
   collapsed?: boolean;
   onToggle?: () => void;
@@ -116,7 +128,7 @@ function SidebarPanel({
             Menu
           </p>
         )}
-        {NAV.map(({ label, href, icon: Icon, badge }) => {
+        {nav.map(({ label, href, icon: Icon, badge }) => {
           const active =
             href === "/dashboard" ? pathname === href : pathname.startsWith(href);
           return (
@@ -185,6 +197,8 @@ export function Sidebar({
   onClose?: () => void;
 } = {}) {
   const pathname = usePathname();
+  const { isAdmin } = useAuth();
+  const nav = isAdmin ? ADMIN_NAV : BUSINESS_NAV;
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
@@ -223,6 +237,7 @@ export function Sidebar({
       >
         <SidebarPanel
           pathname={pathname}
+          nav={nav}
           collapsed={collapsed}
           onToggle={toggleCollapsed}
         />
@@ -247,7 +262,7 @@ export function Sidebar({
             open ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-          <SidebarPanel pathname={pathname} onNavigate={onClose} />
+          <SidebarPanel pathname={pathname} nav={nav} onNavigate={onClose} />
         </aside>
       </div>
     </>

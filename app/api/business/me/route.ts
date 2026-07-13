@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAdminDb, verifyBearer } from "@/lib/firebase-admin";
+import { getAdminDb, isPlatformAdmin, verifyBearer } from "@/lib/firebase-admin";
 
 export const runtime = "nodejs";
 
@@ -14,17 +14,17 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
   }
 
-  const snap = await db
-    .collection("lunaPartners")
-    .where("firebaseUid", "==", uid)
-    .limit(1)
-    .get();
+  const [snap, isAdmin] = await Promise.all([
+    db.collection("lunaPartners").where("firebaseUid", "==", uid).limit(1).get(),
+    isPlatformAdmin(uid),
+  ]);
 
-  if (snap.empty) return NextResponse.json({ business: null });
+  if (snap.empty) return NextResponse.json({ business: null, isAdmin });
 
   const doc = snap.docs[0];
   const d = doc.data();
   return NextResponse.json({
+    isAdmin,
     business: {
       id: doc.id,
       businessName: typeof d.businessName === "string" ? d.businessName : "",

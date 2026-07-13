@@ -1,4 +1,7 @@
 import { CircleCheck, Clock, UserPlus, Users } from "lucide-react";
+import { redirect } from "next/navigation";
+import { AdminOnly } from "@/components/AdminOnly";
+import { getViewer } from "@/lib/server-auth";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge";
@@ -21,6 +24,10 @@ function fmtDate(iso: string): string {
 }
 
 export default async function CustomersPage() {
+  const viewer = await getViewer();
+  if (viewer.kind === "anonymous") redirect("/signin");
+  if (viewer.kind === "user" && !viewer.isAdmin) return <AdminOnly title="Customers" />;
+
   const [stats, users] = await Promise.all([
     fetchUserStats().catch(() => null),
     fetchRecentUsers(50).catch(() => null),

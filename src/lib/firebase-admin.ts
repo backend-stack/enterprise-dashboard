@@ -37,6 +37,22 @@ export function getAdminAuth(): Auth | null {
   return app ? getAuth(app) : null;
 }
 
+/** Platform admins: an `admin/{uid}` doc or `users/{uid}.isAdmin === true`.
+    Only these accounts may see platform-wide (cross-business) data. */
+export async function isPlatformAdmin(uid: string): Promise<boolean> {
+  const db = getAdminDb();
+  if (!db) return false;
+  try {
+    const [adminDoc, userDoc] = await Promise.all([
+      db.collection("admin").doc(uid).get(),
+      db.collection("users").doc(uid).get(),
+    ]);
+    return adminDoc.exists || userDoc.data()?.isAdmin === true;
+  } catch {
+    return false;
+  }
+}
+
 /** Verifies a client ID token from an Authorization: Bearer header.
     Returns the uid, or null when the token is missing/invalid. */
 export async function verifyBearer(req: Request): Promise<string | null> {
