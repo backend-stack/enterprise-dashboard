@@ -48,7 +48,7 @@ function QuickLink({
 
 export default async function OverviewPage() {
   const viewer = await getViewer();
-  if (viewer.kind === "anonymous") redirect("/signin");
+  if (viewer.kind === "anonymous") redirect("/login");
 
   // Business / non-admin accounts: only their own data, never platform-wide.
   if (viewer.kind === "user" && !viewer.isAdmin) {

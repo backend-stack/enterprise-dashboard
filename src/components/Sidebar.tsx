@@ -220,7 +220,7 @@ function AccountBlock({ collapsed }: { collapsed: boolean }) {
 
   const handleSignOut = async () => {
     await signOut();
-    router.push("/signin");
+    router.push("/login");
   };
 
   const roleLine = business

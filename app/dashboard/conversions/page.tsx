@@ -23,7 +23,7 @@ const GOOD_STATUSES = new Set(["approved", "paid", "going", "confirmed"]);
 
 export default async function ConversionsPage() {
   const viewer = await getViewer();
-  if (viewer.kind === "anonymous") redirect("/signin");
+  if (viewer.kind === "anonymous") redirect("/login");
   if (viewer.kind === "user" && !viewer.isAdmin) return <AdminOnly title="Conversions" />;
 
   const [rsvps, events] = await Promise.all([

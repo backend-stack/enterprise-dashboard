@@ -35,7 +35,7 @@ function fmtDate(iso: string): string {
 
 export default async function VendorsPage() {
   const viewer = await getViewer();
-  if (viewer.kind === "anonymous") redirect("/signin");
+  if (viewer.kind === "anonymous") redirect("/login");
   if (viewer.kind === "user" && !viewer.isAdmin) return <AdminOnly title="Vendors" />;
 
   const [vendors, applications] = await Promise.all([

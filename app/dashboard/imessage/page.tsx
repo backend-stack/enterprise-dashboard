@@ -35,7 +35,7 @@ export default async function IMessagePage({
   searchParams: Promise<{ thread?: string; line?: string; chat?: string }>;
 }) {
   const viewer = await getViewer();
-  if (viewer.kind === "anonymous") redirect("/signin");
+  if (viewer.kind === "anonymous") redirect("/login");
 
   /* The Inbox with customers' private conversation threads stays admin-only;
      a business sees only its own line below. */

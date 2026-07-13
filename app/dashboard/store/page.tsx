@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 
 export default async function StoreTrafficPage() {
   const viewer = await getViewer();
-  if (viewer.kind === "anonymous") redirect("/signin");
+  if (viewer.kind === "anonymous") redirect("/login");
   if (viewer.kind === "user" && !viewer.isAdmin) return <AdminOnly title="Store Traffic" />;
 
   const data = await fetchVenueEngagement().catch(() => null);

@@ -22,7 +22,7 @@ export function Shell({ children }: { children: ReactNode }) {
   const hideApprovalNotice = pathname.startsWith("/dashboard/chats");
 
   useEffect(() => {
-    if (!demoMode && !loading && !user) router.replace("/signin");
+    if (!demoMode && !loading && !user) router.replace("/login");
   }, [demoMode, loading, user, router]);
 
   if (!demoMode && (loading || !user)) {

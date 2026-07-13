@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export default async function MessagesInboxPage() {
   const viewer = await getViewer();
-  if (viewer.kind === "anonymous") redirect("/signin");
+  if (viewer.kind === "anonymous") redirect("/login");
 
   return (
     <>

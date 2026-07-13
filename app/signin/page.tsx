@@ -1,7 +1,6 @@
-import { AuthCard } from "@/components/AuthCard";
+import { redirect } from "next/navigation";
 
-export const metadata = { title: "Sign in - Contextual Intelligence for Partners" };
-
-export default function SignInPage() {
-  return <AuthCard />;
+/* The login screen moved to /login - keep old links working. */
+export default function SignInRedirect() {
+  redirect("/login");
 }

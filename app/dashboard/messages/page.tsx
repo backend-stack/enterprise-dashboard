@@ -23,7 +23,7 @@ function fmtWhen(iso: string): string {
 
 export default async function MessagesPage() {
   const viewer = await getViewer();
-  if (viewer.kind === "anonymous") redirect("/signin");
+  if (viewer.kind === "anonymous") redirect("/login");
   if (viewer.kind === "user" && !viewer.isAdmin) return <AdminOnly title="Messages" />;
 
   const [stats, byDay, threads] = await Promise.all([
