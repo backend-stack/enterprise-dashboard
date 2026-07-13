@@ -30,7 +30,7 @@ export function CardHeader({
 }) {
   void accent;
   return (
-    <div className="flex items-center justify-between gap-3 px-5 pt-5 pb-3">
+    <div className="flex items-center justify-between gap-4 px-6 pb-4 pt-6">
       <h3 className="text-[15px] font-semibold tracking-tight text-[var(--ad-ink)]">
         {title}
       </h3>

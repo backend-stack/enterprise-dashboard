@@ -68,9 +68,9 @@ export default async function StoreTrafficPage() {
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.2fr_1fr] sm:mt-6 sm:gap-6">
         {/* Most-liked venues — horizontal bars */}
-        <Card className="p-1.5">
+        <Card>
           <CardHeader title="Most-liked venues" accent="var(--ad-navy)" />
-          <div className="flex flex-col gap-3 px-5 pb-6 pt-1">
+          <div className="flex flex-col gap-3 px-6 pb-6">
             {topVenues.map((v) => (
               <div key={v.id}>
                 <div className="mb-1.5 flex items-baseline justify-between text-xs">
@@ -96,9 +96,9 @@ export default async function StoreTrafficPage() {
         </Card>
 
         {/* Categories */}
-        <Card className="p-1.5">
+        <Card>
           <CardHeader title="Venues by category" accent="var(--ad-orange)" />
-          <div className="flex flex-col gap-2 px-5 pb-6 pt-1">
+          <div className="flex flex-col gap-2 px-6 pb-6">
             {topCategories.map(([cat, count]) => (
               <div
                 key={cat}
@@ -117,7 +117,7 @@ export default async function StoreTrafficPage() {
       </div>
 
       <div className="mt-4 sm:mt-6">
-        <Card className="p-1.5">
+        <Card>
           <CardHeader title="All venues" accent="var(--ad-navy)" />
           <DataTable headers={["Venue", "Category", "Location", "Likes"]}>
             {venues.map((v) => (

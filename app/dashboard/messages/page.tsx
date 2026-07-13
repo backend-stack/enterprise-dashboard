@@ -109,7 +109,7 @@ export default async function MessagesPage() {
           />
         ) : null}
 
-        <Card className="p-1.5">
+        <Card>
           <CardHeader
             title="Latest conversations"
             accent="var(--ad-navy)"
@@ -122,7 +122,7 @@ export default async function MessagesPage() {
               </Link>
             }
           />
-          <ul className="flex flex-col px-3 pb-4">
+          <ul className="flex flex-col px-4 pb-4">
             {(threads ?? []).slice(0, 7).map((t) => (
               <li key={t.phone}>
                 <Link

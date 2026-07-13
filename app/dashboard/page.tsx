@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Kpi } from "@/components/dashboard/Kpi";
 import { BusinessHome } from "@/components/dashboard/BusinessHome";
+import { BusinessOverview } from "@/components/dashboard/BusinessOverview";
 import { GroupedBarChart } from "@/components/dashboard/GroupedBarChart";
 import { DataTable, Td, Tr } from "@/components/dashboard/DataTable";
 import {
@@ -43,18 +44,25 @@ function QuickLink({
   icon,
   title,
   blurb,
+  fg = "var(--ad-navy)",
+  bg = "var(--ad-navy-bg)",
 }: {
   href: string;
   icon: React.ReactNode;
   title: string;
   blurb: string;
+  fg?: string;
+  bg?: string;
 }) {
   return (
     <Link
       href={href}
-      className="group flex items-center gap-4 rounded-[var(--ad-radius-card)] border border-[var(--ad-line)] bg-[var(--ad-paper)] p-5 shadow-[var(--ad-shadow-card)] transition-colors hover:bg-[var(--ad-panel-2)]"
+      className="group flex items-center gap-4 rounded-[var(--ad-radius-card)] border border-[var(--ad-line)] bg-[var(--ad-paper)] p-6 shadow-[var(--ad-shadow-card)] transition-colors hover:bg-[var(--ad-panel-2)]"
     >
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--ad-navy-bg)] text-[var(--ad-navy)]">
+      <span
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
+        style={{ backgroundColor: bg, color: fg }}
+      >
         {icon}
       </span>
       <span className="min-w-0 flex-1">
@@ -74,9 +82,8 @@ export default async function OverviewPage() {
   if (viewer.kind === "user" && !viewer.isAdmin) {
     return (
       <>
-        <PageHeader title="Welcome back" subtitle="Your business at a glance." />
-        <BusinessHome />
-        <div className="grid gap-4 sm:grid-cols-2">
+        <BusinessOverview />
+        <div className="mt-4 grid gap-4 sm:mt-6 sm:grid-cols-2">
           <QuickLink
             href="/dashboard/assistant"
             icon={<Radio size={19} />}
@@ -88,6 +95,8 @@ export default async function OverviewPage() {
             icon={<CreditCard size={19} />}
             title="Billing"
             blurb="Plan, invoices and payment method"
+            fg="var(--ad-teal)"
+            bg="var(--ad-teal-bg)"
           />
         </div>
       </>
@@ -192,9 +201,9 @@ export default async function OverviewPage() {
           />
         ) : null}
 
-        <Card className="p-1.5">
+        <Card>
           <CardHeader title="Events" accent="var(--ad-navy)" />
-          <div className="flex flex-col gap-3 px-4 pb-5 pt-1">
+          <div className="flex flex-col gap-4 px-6 pb-6">
             {(events ?? []).map((e) => {
               const fill = e.capacity ? Math.min(100, Math.round((e.going / e.capacity) * 100)) : 0;
               return (
@@ -244,9 +253,9 @@ export default async function OverviewPage() {
 
       {/* Activity + RSVPs */}
       <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_1.3fr] sm:mt-6 sm:gap-6">
-        <Card className="p-1.5">
+        <Card>
           <CardHeader title="Recent admin activity" accent="var(--ad-navy)" />
-          <ul className="flex flex-col px-3 pb-4">
+          <ul className="flex flex-col px-4 pb-4">
             {(activity ?? []).map((a) => (
               <li
                 key={a.id}
@@ -270,7 +279,7 @@ export default async function OverviewPage() {
           </ul>
         </Card>
 
-        <Card className="p-1.5">
+        <Card>
           <CardHeader title="Recent RSVPs" accent="var(--ad-orange)" />
           {rsvps?.length ? (
             <DataTable headers={["Guest", "Event", "Status", "Applied"]}>
@@ -296,7 +305,7 @@ export default async function OverviewPage() {
               ))}
             </DataTable>
           ) : (
-            <p className="px-5 pb-6 pt-1 text-sm text-[var(--ad-muted)]">No RSVPs yet.</p>
+            <p className="px-6 pb-6 text-sm text-[var(--ad-muted)]">No RSVPs yet.</p>
           )}
         </Card>
       </div>

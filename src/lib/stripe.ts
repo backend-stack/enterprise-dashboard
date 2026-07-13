@@ -23,3 +23,9 @@ export function priceIdForPlan(plan: string): string | undefined {
   };
   return map[plan];
 }
+
+/** One-time $2,000 initiation fee (a non-recurring Stripe Price), added to
+    the first invoice of every self-serve subscription. */
+export function initiationFeePriceId(): string | undefined {
+  return process.env.STRIPE_PRICE_INITIATION;
+}

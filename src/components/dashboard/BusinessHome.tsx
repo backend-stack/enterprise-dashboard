@@ -92,7 +92,7 @@ export function BusinessHome() {
       </div>
 
       {data?.venues.length ? (
-        <Card className="p-1.5">
+        <Card>
           <CardHeader title="Your venues" accent="var(--ad-orange)" />
           <div className="grid gap-4 p-4 pt-1 sm:grid-cols-2 xl:grid-cols-3">
             {data.venues.map((v) => (

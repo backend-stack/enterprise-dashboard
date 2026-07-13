@@ -81,7 +81,7 @@ export default async function CustomersPage() {
       </div>
 
       <div className="mt-4 sm:mt-6">
-        <Card className="p-1.5">
+        <Card>
           <CardHeader
             title="Newest members"
             accent="var(--ad-navy)"
@@ -123,7 +123,7 @@ export default async function CustomersPage() {
               ))}
             </DataTable>
           ) : (
-            <p className="px-5 pb-6 pt-1 text-sm text-[var(--ad-muted)]">No members found.</p>
+            <p className="px-6 pb-6 text-sm text-[var(--ad-muted)]">No members found.</p>
           )}
         </Card>
       </div>

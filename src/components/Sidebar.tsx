@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -19,7 +20,6 @@ import {
   Search,
   Sparkles,
   UserPlus,
-  Zap,
 } from "lucide-react";
 import { useEffect, useState, type ComponentType } from "react";
 import { useRouter } from "next/navigation";
@@ -58,11 +58,17 @@ const BUSINESS_NAV: NavItem[] = [
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
-/* Brand mark — a bolt glyph on an ink tile + wordmark. */
+/* Brand mark — the Contextual Intelligence pixel mark on an ink tile. */
 function BrandMark({ collapsed = false }: { collapsed?: boolean }) {
   const tile = (
-    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--ad-ink)] shadow-[var(--ad-shadow-card)]">
-      <Zap size={18} className="text-white" fill="currentColor" strokeWidth={0} />
+    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--ad-ink)] shadow-[var(--ad-shadow-card)]">
+      <Image
+        src="/logo/ci/ci-mark.png"
+        alt="Contextual Intelligence"
+        width={80}
+        height={80}
+        className="h-6 w-6 invert"
+      />
     </span>
   );
   if (collapsed) return <div className="flex justify-center px-0">{tile}</div>;
@@ -70,11 +76,11 @@ function BrandMark({ collapsed = false }: { collapsed?: boolean }) {
     <div className="flex items-center gap-3 px-1">
       {tile}
       <div className="flex flex-col">
-        <span className="ad-display text-[17px] font-semibold leading-tight text-[var(--ad-ink)]">
-          Pulse
+        <span className="ad-display text-[15px] font-semibold leading-tight text-[var(--ad-ink)]">
+          Contextual
         </span>
         <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--ad-muted)]">
-          Enterprise
+          Intelligence
         </span>
       </div>
     </div>

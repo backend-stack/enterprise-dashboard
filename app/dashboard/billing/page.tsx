@@ -63,9 +63,9 @@ export default function BillingPage() {
       ) : null}
 
       {/* Plans */}
-      <Card className="p-1.5">
+      <Card>
         <CardHeader title="Plans" accent="var(--ad-orange)" />
-        <div className="grid gap-4 p-4 pt-1 lg:grid-cols-3">
+        <div className="grid gap-4 p-6 pt-0 lg:grid-cols-3">
           {PLANS.map((plan) => (
             <div
               key={plan.id}
@@ -91,17 +91,29 @@ export default function BillingPage() {
               >
                 {plan.blurb}
               </p>
-              <div className="mb-5 flex items-baseline gap-1">
+              <div className="mb-2 flex items-baseline gap-1">
                 <span className="ad-display text-[2.25rem] font-semibold leading-none tracking-tight">
-                  {formatMoney(plan.price)}
+                  {plan.price !== null ? formatMoney(plan.price) : "Custom"}
                 </span>
-                <span
-                  className="text-xs"
-                  style={{ opacity: plan.current ? 0.75 : 1, color: plan.current ? "#fff" : "var(--ad-muted)" }}
-                >
-                  / month
-                </span>
+                {plan.price !== null ? (
+                  <span
+                    className="text-xs"
+                    style={{ opacity: plan.current ? 0.75 : 1, color: plan.current ? "#fff" : "var(--ad-muted)" }}
+                  >
+                    / month
+                  </span>
+                ) : null}
               </div>
+              <p
+                className="mb-5 min-h-[16px] text-xs"
+                style={{ opacity: plan.current ? 0.75 : 1, color: plan.current ? "#fff" : "var(--ad-muted)" }}
+              >
+                {plan.setupFee
+                  ? `+ ${formatMoney(plan.setupFee)} one-time initiation fee`
+                  : plan.price === null
+                    ? "Pricing tailored to your business"
+                    : ""}
+              </p>
               <ul className="mb-6 flex flex-col gap-2">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-center gap-2 text-[13px]">
@@ -113,18 +125,27 @@ export default function BillingPage() {
                   </li>
                 ))}
               </ul>
-              <button
-                type="button"
-                disabled={plan.current || busy !== null}
-                onClick={() => callStripe("/api/stripe/checkout", { plan: plan.id })}
-                className={`mt-auto rounded-full px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-90 disabled:cursor-not-allowed ${
-                  plan.current
-                    ? "bg-white/10 text-white/60"
-                    : "bg-[var(--ad-ink)] text-white shadow-[var(--ad-shadow-card)]"
-                }`}
-              >
-                {plan.current ? "Active" : "Upgrade"}
-              </button>
+              {plan.price === null ? (
+                <a
+                  href="mailto:sales@example.com?subject=Enterprise%20plan"
+                  className="mt-auto rounded-full bg-[var(--ad-ink)] px-5 py-2.5 text-center text-sm font-semibold text-white shadow-[var(--ad-shadow-card)] transition-opacity hover:opacity-90"
+                >
+                  Contact sales
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  disabled={plan.current || busy !== null}
+                  onClick={() => callStripe("/api/stripe/checkout", { plan: plan.id })}
+                  className={`mt-auto rounded-full px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-90 disabled:cursor-not-allowed ${
+                    plan.current
+                      ? "bg-white/10 text-white/60"
+                      : "bg-[var(--ad-ink)] text-white shadow-[var(--ad-shadow-card)]"
+                  }`}
+                >
+                  {plan.current ? "Active" : "Upgrade"}
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -132,9 +153,9 @@ export default function BillingPage() {
 
       {/* Payment method + invoices */}
       <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_1.6fr] sm:mt-6 sm:gap-6">
-        <Card className="p-1.5">
+        <Card>
           <CardHeader title="Payment method" accent="var(--ad-navy)" />
-          <div className="px-5 pb-6 pt-1">
+          <div className="px-6 pb-6">
             <div className="flex items-center gap-4 rounded-[var(--ad-radius-sm)] border border-[var(--ad-line)] bg-[var(--ad-panel)] p-5">
               <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--ad-navy-bg)] text-[var(--ad-navy)]">
                 <CreditCard size={18} />
@@ -157,7 +178,7 @@ export default function BillingPage() {
           </div>
         </Card>
 
-        <Card className="p-1.5">
+        <Card>
           <CardHeader title="Invoices" accent="var(--ad-orange)" />
           <DataTable headers={["Invoice", "Period", "Amount", "Status", ""]}>
             {INVOICES.map((inv) => (

@@ -88,7 +88,7 @@ export default async function ConversionsPage() {
       <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_1.4fr] sm:mt-6 sm:gap-6">
         <Funnel stages={funnelStages} />
 
-        <Card className="p-1.5">
+        <Card>
           <CardHeader title="Event fill rates" accent="var(--ad-navy)" />
           {events?.length ? (
             <DataTable headers={["Event", "Date", "Going", "Pending", "Capacity", "Fill"]}>
@@ -114,13 +114,13 @@ export default async function ConversionsPage() {
               })}
             </DataTable>
           ) : (
-            <p className="px-5 pb-6 pt-1 text-sm text-[var(--ad-muted)]">No events yet.</p>
+            <p className="px-6 pb-6 text-sm text-[var(--ad-muted)]">No events yet.</p>
           )}
         </Card>
       </div>
 
       <div className="mt-4 sm:mt-6">
-        <Card className="p-1.5">
+        <Card>
           <CardHeader title="All RSVPs" accent="var(--ad-orange)" />
           <DataTable headers={["Guest", "Event", "Status", "Applied"]}>
             {rsvps.map((r) => (

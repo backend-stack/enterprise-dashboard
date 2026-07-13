@@ -94,7 +94,7 @@ export default async function VendorsPage() {
       </div>
 
       <div className="mt-4 sm:mt-6">
-        <Card className="p-1.5">
+        <Card>
           <CardHeader title="All vendors" accent="var(--ad-navy)" />
           <DataTable
             headers={[
@@ -152,7 +152,7 @@ export default async function VendorsPage() {
       </div>
 
       <div className="mt-4 sm:mt-6">
-        <Card className="p-1.5">
+        <Card>
           <CardHeader title="Inbound applications" accent="var(--ad-orange)" />
           {applications && applications.length ? (
             <DataTable
@@ -197,7 +197,7 @@ export default async function VendorsPage() {
               ))}
             </DataTable>
           ) : (
-            <p className="px-5 pb-6 pt-1 text-sm text-[var(--ad-muted)]">
+            <p className="px-6 pb-6 text-sm text-[var(--ad-muted)]">
               No inbound applications yet.
             </p>
           )}

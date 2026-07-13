@@ -11,9 +11,9 @@ const KIND_STYLE = {
 
 export function ActivityFeed({ items }: { items: ActivityItem[] }) {
   return (
-    <Card className="p-1.5">
+    <Card>
       <CardHeader title="Recent activity" accent="var(--ad-navy)" />
-      <ul className="flex flex-col px-3 pb-4">
+      <ul className="flex flex-col px-4 pb-4">
         {items.map((item) => {
           const style = KIND_STYLE[item.kind];
           const Icon = style.icon;

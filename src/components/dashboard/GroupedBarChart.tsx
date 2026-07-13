@@ -37,7 +37,7 @@ export function GroupedBarChart({
   const ticks = [max, Math.round(max / 2), 0];
 
   return (
-    <Card className="p-1.5">
+    <Card>
       <CardHeader
         title={title}
         accent="var(--ad-orange)"
@@ -51,7 +51,7 @@ export function GroupedBarChart({
       />
 
       {summary?.length ? (
-        <div className="flex flex-wrap items-end gap-x-8 gap-y-3 px-5 pb-1">
+        <div className="flex flex-wrap items-end gap-x-8 gap-y-4 px-6 pb-2">
           {summary.map((s) => (
             <div key={s.label}>
               <div className="flex items-center gap-1.5 text-xs text-[var(--ad-ink-soft)]">
@@ -71,7 +71,7 @@ export function GroupedBarChart({
         </div>
       ) : null}
 
-      <div className="flex gap-2 px-5 pb-5 pt-4">
+      <div className="flex gap-2 px-6 pb-6 pt-4">
         <div className="flex h-44 w-8 flex-col justify-between pb-5 text-right text-[10px] text-[var(--ad-muted)]">
           {ticks.map((t) => (
             <span key={t} className="leading-none">

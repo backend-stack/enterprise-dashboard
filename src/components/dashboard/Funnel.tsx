@@ -7,9 +7,9 @@ export function Funnel({ stages }: { stages: FunnelStage[] }) {
   const top = stages[0]?.value || 1;
 
   return (
-    <Card className="p-1.5">
+    <Card>
       <CardHeader title="Conversion funnel" accent="var(--ad-navy)" />
-      <div className="flex flex-col gap-3 px-5 pb-6 pt-1">
+      <div className="flex flex-col gap-3 px-6 pb-6">
         {stages.map((s, i) => {
           const pct = (s.value / top) * 100;
           const prev = i > 0 ? stages[i - 1].value : null;

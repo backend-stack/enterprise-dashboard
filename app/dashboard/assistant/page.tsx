@@ -413,7 +413,7 @@ export default function AssistantPage() {
 
       {/* Reservations + inquiries */}
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.4fr_1fr] sm:mt-6 sm:gap-6">
-        <Card className="min-w-0 p-1.5">
+        <Card className="min-w-0">
           <CardHeader title="Reservations" accent="var(--ad-navy)" />
           {data?.reservations?.length ? (
             <DataTable headers={["Guest", "Party", "Date", "Time", "Status"]}>
@@ -432,13 +432,13 @@ export default function AssistantPage() {
               ))}
             </DataTable>
           ) : (
-            <p className="px-5 pb-6 pt-1 text-sm text-[var(--ad-muted)]">
+            <p className="px-6 pb-6 text-sm text-[var(--ad-muted)]">
               {data ? "No reservations yet." : "Loading…"}
             </p>
           )}
         </Card>
 
-        <Card className="min-w-0 p-1.5">
+        <Card className="min-w-0">
           <CardHeader title="Flagged for the team" accent="var(--ad-orange)" />
           <div className="flex flex-col gap-2.5 px-4 pb-5 pt-1">
             {(data?.inquiries ?? []).map((q, i) => (
@@ -466,7 +466,7 @@ export default function AssistantPage() {
 
       {/* Customers */}
       <div className="mt-4 sm:mt-6">
-        <Card className="p-1.5">
+        <Card>
           <CardHeader
             title="Customers"
             accent="var(--ad-navy)"
@@ -507,7 +507,7 @@ export default function AssistantPage() {
               ))}
             </DataTable>
           ) : (
-            <p className="px-5 pb-6 pt-1 text-sm text-[var(--ad-muted)]">
+            <p className="px-6 pb-6 text-sm text-[var(--ad-muted)]">
               {customers ? "No customers yet." : "Loading…"}
             </p>
           )}

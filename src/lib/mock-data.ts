@@ -161,15 +161,21 @@ export const ACTIVITY: ActivityItem[] = [
   { id: "a-01", text: "Campaign “Summer Drop” sent", detail: "2,180 messages · SMS + WhatsApp", time: "12m ago", kind: "message" },
   { id: "a-02", text: "Jordan Lee converted", detail: "$184.00 · Flagship — 5th Ave", time: "2h ago", kind: "conversion" },
   { id: "a-03", text: "Foot-traffic spike detected", detail: "+38% vs. usual · SoMa District", time: "3h ago", kind: "visit" },
-  { id: "a-04", text: "Invoice paid", detail: "Growth plan · $299.00", time: "6h ago", kind: "billing" },
+  { id: "a-04", text: "Invoice paid", detail: "Growth plan · $500.00", time: "6h ago", kind: "billing" },
   { id: "a-05", text: "Campaign “VIP Preview” scheduled", detail: "840 recipients · Saturday 10 AM", time: "8h ago", kind: "message" },
 ];
 
-/* Billing plans. */
+/* Billing plans — every paid plan carries a one-time $2,000 initiation fee
+   billed with the first invoice. */
+export const INITIATION_FEE = 200_000; // cents, one-time
+
 export interface Plan {
   id: string;
   name: string;
-  price: number; // cents / month
+  /** Cents / month; null renders as custom pricing (contact sales). */
+  price: number | null;
+  /** One-time initiation fee in cents, billed on the first invoice. */
+  setupFee?: number;
   blurb: string;
   features: string[];
   current?: boolean;
@@ -179,14 +185,16 @@ export const PLANS: Plan[] = [
   {
     id: "starter",
     name: "Starter",
-    price: 9900,
+    price: 30_000,
+    setupFee: INITIATION_FEE,
     blurb: "For a single storefront getting going.",
     features: ["1 store location", "5,000 messages / mo", "Basic analytics", "Email support"],
   },
   {
     id: "growth",
     name: "Growth",
-    price: 29900,
+    price: 50_000,
+    setupFee: INITIATION_FEE,
     blurb: "For growing teams with multiple locations.",
     features: ["Up to 10 locations", "50,000 messages / mo", "Conversion funnels", "Priority support"],
     current: true,
@@ -194,7 +202,7 @@ export const PLANS: Plan[] = [
   {
     id: "enterprise",
     name: "Enterprise",
-    price: 99900,
+    price: null,
     blurb: "Advanced controls, SSO and dedicated support.",
     features: ["Unlimited locations", "Unlimited messages", "Custom reports & API", "Dedicated CSM"],
   },
@@ -208,8 +216,9 @@ export interface Invoice {
 }
 
 export const INVOICES: Invoice[] = [
-  { id: "INV-2026-007", period: "Jul 2026", amount: 29900, status: "due" },
-  { id: "INV-2026-006", period: "Jun 2026", amount: 29900, status: "paid" },
-  { id: "INV-2026-005", period: "May 2026", amount: 29900, status: "paid" },
-  { id: "INV-2026-004", period: "Apr 2026", amount: 29900, status: "paid" },
+  { id: "INV-2026-007", period: "Jul 2026", amount: 50_000, status: "due" },
+  { id: "INV-2026-006", period: "Jun 2026", amount: 50_000, status: "paid" },
+  { id: "INV-2026-005", period: "May 2026", amount: 50_000, status: "paid" },
+  // First invoice = $2,000 initiation + first month.
+  { id: "INV-2026-004", period: "Apr 2026", amount: 250_000, status: "paid" },
 ];

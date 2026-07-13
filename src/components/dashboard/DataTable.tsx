@@ -17,7 +17,7 @@ export function DataTable({
             {headers.map((h, i) => (
               <th
                 key={h}
-                className={`bg-[var(--ad-panel)] px-3 py-2.5 text-left text-[12px] font-semibold text-[var(--ad-ink-soft)] ${
+                className={`bg-[var(--ad-panel)] px-4 py-3 text-left text-[12px] font-semibold text-[var(--ad-ink-soft)] ${
                   i === 0 ? "rounded-l-lg" : ""
                 } ${i === headers.length - 1 ? "rounded-r-lg" : ""}`}
               >
@@ -47,7 +47,7 @@ export function Td({
 }) {
   return (
     <td
-      className={`border-b border-[var(--ad-line)] px-3 py-3.5 align-middle text-[var(--ad-ink-soft)] ${className}`}
+      className={`border-b border-[var(--ad-line)] px-4 py-4 align-middle text-[var(--ad-ink-soft)] ${className}`}
     >
       {children}
     </td>

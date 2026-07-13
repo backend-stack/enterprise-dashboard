@@ -74,10 +74,10 @@ export default function SettingsPage() {
       />
 
       <div className="grid gap-4 xl:grid-cols-[1.3fr_1fr] sm:gap-6">
-        <Card className="p-1.5">
+        <Card>
           <CardHeader title="Profile" accent="var(--ad-orange)" />
           <form
-            className="flex flex-col gap-4 px-5 pb-6 pt-1"
+            className="flex flex-col gap-4 px-6 pb-6"
             onSubmit={(e) => e.preventDefault()}
           >
             <div className="grid gap-4 sm:grid-cols-2">
@@ -97,9 +97,9 @@ export default function SettingsPage() {
           </form>
         </Card>
 
-        <Card className="p-1.5">
+        <Card>
           <CardHeader title="Integrations" accent="var(--ad-navy)" />
-          <div className="flex flex-col gap-3 px-5 pb-6 pt-1">
+          <div className="flex flex-col gap-3 px-6 pb-6">
             <IntegrationRow
               name="Firebase Authentication"
               detail="Sign-in, user accounts and access control."
