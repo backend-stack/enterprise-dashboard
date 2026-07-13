@@ -11,3 +11,4 @@ next-env.d.ts
 # reference projects — design/code references only, not part of this app
 dashboard-ref/
 admin/
+.vercel

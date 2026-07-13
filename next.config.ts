@@ -1,9 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // `dashboard-ref/` and `admin/` are design references only — never compiled.
-  outputFileTracingExcludes: {
-    "*": ["./dashboard-ref/**", "./admin/**"],
+  // Ensure the Firebase Admin SDK is fully traced into the serverless bundle
+  // (it's externalized by default, and Vercel functions 500 with
+  // ERR_MODULE_NOT_FOUND if tracing misses it).
+  outputFileTracingIncludes: {
+    "*": ["node_modules/firebase-admin/**"],
   },
 };
 
