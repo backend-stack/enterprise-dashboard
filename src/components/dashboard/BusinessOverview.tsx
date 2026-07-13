@@ -137,20 +137,20 @@ export function OverviewView({ ci, loading }: { ci: CiBundle | null; loading: bo
           sub="text-back sent today"
         />
         <TintKpi
-          icon={<ClipboardList size={18} />}
+          icon={<CalendarDays size={18} />}
           bg="var(--ad-slate-bg)"
           fg="var(--ad-slate)"
-          value={n(requestCount)}
-          label="Requests"
-          sub="customer inquiries"
-        />
-        <TintKpi
-          icon={<CalendarDays size={18} />}
-          bg="var(--ad-critical-bg)"
-          fg="var(--ad-critical-deep)"
           value={n(bookingCount)}
           label="Special Bookings"
           sub="via your assistant"
+        />
+        <TintKpi
+          icon={<ClipboardList size={18} />}
+          bg="var(--ad-critical-bg)"
+          fg="var(--ad-critical-deep)"
+          value={n(requestCount)}
+          label="Requests"
+          sub="customer inquiries"
         />
       </div>
 
