@@ -26,19 +26,19 @@ const POINTS = [
     icon: PhoneCall,
     title: "Never miss a customer",
     blurb:
-      "Your agent answers every call and text - during service, after hours, all week. Missed calls get an instant text back.",
+      "Your agent answers every call and text, during service, after hours, all week. Missed calls get an instant text back.",
   },
   {
     icon: Heart,
     title: "Build loyalty",
     blurb:
-      "Every conversation remembers the customer - names, preferences, past visits - so regulars always feel like regulars.",
+      "Every conversation remembers the customer, from names to preferences to past visits, so regulars always feel like regulars.",
   },
   {
     icon: TrendingUp,
     title: "Attract new customers",
     blurb:
-      "Get discovered by people nearby looking for exactly what you offer - and turn first questions into first visits.",
+      "Get discovered by people nearby looking for exactly what you offer, and turn first questions into first visits.",
   },
 ];
 
@@ -65,7 +65,7 @@ export default function Home() {
           <p className="text-xs font-medium uppercase tracking-[0.22em] text-white/60">
             For Partners
           </p>
-          <h1 className="mx-auto mt-6 max-w-4xl text-6xl font-medium leading-[1.02] tracking-tight text-white sm:text-7xl lg:text-8xl">
+          <h1 className="mx-auto mt-6 max-w-4xl text-[44px] font-medium leading-[1.02] tracking-tight text-white sm:text-7xl lg:text-8xl">
             Contextual Intelligence
           </h1>
           <p className="mx-auto mt-8 max-w-md text-base leading-relaxed text-white/70 sm:text-lg">
@@ -85,7 +85,7 @@ export default function Home() {
         <div className="mx-auto max-w-5xl">
           <p className="mx-auto max-w-2xl text-center text-2xl font-medium leading-snug tracking-tight text-[var(--ad-ink)] sm:text-3xl">
             Most businesses lose{" "}
-            <span className="whitespace-nowrap">$5,000&ndash;$10,000</span> a month
+            <span className="whitespace-nowrap">$5,000 to $10,000</span> a month
             to missed customers.
           </p>
           <p className="mx-auto mt-4 max-w-md text-center text-base leading-relaxed text-[var(--ad-muted)]">
@@ -124,20 +124,21 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="relative isolate py-16">
+              <div className="relative isolate pb-8 pt-2 lg:py-16">
                 <div className="relative isolate h-full rounded-[var(--ad-radius-sm)] border border-[var(--ad-line)] bg-[var(--ad-paper)] p-2">
-                  {/* The visual - a missed call becoming a booked table. */}
-                  <div className="flex aspect-[14/9] h-full w-full flex-col justify-center gap-3 overflow-hidden rounded-xl bg-black p-6 sm:p-8">
-                    <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/40">
+                  {/* The visual - a missed call becoming a booked table,
+                      styled like a real iMessage thread. */}
+                  <div className="flex aspect-[14/9] h-full w-full flex-col justify-center gap-3 overflow-hidden rounded-xl bg-white p-6 sm:p-8">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[var(--ad-muted)]">
                       Missed call · 9:42 PM
                     </p>
-                    <div className="max-w-[80%] self-start rounded-2xl rounded-bl-md bg-white/10 px-4 py-2.5 text-[13px] leading-relaxed text-white">
+                    <div className="max-w-[80%] self-start rounded-2xl rounded-bl-md bg-[#e9e9eb] px-4 py-2.5 text-[13px] leading-relaxed text-black">
                       Hey, do you have a table for 4 tonight?
                     </div>
-                    <div className="max-w-[80%] self-end rounded-2xl rounded-br-md bg-white px-4 py-2.5 text-[13px] leading-relaxed text-black">
-                      We do! Booked you in for 9:15 - see you soon. ✓
+                    <div className="max-w-[80%] self-end rounded-2xl rounded-br-md bg-[#0a84ff] px-4 py-2.5 text-[13px] leading-relaxed text-white">
+                      We do! Booked you in for 9:15. See you soon ✓
                     </div>
-                    <p className="self-end text-[11px] text-white/40">
+                    <p className="self-end text-[11px] text-[var(--ad-muted)]">
                       Your agent · replied in 4s
                     </p>
                   </div>
@@ -202,27 +203,80 @@ export default function Home() {
       </section>
 
       {/* ── Connections - the platforms we work with ───────────────────── */}
-      <section className="overflow-hidden bg-black py-20 sm:py-28">
-        <p className="text-center text-xs font-medium uppercase tracking-[0.22em] text-white/60">
+      <section className="overflow-hidden border-t border-[var(--ad-line)] bg-white py-20 sm:py-28">
+        <p className="text-center text-xs font-medium uppercase tracking-[0.22em] text-[var(--ad-muted)]">
           Connections
         </p>
-        <h2 className="mx-auto mt-6 max-w-2xl px-6 text-center text-2xl font-medium leading-snug tracking-tight text-white sm:text-3xl">
+        <h2 className="mx-auto mt-6 max-w-2xl px-6 text-center text-2xl font-medium leading-snug tracking-tight text-[var(--ad-ink)] sm:text-3xl">
           Works with the platforms your customers already use.
         </h2>
-        <div className="mt-8 h-[440px] text-white sm:h-[520px]">
-          <CircularGallery items={CONNECTIONS} bend={3} borderRadius={0.06} />
+        <div className="mt-8 h-[440px] sm:h-[520px]">
+          <CircularGallery items={CONNECTIONS} bend={3} borderRadius={0.06} tileBg="#f4f5f7" />
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="flex items-center justify-between border-t border-[var(--ad-line)] px-6 py-6 text-xs text-[var(--ad-muted)] sm:px-10">
-        <span>© 2026 Contextual Intelligence</span>
-        <a
-          href="https://www.contextualintelligence.co"
-          className="transition-colors hover:text-[var(--ad-ink)]"
-        >
-          contextualintelligence.co
-        </a>
+      {/* ── Footer - oversized wordmark ────────────────────────────────── */}
+      <footer className="overflow-hidden bg-black text-white">
+        {/* Top nav row */}
+        <div className="px-6 pt-16 sm:px-10">
+          <nav className="flex flex-wrap items-center gap-x-8 gap-y-3">
+            <a
+              href={SIGNUP_URL}
+              className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/70 transition-colors duration-200 hover:text-white"
+            >
+              Become a Partner
+            </a>
+            <Link
+              href="/login"
+              className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/70 transition-colors duration-200 hover:text-white"
+            >
+              Log in
+            </Link>
+            <a
+              href="mailto:clo@contextualintelligence.co"
+              className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/70 transition-colors duration-200 hover:text-white"
+            >
+              Contact
+            </a>
+          </nav>
+        </div>
+
+        {/* Oversized wordmark - fills the width, faint glow. */}
+        <div className="mb-14 mt-14 px-6 sm:px-10">
+          <h2
+            aria-label="Contextual Intelligence"
+            className="select-none whitespace-nowrap font-semibold uppercase leading-[0.82] tracking-[-0.04em] text-white"
+            style={{
+              fontSize: "13.2vw",
+              textShadow: "0 0 60px rgba(255,255,255,0.14)",
+            }}
+          >
+            Contextual
+            <br />
+            Intelligence
+          </h2>
+        </div>
+
+        {/* Copyright + legal */}
+        <div className="flex flex-col items-start gap-4 border-t border-white/10 px-6 pb-12 pt-8 sm:flex-row sm:items-center sm:justify-between sm:px-10">
+          <p className="text-xs text-white/45">
+            © 2026 Contextual Intelligence. All rights reserved.
+          </p>
+          <div className="flex items-center gap-6">
+            <a
+              href="https://www.contextualintelligence.co/privacy"
+              className="text-xs text-white/45 transition-colors duration-200 hover:text-white"
+            >
+              Privacy Policy
+            </a>
+            <a
+              href="https://www.contextualintelligence.co/terms"
+              className="text-xs text-white/45 transition-colors duration-200 hover:text-white"
+            >
+              Terms &amp; Conditions
+            </a>
+          </div>
+        </div>
       </footer>
     </div>
   );
