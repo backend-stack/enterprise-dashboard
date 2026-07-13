@@ -38,8 +38,8 @@ interface NavItem {
 /** Platform-wide (cross-business) sections - admins only. */
 const ADMIN_NAV: NavItem[] = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Messages", href: "/dashboard/messages", icon: MessageSquare, badge: 3 },
-  { label: "Chats API", href: "/dashboard/chats", icon: MessagesSquare },
+  { label: "Messages", href: "/dashboard/chats", icon: MessagesSquare },
+  { label: "Message Stats", href: "/dashboard/messages", icon: MessageSquare, badge: 3 },
   { label: "Conversions", href: "/dashboard/conversions", icon: TrendingUp },
   { label: "Store Traffic", href: "/dashboard/store", icon: Footprints },
   { label: "Vendors", href: "/dashboard/vendors", icon: Store },
@@ -51,7 +51,7 @@ const ADMIN_NAV: NavItem[] = [
 /** What a business account sees - its own data plus what the agent sends. */
 const BUSINESS_NAV: NavItem[] = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Chats API", href: "/dashboard/chats", icon: MessagesSquare },
+  { label: "Messages", href: "/dashboard/chats", icon: MessagesSquare },
   { label: "Support", href: "/dashboard/support", icon: LifeBuoy },
   { label: "Billing", href: "/dashboard/billing", icon: CreditCard },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
