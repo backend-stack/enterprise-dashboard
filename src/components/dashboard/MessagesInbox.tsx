@@ -168,7 +168,10 @@ export function MessagesInbox() {
           })
         );
         if (seq !== reqSeq.current) return;
-        setConvos(buildConversations(feeds));
+        const list = buildConversations(feeds);
+        setConvos(list);
+        // Open the newest conversation by default on first load.
+        setSelectedKey((prev) => prev ?? list[0]?.key ?? null);
         setUpdatedAt(new Date().toISOString());
         setStale(false);
         setError(null);
@@ -231,10 +234,10 @@ export function MessagesInbox() {
         </div>
       ) : null}
 
-      {/* Conversations + thread */}
-      <div className="grid gap-4 lg:grid-cols-[340px_1fr]">
+      {/* Conversations + thread - fills the viewport below the header */}
+      <div className="grid gap-4 lg:h-[calc(100dvh-190px)] lg:min-h-[480px] lg:grid-cols-[380px_1fr]">
         {/* Conversation list - every tenant, one unified feed */}
-        <Card className="flex max-h-[min(560px,calc(100dvh-220px))] flex-col overflow-hidden">
+        <Card className="flex max-h-[min(480px,calc(100dvh-220px))] flex-col overflow-hidden lg:h-full lg:max-h-none">
           <div className="flex items-center justify-between gap-2 border-b border-[var(--ad-line)] px-4 py-3">
             <p className="text-[13px] font-semibold text-[var(--ad-ink)]">
               Conversations{convos ? ` · ${convos.length}` : ""}
@@ -295,17 +298,17 @@ export function MessagesInbox() {
         </Card>
 
         {/* Thread */}
-        <Card className="flex max-h-[min(560px,calc(100dvh-220px))] min-h-[320px] flex-col overflow-hidden">
+        <Card className="flex max-h-[min(560px,calc(100dvh-220px))] min-h-[360px] flex-col overflow-hidden lg:h-full lg:max-h-none">
           {selected ? (
             <>
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--ad-line)] px-4 py-3">
                 <div className="flex min-w-0 items-center gap-3">
-                  <DigitAvatar handle={selected.phone} size={38} />
+                  <DigitAvatar handle={selected.phone} size={42} />
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-[var(--ad-ink)]">
+                    <p className="truncate text-[15px] font-semibold text-[var(--ad-ink)]">
                       {maskPhone(selected.phone)}
                     </p>
-                    <p className="text-[11px] text-[var(--ad-muted)]">
+                    <p className="text-xs text-[var(--ad-muted)]">
                       {selected.tenantName} · {selected.messages.length} message
                       {selected.messages.length === 1 ? "" : "s"}
                     </p>
@@ -313,7 +316,7 @@ export function MessagesInbox() {
                 </div>
               </div>
 
-              <div ref={threadRef} className="flex flex-1 flex-col gap-2.5 overflow-y-auto p-4">
+              <div ref={threadRef} className="flex flex-1 flex-col gap-3 overflow-y-auto p-5">
                 {selected.messages.map((m, i) => {
                   const prev = selected.messages[i - 1];
                   const fromMe = m.role === "assistant";
@@ -328,10 +331,10 @@ export function MessagesInbox() {
                         </div>
                       ) : null}
                       <div className={`flex items-end gap-2 ${fromMe ? "justify-end" : "justify-start"}`}>
-                        {!fromMe ? <DigitAvatar handle={selected.phone} size={26} /> : null}
-                        <div className={`flex max-w-[75%] flex-col ${fromMe ? "items-end" : "items-start"}`}>
+                        {!fromMe ? <DigitAvatar handle={selected.phone} size={28} /> : null}
+                        <div className={`flex max-w-[70%] flex-col ${fromMe ? "items-end" : "items-start"}`}>
                           <div
-                            className={`whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed ${
+                            className={`whitespace-pre-wrap rounded-2xl px-4 py-3 text-[14px] leading-relaxed ${
                               fromMe
                                 ? "rounded-br-md bg-[var(--ad-slate)] text-white"
                                 : "rounded-bl-md border border-[var(--ad-line)] bg-[var(--ad-panel)] text-[var(--ad-ink)]"

@@ -173,48 +173,9 @@ export function OverviewView({ ci, loading }: { ci: CiBundle | null; loading: bo
         </Card>
       ) : null}
 
-      {/* Requests + Special Bookings */}
+      {/* Special Bookings + Requests */}
       {ci ? (
         <div className="grid gap-4 xl:grid-cols-2 sm:gap-6">
-          <Card>
-            <CardHeader
-              title="Requests"
-              action={
-                <span className="rounded-full border border-[var(--ad-line)] px-3 py-1 text-xs text-[var(--ad-ink-soft)]">
-                  {formatNumber(requestCount ?? 0)} total
-                </span>
-              }
-            />
-            {requests.length ? (
-              <ul className="flex flex-col px-4 pb-4">
-                {requests.map((r, i) => (
-                  <li
-                    key={`${r.customer_phone}-${r.created_at}-${i}`}
-                    className="flex items-center gap-3 rounded-[var(--ad-radius-sm)] px-2 py-3 transition-colors hover:bg-[var(--ad-panel-2)]"
-                  >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--ad-panel)] text-[var(--ad-ink)]">
-                      <ClipboardList size={15} />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-[var(--ad-ink)]">
-                        {r.text || r.request || "Customer request"}
-                      </p>
-                      <p className="truncate text-xs text-[var(--ad-muted)]">
-                        {[r.customer_phone ? maskPhone(r.customer_phone) : "", fmtUnix(r.created_at)]
-                          .filter(Boolean)
-                          .join(" · ")}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="px-6 pb-6 text-sm text-[var(--ad-muted)]">
-                No requests yet - customer inquiries your assistant collects will appear here.
-              </p>
-            )}
-          </Card>
-
           <Card>
             <CardHeader
               title="Special Bookings"
@@ -257,6 +218,45 @@ export function OverviewView({ ci, loading }: { ci: CiBundle | null; loading: bo
             ) : (
               <p className="px-6 pb-6 text-sm text-[var(--ad-muted)]">
                 No special bookings yet - reservations your assistant takes will appear here.
+              </p>
+            )}
+          </Card>
+
+          <Card>
+            <CardHeader
+              title="Requests"
+              action={
+                <span className="rounded-full border border-[var(--ad-line)] px-3 py-1 text-xs text-[var(--ad-ink-soft)]">
+                  {formatNumber(requestCount ?? 0)} total
+                </span>
+              }
+            />
+            {requests.length ? (
+              <ul className="flex flex-col px-4 pb-4">
+                {requests.map((r, i) => (
+                  <li
+                    key={`${r.customer_phone}-${r.created_at}-${i}`}
+                    className="flex items-center gap-3 rounded-[var(--ad-radius-sm)] px-2 py-3 transition-colors hover:bg-[var(--ad-panel-2)]"
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--ad-panel)] text-[var(--ad-ink)]">
+                      <ClipboardList size={15} />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium text-[var(--ad-ink)]">
+                        {r.text || r.request || "Customer request"}
+                      </p>
+                      <p className="truncate text-xs text-[var(--ad-muted)]">
+                        {[r.customer_phone ? maskPhone(r.customer_phone) : "", fmtUnix(r.created_at)]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="px-6 pb-6 text-sm text-[var(--ad-muted)]">
+                No requests yet - customer inquiries your assistant collects will appear here.
               </p>
             )}
           </Card>

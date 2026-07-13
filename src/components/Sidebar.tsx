@@ -7,7 +7,7 @@ import {
   LayoutDashboard,
   LifeBuoy,
   LogOut,
-  MessageSquare,
+  // MessageSquare,
   MessagesSquare,
   // Footprints,
   CreditCard,
@@ -35,7 +35,7 @@ interface NavItem {
 const ADMIN_NAV: NavItem[] = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "Messages", href: "/dashboard/chats", icon: MessagesSquare },
-  { label: "Message Stats", href: "/dashboard/messages", icon: MessageSquare, badge: 3 },
+  // { label: "Message Stats", href: "/dashboard/messages", icon: MessageSquare, badge: 3 },
   // { label: "Store Traffic", href: "/dashboard/store", icon: Footprints },
   { label: "Billing", href: "/dashboard/billing", icon: CreditCard },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
