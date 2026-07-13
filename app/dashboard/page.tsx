@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowRight, CalendarDays, CircleCheck, CreditCard, MessageSquare, Radio, Store, UserPlus, Users } from "lucide-react";
+import { ArrowRight, CalendarDays, CircleCheck, CreditCard, LifeBuoy, MessageSquare, Store, UserPlus, Users } from "lucide-react";
 import { getViewer } from "@/lib/server-auth";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -85,10 +85,10 @@ export default async function OverviewPage() {
         <BusinessOverview />
         <div className="mt-4 grid gap-4 sm:mt-6 sm:grid-cols-2">
           <QuickLink
-            href="/dashboard/assistant"
-            icon={<Radio size={19} />}
-            title="Live Assistant"
-            blurb="Real-time conversations, bookings and customers"
+            href="/dashboard/support"
+            icon={<LifeBuoy size={19} />}
+            title="Support"
+            blurb="Open a ticket — billing, listings, assistant or anything else"
           />
           <QuickLink
             href="/dashboard/billing"

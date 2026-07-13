@@ -31,10 +31,10 @@ export function AdminOnly({ title }: { title: string }) {
             Go to Overview
           </Link>
           <Link
-            href="/dashboard/assistant"
+            href="/dashboard/support"
             className="rounded-full border border-[var(--ad-line)] px-5 py-2.5 text-sm font-semibold text-[var(--ad-ink-soft)] transition-colors hover:bg-[var(--ad-panel)]"
           >
-            Live Assistant
+            Contact support
           </Link>
         </div>
       </Card>

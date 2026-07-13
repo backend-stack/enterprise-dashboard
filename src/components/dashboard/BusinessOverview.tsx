@@ -264,14 +264,14 @@ export function OverviewView({
           <Card className="flex flex-col items-start justify-center gap-2 p-8">
             <h3 className="text-[15px] font-semibold text-[var(--ad-ink)]">Conversation activity</h3>
             <p className="max-w-md text-sm text-[var(--ad-muted)]">
-              Connect your live assistant to see daily customer conversations,
-              bookings and conversion here.
+              Your AI assistant isn&apos;t connected yet — once it&apos;s live,
+              daily conversations, bookings and conversion show up here.
             </p>
             <Link
-              href="/dashboard/assistant"
+              href="/dashboard/support"
               className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[var(--ad-navy)] px-4 py-2 text-xs font-semibold text-white"
             >
-              Open Live Assistant <ArrowRight size={13} />
+              Contact support to get set up <ArrowRight size={13} />
             </Link>
           </Card>
         )}
@@ -618,12 +618,9 @@ function ActivityChart({
       <CardHeader
         title="Conversation activity"
         action={
-          <Link
-            href="/dashboard/assistant"
-            className="inline-flex items-center gap-1 rounded-full bg-[var(--ad-navy)] px-3.5 py-1.5 text-xs font-semibold text-white"
-          >
-            View details <ArrowRight size={12} />
-          </Link>
+          <span className="rounded-full border border-[var(--ad-line)] px-3 py-1 text-xs text-[var(--ad-ink-soft)]">
+            Last 7 days
+          </span>
         }
       />
 

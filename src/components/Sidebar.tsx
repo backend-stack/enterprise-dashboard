@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
+  LifeBuoy,
   LogOut,
   MessageSquare,
   MessageCircle,
@@ -16,7 +17,6 @@ import {
   Settings,
   PanelLeftClose,
   PanelLeftOpen,
-  Radio,
   Search,
   Sparkles,
   UserPlus,
@@ -40,7 +40,6 @@ const ADMIN_NAV: NavItem[] = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "Messages", href: "/dashboard/messages", icon: MessageSquare, badge: 3 },
   { label: "iMessage Agent", href: "/dashboard/imessage", icon: MessageCircle },
-  { label: "Live Assistant", href: "/dashboard/assistant", icon: Radio },
   { label: "Conversions", href: "/dashboard/conversions", icon: TrendingUp },
   { label: "Store Traffic", href: "/dashboard/store", icon: Footprints },
   { label: "Vendors", href: "/dashboard/vendors", icon: Store },
@@ -53,7 +52,7 @@ const ADMIN_NAV: NavItem[] = [
 const BUSINESS_NAV: NavItem[] = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "iMessage Agent", href: "/dashboard/imessage", icon: MessageCircle },
-  { label: "Live Assistant", href: "/dashboard/assistant", icon: Radio },
+  { label: "Support", href: "/dashboard/support", icon: LifeBuoy },
   { label: "Billing", href: "/dashboard/billing", icon: CreditCard },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
