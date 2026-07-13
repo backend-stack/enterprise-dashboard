@@ -15,7 +15,6 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Search,
-  Sparkles,
 } from "lucide-react";
 import { useEffect, useState, type ComponentType } from "react";
 import { useRouter } from "next/navigation";
@@ -202,7 +201,6 @@ function SidebarPanel({
               onClick={onNavigate}
               className="mt-3 flex h-9 items-center justify-center gap-1.5 rounded-full bg-white text-[12.5px] font-semibold text-[var(--ad-ink)] transition-opacity hover:opacity-90"
             >
-              <Sparkles size={13} />
               Upgrade Now
             </Link>
           </div>

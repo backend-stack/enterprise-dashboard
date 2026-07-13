@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Bot, Lock, Search, Sparkles } from "lucide-react";
+import { Bot, Lock, Search } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
 import { AgentBubble, maskPhone, statusInfo } from "@/components/dashboard/AgentBubble";
 import type { AgentThread, ThreadMessage } from "@/lib/imessage";
@@ -173,8 +173,7 @@ export function AgentInbox({
 
                     {m.from === "insight" ? (
                       <div className="my-3 flex justify-center">
-                        <span className="flex max-w-[80%] items-start gap-1.5 rounded-full bg-[var(--ad-orange-bg)] px-3.5 py-1.5 text-[11px] text-[var(--ad-ink-soft)]">
-                          <Sparkles size={12} className="mt-0.5 shrink-0 text-[var(--ad-orange)]" />
+                        <span className="flex max-w-[80%] items-start rounded-full bg-[var(--ad-slate-bg)] px-3.5 py-1.5 text-[11px] text-[var(--ad-ink-soft)]">
                           <span className="truncate">Agent insight: {m.text}</span>
                         </span>
                       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { BadgeCheck, Check, CreditCard, Download, Sparkles } from "lucide-react";
+import { BadgeCheck, Check, CreditCard, Download } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge";
@@ -81,8 +81,7 @@ export default function BillingPage() {
           <div className="relative">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em]">
-                  <Sparkles size={12} />
+                <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em]">
                   Enterprise
                 </span>
                 <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/80">{plan.blurb}</p>
