@@ -11,7 +11,7 @@ import { getAdminDb } from "@/lib/firebase-admin";
      GET /v3/chats/{chatId}/messages?limit=&cursor=
 */
 
-const API = "https://api.linqapp.com/api/partner/v3";
+const API = "https://api.linqapp.com/api/partner";
 
 export interface LinqLine {
   id: string;

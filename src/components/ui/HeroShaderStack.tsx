@@ -14,7 +14,7 @@ import {
  *
  * Flat sibling filters inside <Shader>, composited in order:
  *   Swirl       - white / light-grey flowing base
- *   ChromaFlow  - orange (#ff5f03) directional fluid flow over the base
+ *   ChromaFlow  - orange (#fe7f2d) directional fluid flow over the base
  *   FlutedGlass - vertical glass ribs refracting everything beneath, with
  *                 chromatic aberration (the orange fringe)
  *   FilmGrain   - faint filmic grain on top
@@ -25,10 +25,10 @@ export function HeroShaderStack() {
       <Swirl colorA="#ffffff" colorB="#f0f0f0" detail={1.7} />
       <ChromaFlow
         baseColor="#ffffff"
-        downColor="#ff5f03"
-        leftColor="#ff5f03"
-        rightColor="#ff5f03"
-        upColor="#ff5f03"
+        downColor="#fe7f2d"
+        leftColor="#fe7f2d"
+        rightColor="#fe7f2d"
+        upColor="#fe7f2d"
         momentum={13}
         radius={3.5}
       />

@@ -44,10 +44,10 @@ interface Analytics {
   totals: { venues: number; liveVenues: number; likes: number } | null;
 }
 
-/* Categorical slots for the donut - validated (lightness band, chroma,
-   CVD ΔE 15.8+, ≥3:1 on white) in this order. "Other" is de-emphasis gray. */
-const DONUT_COLORS = ["#6b3df2", "#ea580c", "#0d9268", "#2a78d6"];
-const OTHER_COLOR = "#d5d8df";
+/* Categorical slots for the donut - brand slate, orange, black and a mid
+   slate tint, in this order. "Other" is de-emphasis gray. */
+const DONUT_COLORS = ["#233d4d", "#fe7f2d", "#000000", "#5f7381"];
+const OTHER_COLOR = "#cdd3da";
 
 function fmtDay(d: Date): string {
   return d.toLocaleDateString("en-US", { weekday: "short" });
@@ -523,7 +523,7 @@ function WelcomeBanner({
   return (
     <div
       className="relative overflow-hidden rounded-[var(--ad-radius-card)] p-6 text-white shadow-[var(--ad-shadow-card)] sm:col-span-2 xl:col-span-1"
-      style={{ background: "linear-gradient(130deg, #5b2ee5 0%, #6b3df2 55%, #8a63f6 100%)" }}
+      style={{ background: "linear-gradient(130deg, #16303e 0%, #233d4d 55%, #3a566a 100%)" }}
     >
       {/* decorative washes */}
       <div
@@ -599,7 +599,7 @@ function TintKpi({
   );
 }
 
-/* Single-series weekly bar chart - thin violet columns, 4px rounded tips,
+/* Single-series weekly bar chart - thin slate columns, 4px rounded tips,
    solid hairline gridlines, per-bar hover tooltip with the inbound/reply
    breakdown. */
 function ActivityChart({

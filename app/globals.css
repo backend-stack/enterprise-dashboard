@@ -2,7 +2,7 @@
 
 /* ----------------------------------------------------------------------------
    Dashboard theme — modern SaaS admin system: white cards on a cool grey
-   canvas, near-black ink, vivid violet as the brand accent plus warm orange
+   canvas, near-black ink, deep slate (#233d4d) as the brand accent plus warm orange (#fe7f2d)
    for the header wash and secondary highlights. Bright pastel chips for
    status. Components reference these via Tailwind arbitrary values,
    e.g. `bg-[var(--ad-paper)] text-[var(--ad-ink)]`.
@@ -11,52 +11,52 @@
 :root {
   /* Surfaces */
   --ad-paper: #ffffff;        /* cards / panels — pure white */
-  --ad-cream: #f5f6f8;        /* app canvas — barely-there cool grey */
+  --ad-cream: #eaecf0;        /* app canvas - cool grey */
   --ad-panel: #f4f5f7;        /* inset surfaces inside cards */
   --ad-panel-2: #fafafb;      /* extra-subtle inset / hover */
-  --ad-line: #ececf0;         /* hairline borders */
-  --ad-line-strong: #e2e2e7;  /* slightly stronger divider */
+  --ad-line: #eaecf0;         /* hairline borders */
+  --ad-line-strong: #dde1e7;  /* slightly stronger divider */
 
   /* Ink / text */
-  --ad-ink: #15161a;
-  --ad-ink-soft: #41434a;
-  --ad-muted: #85888f;
+  --ad-ink: #000000;
+  --ad-ink-soft: #233d4d;
+  --ad-muted: #5f7381;
 
-  /* Accent = brand violet */
-  --ad-accent: #6b3df2;
+  /* Accent = brand slate */
+  --ad-accent: #233d4d;
   --ad-accent-contrast: #ffffff;
 
   /* Semantic — bright pastel chips */
-  --ad-positive: #12a35e;
-  --ad-positive-bg: #e8f8ef;
-  --ad-negative: #ef4438;
-  --ad-negative-bg: #feefed;
-  --ad-pending: #ef8c0e;
-  --ad-pending-bg: #fef3e3;
+  --ad-positive: #233d4d;
+  --ad-positive-bg: #e9eef2;
+  --ad-negative: #000000;
+  --ad-negative-bg: #eaecf0;
+  --ad-pending: #fe7f2d;
+  --ad-pending-bg: #fff1e6;
 
   /* Brand accent palette. `navy` is the legacy name for the primary accent —
-     it now points at the brand violet so every component picks it up. */
-  --ad-navy: #6b3df2;
-  --ad-navy-soft: #8a63f6;
-  --ad-navy-bg: #f0ebfe;
-  --ad-violet: #6b3df2;
-  --ad-violet-soft: #8a63f6;
-  --ad-violet-bg: #f0ebfe;
-  --ad-orange: #f97316;
-  --ad-orange-soft: #fb923c;
-  --ad-orange-deep: #ea580c;  /* filled toast / alert surfaces */
-  --ad-orange-bg: #fff3ea;
+     it now points at the brand slate so every component picks it up. */
+  --ad-navy: #233d4d;
+  --ad-navy-soft: #3a566a;
+  --ad-navy-bg: #e9eef2;
+  --ad-violet: #233d4d;
+  --ad-violet-soft: #3a566a;
+  --ad-violet-bg: #e9eef2;
+  --ad-orange: #fe7f2d;
+  --ad-orange-soft: #fe9a56;
+  --ad-orange-deep: #ef6a12;  /* filled toast / alert surfaces */
+  --ad-orange-bg: #fff1e6;
   --ad-mist: #eaecf0;
 
-  /* Data-viz categorical companions (validated with violet + orange-deep for
-     colorblind separation and ≥3:1 contrast on white). Used semantically:
+  /* Data-viz categorical companions - shades of the brand slate (#233d4d)
+     and orange (#fe7f2d) only. Used semantically:
      blue = messages/conversations, teal = bookings, pink = consent/limits. */
-  --ad-blue: #2a78d6;
-  --ad-blue-bg: #e9f2fc;
-  --ad-teal: #0d9268;
-  --ad-teal-bg: #e6f6f0;
-  --ad-pink: #d55181;
-  --ad-pink-bg: #fceef4;
+  --ad-blue: #233d4d;
+  --ad-blue-bg: #e9eef2;
+  --ad-teal: #5f7381;
+  --ad-teal-bg: #eef1f4;
+  --ad-pink: #fe7f2d;
+  --ad-pink-bg: #fff1e6;
 
   /* Alerts & notifications: slate for informational notices, bright orange
      reserved for CRITICAL alerts only. */

@@ -76,7 +76,7 @@ export default function BillingPage() {
         {/* Featured plan */}
         <div
           className="relative overflow-hidden rounded-[var(--ad-radius-card)] p-8 text-white shadow-[var(--ad-shadow-card)]"
-          style={{ background: "linear-gradient(130deg, #4c22cf 0%, #6b3df2 55%, #8a63f6 100%)" }}
+          style={{ background: "linear-gradient(130deg, #16303e 0%, #233d4d 55%, #3a566a 100%)" }}
         >
           <div
             aria-hidden
