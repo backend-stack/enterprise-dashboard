@@ -1,36 +1,47 @@
 import { NextResponse } from "next/server";
-import { verifyBearer } from "@/lib/firebase-admin";
+import { getAdminAuth, getAdminDb } from "@/lib/firebase-admin";
 
 export const runtime = "nodejs";
 
 /* Server-side proxy to the Contextual Intelligence Business Dashboard API.
 
-   The CI service token grants access to ALL tenants, so it must never reach
-   the browser — the dashboard client calls this route with the signed-in
-   user's Firebase ID token, and we forward the request with the service
-   token attached. Only the documented read-only GET paths are allowed. */
+   Auth model (least privilege, fail closed):
+   - Every caller must present a valid Firebase ID token. The only exception
+     is local development with Firebase entirely unconfigured.
+   - Regular users: their OWN ID token is forwarded upstream, so the CI API's
+     owner model decides which tenants they can see (403 otherwise). The
+     all-tenant service token is never used on their behalf.
+   - Platform admins (admin/{uid} doc or users/{uid}.isAdmin): requests are
+     forwarded with the service token, granting the full tenant list.
+   Only the documented read-only GET paths are allowed. */
 
 const ALLOWED = /^tenants(\/[\w-]+\/(data|stats|customers))?$/;
+
+async function isPlatformAdmin(uid: string): Promise<boolean> {
+  const db = getAdminDb();
+  if (!db) return false;
+  try {
+    const [adminDoc, userDoc] = await Promise.all([
+      db.collection("admin").doc(uid).get(),
+      db.collection("users").doc(uid).get(),
+    ]);
+    return adminDoc.exists || userDoc.data()?.isAdmin === true;
+  } catch {
+    return false;
+  }
+}
 
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ path: string[] }> }
 ) {
   const base = process.env.CI_API_BASE_URL?.replace(/\/$/, "");
-  const token = process.env.CI_API_TOKEN;
-  if (!base || !token) {
+  const serviceToken = process.env.CI_API_TOKEN;
+  if (!base || !serviceToken) {
     return NextResponse.json(
       { error: "not_configured", message: "Set CI_API_BASE_URL and CI_API_TOKEN in .env." },
       { status: 503 }
     );
-  }
-
-  // Require a signed-in dashboard user whenever Firebase auth is active.
-  if (process.env.FIREBASE_PROJECT_ID) {
-    const uid = await verifyBearer(req);
-    if (!uid) {
-      return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
-    }
   }
 
   const { path } = await params;
@@ -39,9 +50,36 @@ export async function GET(
     return NextResponse.json({ error: "Unknown path." }, { status: 404 });
   }
 
+  // Fail closed: a valid Firebase ID token is required. The sole carve-out
+  // is local development with Firebase entirely unconfigured.
+  const header = req.headers.get("authorization") ?? "";
+  const idToken = header.startsWith("Bearer ") ? header.slice(7) : "";
+  const auth = getAdminAuth();
+
+  let uid: string | null = null;
+  if (auth && idToken) {
+    try {
+      uid = (await auth.verifyIdToken(idToken)).uid;
+    } catch {
+      uid = null;
+    }
+  }
+
+  const devBypass = !auth && process.env.NODE_ENV === "development";
+  if (!uid && !devBypass) {
+    return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
+  }
+
+  // Least privilege upstream: admins get the service token; everyone else is
+  // proxied with their own ID token so the CI API enforces tenant ownership.
+  let upstreamToken = serviceToken;
+  if (uid && !(await isPlatformAdmin(uid))) {
+    upstreamToken = idToken;
+  }
+
   try {
     const upstream = await fetch(`${base}/api/v1/${joined}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${upstreamToken}` },
       cache: "no-store",
     });
     const body = await upstream.json().catch(() => ({}));
