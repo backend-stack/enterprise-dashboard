@@ -1,71 +1,128 @@
-import { UserPlus } from "lucide-react";
+import { CircleCheck, Clock, UserPlus, Users } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Avatar } from "@/components/ui/Avatar";
+import { Kpi } from "@/components/dashboard/Kpi";
 import { DataTable, Td, Tr } from "@/components/dashboard/DataTable";
-import { CUSTOMERS } from "@/lib/mock-data";
-import { formatMoney, formatNumber } from "@/lib/format";
+import { fetchRecentUsers, fetchUserStats } from "@/lib/platform-data";
+import { formatNumber } from "@/lib/format";
 
-export default function CustomersPage() {
+/* Customers — live member base from the users collection. */
+export const dynamic = "force-dynamic";
+
+function fmtDate(iso: string): string {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+export default async function CustomersPage() {
+  const [stats, users] = await Promise.all([
+    fetchUserStats().catch(() => null),
+    fetchRecentUsers(50).catch(() => null),
+  ]);
+
+  if (!stats) {
+    return (
+      <>
+        <PageHeader title="Customers" subtitle="Live member base." />
+        <Card className="p-8 text-sm text-[var(--ad-muted)]">
+          Firebase Admin credentials aren&apos;t configured — add FIREBASE_PROJECT_ID,
+          FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY to .env to load live data.
+        </Card>
+      </>
+    );
+  }
+
   return (
     <>
       <PageHeader
         title="Customers"
-        subtitle={`${CUSTOMERS.length} customers · sorted by lifetime spend`}
-        action={
-          <button
-            type="button"
-            className="flex items-center gap-2 rounded-full bg-[var(--ad-ink)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--ad-shadow-card)] transition-opacity hover:opacity-90"
-          >
-            <UserPlus size={15} />
-            Invite customer
-          </button>
-        }
+        subtitle={`Live from Firestore · ${formatNumber(stats.total)} members on the platform.`}
       />
 
       <Card className="p-1.5">
-        <CardHeader title="All customers" accent="var(--ad-orange)" />
-        <DataTable
-          headers={["Customer", "Segment", "Store visits", "Lifetime spend", "Last seen"]}
-        >
-          {[...CUSTOMERS]
-            .sort((a, b) => b.spend - a.spend)
-            .map((c) => (
-              <Tr key={c.id}>
-                <Td className="font-medium text-[var(--ad-ink)]">
-                  <span className="flex items-center gap-3">
-                    <Avatar name={c.name} size={32} />
-                    <span>
-                      {c.name}
-                      <span className="block text-xs font-normal text-[var(--ad-muted)]">
-                        {c.email}
-                      </span>
-                    </span>
-                  </span>
-                </Td>
-                <Td>
-                  <StatusBadge
-                    tone={
-                      c.segment === "VIP"
-                        ? "orange"
-                        : c.segment === "Repeat"
-                          ? "navy"
-                          : "neutral"
-                    }
-                  >
-                    {c.segment}
-                  </StatusBadge>
-                </Td>
-                <Td>{formatNumber(c.visits)}</Td>
-                <Td className="font-semibold text-[var(--ad-ink)]">
-                  {formatMoney(c.spend)}
-                </Td>
-                <Td>{c.lastSeen}</Td>
-              </Tr>
-            ))}
-        </DataTable>
+        <CardHeader title="Member base" accent="var(--ad-orange)" />
+        <div className="flex flex-col gap-4 p-4 pt-1 xl:flex-row">
+          <Kpi
+            icon={<Users size={17} />}
+            label="Total members"
+            value={formatNumber(stats.total)}
+            tone="navy"
+            emphasis
+          />
+          <Kpi
+            icon={<CircleCheck size={17} />}
+            label="Approved"
+            value={formatNumber(stats.approved)}
+            tone="navy"
+          />
+          <Kpi
+            icon={<Clock size={17} />}
+            label="Pending review"
+            value={formatNumber(stats.pending)}
+            tone="orange"
+          />
+          <Kpi
+            icon={<UserPlus size={17} />}
+            label="New this week"
+            value={formatNumber(stats.newThisWeek)}
+            tone="orange"
+          />
+        </div>
       </Card>
+
+      <div className="mt-4 sm:mt-6">
+        <Card className="p-1.5">
+          <CardHeader
+            title="Newest members"
+            accent="var(--ad-navy)"
+            action={
+              <span className="rounded-full border border-[var(--ad-line)] px-3 py-1 text-xs text-[var(--ad-ink-soft)]">
+                Latest {users?.length ?? 0}
+              </span>
+            }
+          />
+          {users?.length ? (
+            <DataTable headers={["Member", "Instagram", "Status", "Score", "Joined"]}>
+              {users.map((u) => (
+                <Tr key={u.id}>
+                  <Td className="font-medium text-[var(--ad-ink)]">
+                    <span className="flex items-center gap-3">
+                      <Avatar name={u.name} size={32} />
+                      {u.name}
+                    </span>
+                  </Td>
+                  <Td>{u.instagram ? `@${u.instagram.replace(/^@/, "")}` : "—"}</Td>
+                  <Td>
+                    <StatusBadge
+                      tone={
+                        u.status === "approved"
+                          ? "positive"
+                          : u.status === "pending"
+                            ? "orange"
+                            : u.status === "denied" || u.status === "rejected"
+                              ? "negative"
+                              : "neutral"
+                      }
+                    >
+                      {u.status}
+                    </StatusBadge>
+                  </Td>
+                  <Td>{formatNumber(u.score)}</Td>
+                  <Td className="whitespace-nowrap">{fmtDate(u.joined)}</Td>
+                </Tr>
+              ))}
+            </DataTable>
+          ) : (
+            <p className="px-5 pb-6 pt-1 text-sm text-[var(--ad-muted)]">No members found.</p>
+          )}
+        </Card>
+      </div>
     </>
   );
 }

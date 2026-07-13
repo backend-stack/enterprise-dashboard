@@ -1,29 +1,69 @@
-import { DollarSign, Footprints, MessageSquare, TrendingUp } from "lucide-react";
+import { CalendarDays, CircleCheck, MessageSquare, Store, UserPlus, Users } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Kpi } from "@/components/dashboard/Kpi";
 import { BusinessHome } from "@/components/dashboard/BusinessHome";
 import { GroupedBarChart } from "@/components/dashboard/GroupedBarChart";
-import { Funnel } from "@/components/dashboard/Funnel";
-import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { DataTable, Td, Tr } from "@/components/dashboard/DataTable";
 import {
-  ACTIVITY,
-  DELTAS,
-  FUNNEL,
-  PAYMENTS,
-  TOTALS,
-  WEEK,
-} from "@/lib/mock-data";
-import { formatCompact, formatDay, formatMoney, formatNumber } from "@/lib/format";
+  fetchActivity,
+  fetchEvents,
+  fetchRsvps,
+  fetchSignupsByDay,
+  fetchUserStats,
+  fetchVenueEngagement,
+} from "@/lib/platform-data";
+import { formatNumber } from "@/lib/format";
 
-export default function OverviewPage() {
+/* Overview — live platform metrics from Firestore on every load. */
+export const dynamic = "force-dynamic";
+
+function fmtDate(iso: string): string {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function fmtWhen(iso: string): string {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+}
+
+export default async function OverviewPage() {
+  const [stats, signups, events, rsvps, activity, venueData] = await Promise.all([
+    fetchUserStats().catch(() => null),
+    fetchSignupsByDay(7).catch(() => null),
+    fetchEvents().catch(() => null),
+    fetchRsvps().catch(() => null),
+    fetchActivity(8).catch(() => null),
+    fetchVenueEngagement().catch(() => null),
+  ]);
+
+  if (!stats) {
+    return (
+      <>
+        <PageHeader title="Overview" subtitle="Live platform metrics." />
+        <BusinessHome />
+        <Card className="p-8 text-sm text-[var(--ad-muted)]">
+          Firebase Admin credentials aren&apos;t configured — add FIREBASE_PROJECT_ID,
+          FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY to .env to load live data.
+        </Card>
+      </>
+    );
+  }
+
+  const weekSignups = (signups ?? []).reduce((s, d) => s + d.signups, 0);
+  const weekApproved = (signups ?? []).reduce((s, d) => s + d.approved, 0);
+
   return (
     <>
       <PageHeader
         title="Overview"
-        subtitle="Messages, conversions, store traffic and revenue — last 7 days."
+        subtitle="Live from your platform database — members, events, venues and activity."
       />
 
       {/* Live business section — renders only for business accounts. */}
@@ -32,102 +72,174 @@ export default function OverviewPage() {
       {/* KPI strip */}
       <Card className="p-1.5">
         <CardHeader
-          title="This week"
+          title="Platform"
           accent="var(--ad-orange)"
           action={
             <span className="rounded-full border border-[var(--ad-line)] px-3 py-1 text-xs text-[var(--ad-ink-soft)]">
-              Sample data
+              Live
             </span>
           }
         />
         <div className="flex flex-col gap-4 p-4 pt-1 xl:flex-row">
           <Kpi
-            icon={<MessageSquare size={17} />}
-            label="Messages"
-            value={formatNumber(TOTALS.messages)}
-            delta={DELTAS.messages}
+            icon={<Users size={17} />}
+            label="Total members"
+            value={formatNumber(stats.total)}
             tone="navy"
-          />
-          <Kpi
-            icon={<TrendingUp size={17} />}
-            label="Conversions"
-            value={formatNumber(TOTALS.conversions)}
-            delta={DELTAS.conversions}
-            tone="orange"
             emphasis
           />
           <Kpi
-            icon={<Footprints size={17} />}
-            label="Store visitors"
-            value={formatNumber(TOTALS.visitors)}
-            delta={DELTAS.visitors}
+            icon={<CircleCheck size={17} />}
+            label="Approved"
+            value={formatNumber(stats.approved)}
             tone="navy"
           />
           <Kpi
-            icon={<DollarSign size={17} />}
-            label="Revenue"
-            value={`$${formatCompact(TOTALS.revenue / 100)}`}
-            delta={DELTAS.revenue}
+            icon={<UserPlus size={17} />}
+            label="New this week"
+            value={formatNumber(stats.newThisWeek)}
+            tone="orange"
+          />
+          <Kpi
+            icon={<Store size={17} />}
+            label="Venues live"
+            value={formatNumber(venueData?.venues.length ?? 0)}
             tone="orange"
           />
         </div>
       </Card>
 
-      {/* Charts row */}
-      <div className="mt-4 grid gap-4 xl:grid-cols-[1.6fr_1fr] sm:mt-6 sm:gap-6">
-        <GroupedBarChart
-          title="Messages → conversions"
-          seriesA="Messages"
-          seriesB="Conversions"
-          rangeLabel="Last 7 days"
-          data={WEEK.map((d) => ({
-            label: d.label,
-            tooltipLabel: formatDay(d.date),
-            a: d.messages,
-            b: d.conversions,
-          }))}
-          summary={[
-            { label: "Messages", value: formatNumber(TOTALS.messages), dotColor: "var(--ad-navy)" },
-            { label: "Conversions", value: formatNumber(TOTALS.conversions), dotColor: "var(--ad-orange)" },
-            {
-              label: "Conversion rate",
-              value: `${((TOTALS.conversions / TOTALS.messages) * 100).toFixed(1)}%`,
-            },
-          ]}
-        />
-        <Funnel stages={FUNNEL} />
+      {/* Signups chart + events */}
+      <div className="mt-4 grid gap-4 xl:grid-cols-[1.5fr_1fr] sm:mt-6 sm:gap-6">
+        {signups ? (
+          <GroupedBarChart
+            title="Signups"
+            seriesA="Signed up"
+            seriesB="Approved"
+            rangeLabel="Last 7 days"
+            data={signups.map((d) => ({
+              label: d.label,
+              tooltipLabel: fmtDate(d.date),
+              a: d.signups,
+              b: d.approved,
+            }))}
+            summary={[
+              { label: "Signed up", value: formatNumber(weekSignups), dotColor: "var(--ad-navy)" },
+              { label: "Approved", value: formatNumber(weekApproved), dotColor: "var(--ad-orange)" },
+              {
+                label: "Approval rate",
+                value: weekSignups ? `${Math.round((weekApproved / weekSignups) * 100)}%` : "—",
+              },
+            ]}
+          />
+        ) : null}
+
+        <Card className="p-1.5">
+          <CardHeader title="Events" accent="var(--ad-navy)" />
+          <div className="flex flex-col gap-3 px-4 pb-5 pt-1">
+            {(events ?? []).map((e) => {
+              const fill = e.capacity ? Math.min(100, Math.round((e.going / e.capacity) * 100)) : 0;
+              return (
+                <div
+                  key={e.id}
+                  className="rounded-[var(--ad-radius-sm)] border border-[var(--ad-line)] bg-[var(--ad-panel)] p-4"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-[var(--ad-ink)]">{e.name}</p>
+                      <p className="truncate text-xs text-[var(--ad-muted)]">
+                        {e.venue}
+                        {e.address ? ` · ${e.address}` : ""}
+                      </p>
+                    </div>
+                    <span className="flex shrink-0 items-center gap-1 text-[11px] text-[var(--ad-ink-soft)]">
+                      <CalendarDays size={12} className="text-[var(--ad-muted)]" />
+                      {fmtDate(e.startsAt)}
+                    </span>
+                  </div>
+                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-[var(--ad-mist)]">
+                    <div
+                      className="h-full rounded-full bg-[var(--ad-navy)]"
+                      style={{ width: `${Math.max(fill, e.going > 0 ? 4 : 0)}%` }}
+                    />
+                  </div>
+                  <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-[var(--ad-muted)]">
+                    <span>
+                      <strong className="font-semibold text-[var(--ad-ink)]">{e.going}</strong> going
+                      {e.capacity ? ` of ${e.capacity}` : ""}
+                    </span>
+                    {e.pending ? <span>{e.pending} pending</span> : null}
+                    {e.priceCents ? <span>${(e.priceCents / 100).toFixed(0)} / ticket</span> : null}
+                    {!e.published ? (
+                      <StatusBadge tone="orange">draft</StatusBadge>
+                    ) : null}
+                  </div>
+                </div>
+              );
+            })}
+            {!events?.length ? (
+              <p className="px-1 py-3 text-sm text-[var(--ad-muted)]">No events yet.</p>
+            ) : null}
+          </div>
+        </Card>
       </div>
 
-      {/* Activity + payments */}
-      <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_1.4fr] sm:mt-6 sm:gap-6">
-        <ActivityFeed items={ACTIVITY} />
+      {/* Activity + RSVPs */}
+      <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_1.3fr] sm:mt-6 sm:gap-6">
         <Card className="p-1.5">
-          <CardHeader title="Recent payments" accent="var(--ad-orange)" />
-          <DataTable headers={["Customer", "Amount", "Method", "Status", "When"]}>
-            {PAYMENTS.map((p) => (
-              <Tr key={p.id}>
-                <Td className="font-medium text-[var(--ad-ink)]">{p.customer}</Td>
-                <Td className="font-semibold text-[var(--ad-ink)]">
-                  {formatMoney(p.amount)}
-                </Td>
-                <Td>{p.method}</Td>
-                <Td>
-                  <StatusBadge
-                    tone={
-                      p.status === "paid"
-                        ? "positive"
-                        : p.status === "pending"
-                          ? "pending"
-                          : "negative"
-                    }
-                  >
-                    {p.status}
-                  </StatusBadge>
-                </Td>
-                <Td>{p.date}</Td>
-              </Tr>
+          <CardHeader title="Recent admin activity" accent="var(--ad-navy)" />
+          <ul className="flex flex-col px-3 pb-4">
+            {(activity ?? []).map((a) => (
+              <li
+                key={a.id}
+                className="flex items-start gap-3 rounded-[var(--ad-radius-sm)] px-2 py-3 transition-colors hover:bg-[var(--ad-panel-2)]"
+              >
+                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--ad-navy-bg)] text-[var(--ad-navy)]">
+                  <MessageSquare size={15} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-[var(--ad-ink)]">
+                    {a.actor} · {a.action}
+                  </p>
+                  <p className="truncate text-xs text-[var(--ad-muted)]">{a.target || "—"}</p>
+                </div>
+                <span className="shrink-0 text-[11px] text-[var(--ad-muted)]">{fmtWhen(a.at)}</span>
+              </li>
             ))}
-          </DataTable>
+            {!activity?.length ? (
+              <p className="px-2 py-4 text-sm text-[var(--ad-muted)]">No activity logged yet.</p>
+            ) : null}
+          </ul>
+        </Card>
+
+        <Card className="p-1.5">
+          <CardHeader title="Recent RSVPs" accent="var(--ad-orange)" />
+          {rsvps?.length ? (
+            <DataTable headers={["Guest", "Event", "Status", "Applied"]}>
+              {rsvps.slice(0, 8).map((r) => (
+                <Tr key={r.id}>
+                  <Td className="font-medium text-[var(--ad-ink)]">{r.name}</Td>
+                  <Td>{r.event}</Td>
+                  <Td>
+                    <StatusBadge
+                      tone={
+                        r.status === "approved" || r.status === "paid"
+                          ? "positive"
+                          : r.status === "denied"
+                            ? "negative"
+                            : "orange"
+                      }
+                    >
+                      {r.status}
+                    </StatusBadge>
+                  </Td>
+                  <Td>{fmtWhen(r.appliedAt)}</Td>
+                </Tr>
+              ))}
+            </DataTable>
+          ) : (
+            <p className="px-5 pb-6 pt-1 text-sm text-[var(--ad-muted)]">No RSVPs yet.</p>
+          )}
         </Card>
       </div>
     </>

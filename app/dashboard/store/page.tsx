@@ -1,89 +1,140 @@
-import { Clock, Footprints, Store } from "lucide-react";
+import { Heart, Layers, Store } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Kpi } from "@/components/dashboard/Kpi";
-import { GroupedBarChart } from "@/components/dashboard/GroupedBarChart";
 import { DataTable, Td, Tr } from "@/components/dashboard/DataTable";
-import { HOURS, LOCATIONS, TOTALS } from "@/lib/mock-data";
-import { formatMoney, formatNumber } from "@/lib/format";
+import { fetchVenueEngagement } from "@/lib/platform-data";
+import { formatNumber } from "@/lib/format";
 
-export default function StoreTrafficPage() {
-  const todayVisitors = HOURS.reduce((s, h) => s + h.visitors, 0);
-  const peak = HOURS.reduce((a, b) => (b.visitors > a.visitors ? b : a));
+/* Store Traffic — live venue engagement across the platform. */
+export const dynamic = "force-dynamic";
+
+export default async function StoreTrafficPage() {
+  const data = await fetchVenueEngagement().catch(() => null);
+
+  if (!data) {
+    return (
+      <>
+        <PageHeader title="Store Traffic" subtitle="Live venue engagement." />
+        <Card className="p-8 text-sm text-[var(--ad-muted)]">
+          Firebase Admin credentials aren&apos;t configured — add FIREBASE_PROJECT_ID,
+          FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY to .env to load live data.
+        </Card>
+      </>
+    );
+  }
+
+  const { venues, totalLikes, categories } = data;
+  const topVenues = venues.filter((v) => v.likes > 0).slice(0, 8);
+  const maxLikes = Math.max(...topVenues.map((v) => v.likes), 1);
+  const topCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
 
   return (
     <>
       <PageHeader
         title="Store Traffic"
-        subtitle="Foot traffic across locations — who's walking in, and when."
+        subtitle="Live from Firestore · venue engagement across the platform."
       />
 
       <Card className="p-1.5">
-        <CardHeader title="Foot traffic" accent="var(--ad-orange)" />
+        <CardHeader title="Venues" accent="var(--ad-orange)" />
         <div className="flex flex-col gap-4 p-4 pt-1 lg:flex-row">
           <Kpi
-            icon={<Footprints size={17} />}
-            label="Visitors today"
-            value={formatNumber(todayVisitors)}
-            delta={5.6}
+            icon={<Store size={17} />}
+            label="Venues live"
+            value={formatNumber(venues.filter((v) => v.live).length)}
             tone="navy"
             emphasis
           />
           <Kpi
-            icon={<Clock size={17} />}
-            label="Peak hour"
-            value={peak.label}
+            icon={<Heart size={17} />}
+            label="Customer likes"
+            value={formatNumber(totalLikes)}
             tone="orange"
           />
           <Kpi
-            icon={<Store size={17} />}
-            label="Weekly visitors"
-            value={formatNumber(TOTALS.visitors)}
-            delta={5.6}
+            icon={<Layers size={17} />}
+            label="Categories"
+            value={formatNumber(topCategories.length)}
             tone="navy"
           />
         </div>
       </Card>
 
-      <div className="mt-4 sm:mt-6">
-        <GroupedBarChart
-          title="Traffic by hour"
-          seriesA="All visitors"
-          seriesB="Campaign walk-ins"
-          rangeLabel="Today"
-          data={HOURS.map((h) => ({ label: h.label, a: h.visitors, b: h.walkIns }))}
-          summary={[
-            { label: "All visitors", value: formatNumber(todayVisitors), dotColor: "var(--ad-navy)" },
-            {
-              label: "Campaign walk-ins",
-              value: formatNumber(HOURS.reduce((s, h) => s + h.walkIns, 0)),
-              dotColor: "var(--ad-orange)",
-            },
-          ]}
-        />
+      <div className="mt-4 grid gap-4 xl:grid-cols-[1.2fr_1fr] sm:mt-6 sm:gap-6">
+        {/* Most-liked venues — horizontal bars */}
+        <Card className="p-1.5">
+          <CardHeader title="Most-liked venues" accent="var(--ad-navy)" />
+          <div className="flex flex-col gap-3 px-5 pb-6 pt-1">
+            {topVenues.map((v) => (
+              <div key={v.id}>
+                <div className="mb-1.5 flex items-baseline justify-between text-xs">
+                  <span className="min-w-0 truncate font-medium text-[var(--ad-ink-soft)]">
+                    {v.name}
+                  </span>
+                  <span className="ad-display ml-3 shrink-0 text-sm font-semibold text-[var(--ad-ink)]">
+                    {formatNumber(v.likes)}
+                  </span>
+                </div>
+                <div className="h-6 overflow-hidden rounded-lg bg-[var(--ad-panel)]">
+                  <div
+                    className="h-full rounded-lg bg-[var(--ad-navy)]"
+                    style={{ width: `${Math.max((v.likes / maxLikes) * 100, 3)}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+            {!topVenues.length ? (
+              <p className="py-3 text-sm text-[var(--ad-muted)]">No venue likes recorded yet.</p>
+            ) : null}
+          </div>
+        </Card>
+
+        {/* Categories */}
+        <Card className="p-1.5">
+          <CardHeader title="Venues by category" accent="var(--ad-orange)" />
+          <div className="flex flex-col gap-2 px-5 pb-6 pt-1">
+            {topCategories.map(([cat, count]) => (
+              <div
+                key={cat}
+                className="flex items-center justify-between rounded-[var(--ad-radius-sm)] border border-[var(--ad-line)] bg-[var(--ad-panel)] px-4 py-3"
+              >
+                <span className="min-w-0 truncate text-sm font-medium capitalize text-[var(--ad-ink)]">
+                  {cat}
+                </span>
+                <span className="ml-3 shrink-0 rounded-full bg-[var(--ad-navy-bg)] px-2.5 py-0.5 text-xs font-semibold text-[var(--ad-navy)]">
+                  {count}
+                </span>
+              </div>
+            ))}
+          </div>
+        </Card>
       </div>
 
       <div className="mt-4 sm:mt-6">
         <Card className="p-1.5">
-          <CardHeader title="Locations" accent="var(--ad-navy)" />
-          <DataTable
-            headers={["Store", "Visitors (7d)", "Conversions", "Revenue", "WoW trend"]}
-          >
-            {LOCATIONS.map((l) => (
-              <Tr key={l.id}>
+          <CardHeader title="All venues" accent="var(--ad-navy)" />
+          <DataTable headers={["Venue", "Category", "Location", "Likes"]}>
+            {venues.map((v) => (
+              <Tr key={v.id}>
                 <Td className="font-medium text-[var(--ad-ink)]">
-                  {l.name}
-                  <span className="block text-xs font-normal text-[var(--ad-muted)]">
-                    {l.city}
+                  {v.name}
+                  {!v.live ? (
+                    <span className="ml-2 rounded-md bg-[var(--ad-panel)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--ad-muted)]">
+                      removed
+                    </span>
+                  ) : null}
+                </Td>
+                <Td className="capitalize">{v.category}</Td>
+                <Td>
+                  <span className="block max-w-[340px] truncate" title={v.location}>
+                    {v.location || "—"}
                   </span>
                 </Td>
-                <Td>{formatNumber(l.visitors)}</Td>
-                <Td>{formatNumber(l.conversions)}</Td>
-                <Td>{formatMoney(l.revenue)}</Td>
                 <Td>
-                  <StatusBadge tone={l.trend >= 0 ? "positive" : "negative"}>
-                    {l.trend >= 0 ? "▲" : "▼"} {Math.abs(l.trend).toFixed(1)}%
+                  <StatusBadge tone={v.likes > 0 ? "orange" : "neutral"}>
+                    {formatNumber(v.likes)}
                   </StatusBadge>
                 </Td>
               </Tr>

@@ -103,6 +103,148 @@ export async function fetchSmsLog(limit = 50): Promise<SmsLogEntry[] | null> {
   });
 }
 
+/** One bubble in a conversation view. */
+export interface ThreadMessage {
+  id: string;
+  from: "customer" | "agent" | "insight";
+  text: string;
+  at: string; // ISO
+  /** Delivery status for agent messages (from smsLog). */
+  status?: string;
+}
+
+/** Full conversation for one phone: customer texts (agentMemories episodes),
+    agent insights, and outbound platform sends (smsLog), merged by time. */
+export async function fetchThreadMessages(phone: string): Promise<ThreadMessage[] | null> {
+  const db = getAdminDb();
+  if (!db) return null;
+
+  const [memSnap, smsSnap] = await Promise.all([
+    db.collection("agentMemories").where("key", "==", phone).limit(500).get(),
+    db.collection("smsLog").where("to", "==", phone).limit(500).get(),
+  ]);
+
+  const msgs: ThreadMessage[] = [];
+
+  memSnap.docs.forEach((d) => {
+    const data = d.data();
+    const ts = typeof data.ts === "number" ? data.ts : parseFloat(str(data.ts)) || 0;
+    msgs.push({
+      id: d.id,
+      from: data.kind === "insight" ? "insight" : "customer",
+      text: str(data.text),
+      at: ts ? new Date(ts * 1000).toISOString() : "",
+    });
+  });
+
+  smsSnap.docs.forEach((d) => {
+    const data = d.data();
+    msgs.push({
+      id: d.id,
+      from: "agent",
+      text: str(data.body),
+      at: toIso(data.createdAt),
+      status: str(data.status) || "unknown",
+    });
+  });
+
+  msgs.sort((a, b) => (a.at < b.at ? -1 : 1));
+  return msgs;
+}
+
+/** Every thread's messages in one shot (2 Firestore reads total), keyed by
+    phone — lets the inbox switch conversations instantly client-side. */
+export async function fetchAllThreadMessages(): Promise<Record<string, ThreadMessage[]> | null> {
+  const db = getAdminDb();
+  if (!db) return null;
+
+  const [memSnap, smsSnap] = await Promise.all([
+    db.collection("agentMemories").limit(1000).get(),
+    db.collection("smsLog").limit(1000).get(),
+  ]);
+
+  const byPhone: Record<string, ThreadMessage[]> = {};
+  const push = (phone: string, msg: ThreadMessage) => {
+    (byPhone[phone] ??= []).push(msg);
+  };
+
+  memSnap.docs.forEach((d) => {
+    const data = d.data();
+    const phone = str(data.key);
+    if (!phone) return;
+    const ts = typeof data.ts === "number" ? data.ts : parseFloat(str(data.ts)) || 0;
+    push(phone, {
+      id: d.id,
+      from: data.kind === "insight" ? "insight" : "customer",
+      text: str(data.text),
+      at: ts ? new Date(ts * 1000).toISOString() : "",
+    });
+  });
+
+  smsSnap.docs.forEach((d) => {
+    const data = d.data();
+    const phone = str(data.to);
+    if (!phone) return;
+    push(phone, {
+      id: d.id,
+      from: "agent",
+      text: str(data.body),
+      at: toIso(data.createdAt),
+      status: str(data.status) || "unknown",
+    });
+  });
+
+  for (const msgs of Object.values(byPhone)) {
+    msgs.sort((a, b) => (a.at < b.at ? -1 : 1));
+  }
+  return byPhone;
+}
+
+/** One distinct outbound message (grouped by body) — "what is being sent". */
+export interface SmsCampaign {
+  body: string;
+  kind: string;
+  recipients: number;
+  statuses: Record<string, number>;
+  firstAt: string;
+  lastAt: string;
+  /** Masked sample of recipient numbers (up to 6). */
+  sampleTo: string[];
+}
+
+/** Groups the smsLog into distinct messages so the dashboard can show the
+    exact text going out, how many people got it, and how delivery went. */
+export async function fetchSmsCampaigns(limit = 400): Promise<SmsCampaign[] | null> {
+  const log = await fetchSmsLog(limit);
+  if (!log) return null;
+
+  const groups = new Map<string, SmsCampaign>();
+  for (const entry of log) {
+    const key = entry.body.trim();
+    if (!key) continue;
+    let g = groups.get(key);
+    if (!g) {
+      g = {
+        body: entry.body,
+        kind: entry.kind,
+        recipients: 0,
+        statuses: {},
+        firstAt: entry.createdAt,
+        lastAt: entry.createdAt,
+        sampleTo: [],
+      };
+      groups.set(key, g);
+    }
+    g.recipients += 1;
+    g.statuses[entry.status] = (g.statuses[entry.status] ?? 0) + 1;
+    if (entry.createdAt && (!g.firstAt || entry.createdAt < g.firstAt)) g.firstAt = entry.createdAt;
+    if (entry.createdAt > g.lastAt) g.lastAt = entry.createdAt;
+    if (entry.to && g.sampleTo.length < 6) g.sampleTo.push(entry.to);
+  }
+
+  return [...groups.values()].sort((a, b) => (a.lastAt < b.lastAt ? 1 : -1));
+}
+
 export async function fetchIMessageStats(): Promise<IMessageStats | null> {
   const db = getAdminDb();
   if (!db) return null;
