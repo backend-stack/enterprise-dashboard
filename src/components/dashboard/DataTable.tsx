@@ -18,8 +18,8 @@ export function DataTable({
               <th
                 key={h}
                 className={`bg-[var(--ad-panel)] px-4 py-3 text-left text-[12px] font-semibold text-[var(--ad-ink-soft)] ${
-                  i === 0 ? "rounded-l-lg" : ""
-                } ${i === headers.length - 1 ? "rounded-r-lg" : ""}`}
+                  i === 0 ? "rounded-l-xl" : ""
+                } ${i === headers.length - 1 ? "rounded-r-xl" : ""}`}
               >
                 {h}
               </th>
