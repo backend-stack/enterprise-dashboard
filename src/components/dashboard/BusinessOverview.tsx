@@ -130,8 +130,8 @@ export function OverviewView({ ci, loading }: { ci: CiBundle | null; loading: bo
         />
         <TintKpi
           icon={<PhoneMissed size={18} />}
-          bg="var(--ad-orange-bg)"
-          fg="var(--ad-orange)"
+          bg="var(--ad-navy-bg)"
+          fg="var(--ad-navy)"
           value={n(missedCalls)}
           label="Missed phone calls"
           sub="text-back sent today"
@@ -146,8 +146,8 @@ export function OverviewView({ ci, loading }: { ci: CiBundle | null; loading: bo
         />
         <TintKpi
           icon={<ClipboardList size={18} />}
-          bg="var(--ad-critical-bg)"
-          fg="var(--ad-critical-deep)"
+          bg="var(--ad-slate-bg)"
+          fg="var(--ad-slate)"
           value={n(requestCount)}
           label="Special Requests"
           sub="customer inquiries"
