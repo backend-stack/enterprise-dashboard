@@ -23,7 +23,7 @@ import { formatNumber } from "@/lib/format";
 import type { CiData, CiStats, CiTenant } from "@/lib/ci";
 
 /* Business overview - reference-dashboard layout for vendor accounts:
-   gradient welcome banner with headline stats, tinted KPI cards, a weekly
+   welcome banner with headline stats, tinted KPI cards, a weekly
    conversation-activity chart (live CI feed), an engagement donut by venue,
    the venue table and recent bookings. Everything renders from real data;
    CI-backed panels disappear gracefully when the assistant isn't connected. */
@@ -46,7 +46,7 @@ interface Analytics {
 
 /* Categorical slots for the donut - brand slate, orange, black and a mid
    slate tint, in this order. "Other" is de-emphasis gray. */
-const DONUT_COLORS = ["#233d4d", "#fe7f2d", "#000000", "#5f7381"];
+const DONUT_COLORS = ["#0b2447", "#fe7f2d", "#000000", "#5f7381"];
 const OTHER_COLOR = "#cdd3da";
 
 function fmtDay(d: Date): string {
@@ -302,7 +302,7 @@ export function OverviewView({
                     key={`${b.name}-${b.date}-${i}`}
                     className="flex items-center gap-3 rounded-[var(--ad-radius-sm)] px-2 py-3 transition-colors hover:bg-[var(--ad-panel-2)]"
                   >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--ad-teal-bg)] text-[var(--ad-teal)]">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--ad-panel)] text-[var(--ad-ink)]">
                       <CalendarDays size={15} />
                     </span>
                     <div className="min-w-0 flex-1">
@@ -349,7 +349,7 @@ export function OverviewView({
                 <Tr key={v.id}>
                   <Td className="font-medium text-[var(--ad-ink)]">
                     <span className="flex items-center gap-3">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[var(--ad-navy-bg)] text-[var(--ad-navy)]">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[var(--ad-panel)] text-[var(--ad-ink)]">
                         {v.imageUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img src={v.imageUrl} alt="" className="h-full w-full object-cover" />
@@ -493,10 +493,7 @@ function MiniStat({
 }) {
   return (
     <div className="flex items-center gap-2.5">
-      <span
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
-        style={{ backgroundColor: bg, color: fg }}
-      >
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--ad-panel)] text-[var(--ad-ink)]">
         {icon}
       </span>
       <div className="min-w-0">
@@ -521,39 +518,24 @@ function WelcomeBanner({
   pills: { value: string; label: string }[];
 }) {
   return (
-    <div
-      className="relative overflow-hidden rounded-[var(--ad-radius-card)] p-6 text-white shadow-[var(--ad-shadow-card)] sm:col-span-2 xl:col-span-1"
-      style={{ background: "linear-gradient(130deg, #16303e 0%, #233d4d 55%, #3a566a 100%)" }}
-    >
-      {/* decorative washes */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-10 -top-16 h-48 w-48 rounded-full"
-        style={{ background: "rgba(255,255,255,0.12)" }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -bottom-20 right-16 h-40 w-40 rounded-full"
-        style={{ background: "rgba(255,255,255,0.08)" }}
-      />
-
+    <div className="relative overflow-hidden rounded-[var(--ad-radius-card)] border border-[var(--ad-line)] bg-[var(--ad-panel-2)] p-6 shadow-[var(--ad-shadow-card)] sm:col-span-2 xl:col-span-1">
       <div className="relative">
         <div className="flex items-center gap-2">
-          <h1 className="ad-display text-xl font-bold tracking-tight sm:text-2xl">
+          <h1 className="ad-display text-xl font-bold tracking-tight text-[var(--ad-ink)] sm:text-2xl">
             Welcome back, {name}
           </h1>
-          {approved ? <BadgeCheck size={18} className="shrink-0 opacity-90" /> : null}
+          {approved ? <BadgeCheck size={18} className="shrink-0 text-[var(--ad-navy)]" /> : null}
         </div>
-        <p className="mt-1 text-sm text-white/75">Here&apos;s how your business is doing.</p>
+        <p className="mt-1 text-sm text-[var(--ad-ink-soft)]">Here&apos;s how your business is doing.</p>
 
-        <div className="mt-6 inline-flex overflow-hidden rounded-xl" style={{ background: "rgba(255,255,255,0.14)" }}>
+        <div className="mt-6 inline-flex overflow-hidden rounded-xl border border-[var(--ad-line)] bg-[var(--ad-paper)]">
           {pills.map((p, i) => (
             <div
               key={p.label}
-              className={`px-4 py-3 text-center ${i > 0 ? "border-l border-white/20" : ""}`}
+              className={`px-4 py-3 text-center ${i > 0 ? "border-l border-[var(--ad-line)]" : ""}`}
             >
-              <div className="text-lg font-bold leading-tight">{p.value}</div>
-              <div className="text-[11px] text-white/80">{p.label}</div>
+              <div className="text-lg font-bold leading-tight text-[var(--ad-ink)]">{p.value}</div>
+              <div className="text-[11px] text-[var(--ad-muted)]">{p.label}</div>
             </div>
           ))}
         </div>
@@ -582,10 +564,7 @@ function TintKpi({
       className="flex flex-col items-start justify-between gap-4 rounded-[var(--ad-radius-card)] p-6 shadow-[var(--ad-shadow-card)]"
       style={{ backgroundColor: bg }}
     >
-      <span
-        className="flex h-11 w-11 items-center justify-center rounded-full text-white"
-        style={{ backgroundColor: fg }}
-      >
+      <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--ad-paper)] text-[var(--ad-ink)]">
         {icon}
       </span>
       <div>

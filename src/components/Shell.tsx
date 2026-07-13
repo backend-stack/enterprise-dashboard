@@ -8,8 +8,7 @@ import { Topbar } from "@/components/Topbar";
 import { useAuth } from "@/lib/auth-context";
 
 /* The dashboard frame - enterprise layout: full-height sidebar flush left,
-   slim breadcrumb topbar, and content cards sitting directly on the cool
-   canvas with a soft brand-gradient wash behind the page title.
+   slim breadcrumb topbar, and content cards on a clean white canvas.
 
    Also the auth gate: with Firebase configured, unauthenticated visitors are
    sent to /signin; in demo mode (no keys yet) everyone passes through. */
@@ -37,16 +36,7 @@ export function Shell({ children }: { children: ReactNode }) {
       <div className="flex min-h-0 min-w-0 flex-1 flex-col lg:gap-4">
         <Topbar onMenuClick={() => setNavOpen(true)} />
 
-        <main className="relative min-h-0 flex-1 overflow-y-auto">
-          {/* Soft brand wash behind the page header, like the reference. */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-52"
-            style={{
-              background:
-                "radial-gradient(120% 100% at 85% 0%, rgba(35,61,77,0.12) 0%, rgba(107,61,242,0.08) 45%, transparent 100%)",
-            }}
-          />
+        <main className="relative min-h-0 flex-1 overflow-y-auto bg-[var(--ad-paper)] lg:rounded-[var(--ad-radius-lg)]">
           <div className="relative px-4 py-6 sm:px-8 sm:py-8">
             {business && !business.approved ? (
               <div

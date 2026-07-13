@@ -44,8 +44,8 @@ function QuickLink({
   icon,
   title,
   blurb,
-  fg = "var(--ad-navy)",
-  bg = "var(--ad-navy-bg)",
+  fg = "var(--ad-ink)",
+  bg = "var(--ad-panel)",
 }: {
   href: string;
   icon: React.ReactNode;
@@ -95,8 +95,6 @@ export default async function OverviewPage() {
             icon={<CreditCard size={19} />}
             title="Billing"
             blurb="Plan, invoices and payment method"
-            fg="var(--ad-teal)"
-            bg="var(--ad-teal-bg)"
           />
         </div>
       </>

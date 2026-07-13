@@ -21,12 +21,12 @@ import { useAuth } from "@/lib/auth-context";
    category so triage is a mailbox filter, not detective work. */
 
 const CATEGORIES = [
-  { key: "Billing & payments", icon: CreditCard, blurb: "Invoices, plan changes, initiation fee", fg: "var(--ad-teal)", bg: "var(--ad-teal-bg)" },
-  { key: "Venue listing", icon: Store, blurb: "Wrong details, photos, publishing", fg: "var(--ad-navy)", bg: "var(--ad-navy-bg)" },
-  { key: "AI assistant & bookings", icon: Bot, blurb: "Missed messages, wrong replies, reservations", fg: "var(--ad-blue)", bg: "var(--ad-blue-bg)" },
-  { key: "Account & sign-in", icon: KeyRound, blurb: "Access, password, team members", fg: "var(--ad-orange)", bg: "var(--ad-orange-bg)" },
-  { key: "Technical problem", icon: Wrench, blurb: "Something broken in the dashboard", fg: "var(--ad-pink)", bg: "var(--ad-pink-bg)" },
-  { key: "Something else", icon: HelpCircle, blurb: "Anything that doesn't fit above", fg: "var(--ad-ink-soft)", bg: "var(--ad-panel)" },
+  { key: "Billing & payments", icon: CreditCard, blurb: "Invoices, plan changes, initiation fee", fg: "var(--ad-ink)", bg: "var(--ad-panel)" },
+  { key: "Venue listing", icon: Store, blurb: "Wrong details, photos, publishing", fg: "var(--ad-ink)", bg: "var(--ad-panel)" },
+  { key: "AI assistant & bookings", icon: Bot, blurb: "Missed messages, wrong replies, reservations", fg: "var(--ad-ink)", bg: "var(--ad-panel)" },
+  { key: "Account & sign-in", icon: KeyRound, blurb: "Access, password, team members", fg: "var(--ad-ink)", bg: "var(--ad-panel)" },
+  { key: "Technical problem", icon: Wrench, blurb: "Something broken in the dashboard", fg: "var(--ad-ink)", bg: "var(--ad-panel)" },
+  { key: "Something else", icon: HelpCircle, blurb: "Anything that doesn't fit above", fg: "var(--ad-ink)", bg: "var(--ad-panel)" },
 ] as const;
 
 export default function SupportPage() {

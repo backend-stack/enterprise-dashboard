@@ -188,7 +188,7 @@ export function AgentInbox({
                               </p>
                             ) : null}
                             <div
-                              className={`rounded-2xl bg-[#233d4d] px-4 py-2.5 text-[13px] leading-relaxed text-white shadow-[var(--ad-shadow-card)] ${
+                              className={`rounded-2xl bg-[#0b2447] px-4 py-2.5 text-[13px] leading-relaxed text-white shadow-[var(--ad-shadow-card)] ${
                                 endsRun ? "rounded-br-md" : ""
                               }`}
                             >

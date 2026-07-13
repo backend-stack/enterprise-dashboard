@@ -9,7 +9,7 @@ export function AgentBubble({ text, caption }: { text: string; caption?: string 
         <p className="mb-1 flex items-center justify-end gap-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--ad-navy)]">
           <Bot size={11} /> Clo Agent
         </p>
-        <div className="rounded-2xl rounded-br-md bg-[#233d4d] px-4 py-2.5 text-[13px] leading-relaxed text-white shadow-[var(--ad-shadow-card)]">
+        <div className="rounded-2xl rounded-br-md bg-[#0b2447] px-4 py-2.5 text-[13px] leading-relaxed text-white shadow-[var(--ad-shadow-card)]">
           <p className="whitespace-pre-wrap break-words">{text}</p>
         </div>
         {caption ? (
