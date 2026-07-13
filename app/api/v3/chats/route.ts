@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
 import { SandboxError, chatSummary, createChat, listChats } from "@/lib/linq-sandbox";
-import { body, tenantFrom } from "@/lib/linq-sandbox-api";
+import { body } from "@/lib/linq-sandbox-api";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-/** GET /v3/chats - list all chats on the tenant's line, newest first. */
-export async function GET(req: Request) {
+/** GET /v3/chats - every chat on the line, newest first. */
+export async function GET() {
   try {
-    const tenant = tenantFrom(req);
     return NextResponse.json({
-      chats: listChats(tenant.id).map(chatSummary),
+      chats: listChats().map(chatSummary),
       next_cursor: null,
     });
   } catch (err) {
@@ -24,9 +23,8 @@ export async function GET(req: Request) {
 /** POST /v3/chats - create a new chat (optionally with a first message). */
 export async function POST(req: Request) {
   try {
-    const tenant = tenantFrom(req);
     const input = await body(req);
-    const chat = createChat(tenant.id, {
+    const chat = createChat({
       participants: Array.isArray(input.participants)
         ? (input.participants as string[])
         : [],

@@ -13,19 +13,19 @@ import "server-only";
      POST /v3/chats/{chatId}/share_contact_card  share the contact card
      POST /v3/chats/{chatId}/voicememo           send a voice memo
 
-   Four DUMMY tenant accounts are seeded below - fictional businesses, each
-   with its own line and conversations. Nothing touches Firestore or Linq;
-   state lives in `globalThis` so it survives dev hot-reloads and resets on
-   server restart. Outbound sends trigger a canned customer auto-reply a few
-   seconds later so the inbox feels alive. */
+   One unified inbox - every seeded conversation lives on the same line, so
+   the Messages page shows them all together. Nothing touches Firestore or
+   Linq; state lives in `globalThis` so it survives dev hot-reloads and
+   resets on server restart. Outbound sends trigger a canned customer
+   auto-reply a few seconds later so the inbox feels alive. */
 
-export interface SandboxTenant {
-  id: string;
-  business_name: string;
-  contact_name: string;
-  email: string;
-  phone_number: string; // the tenant's own iMessage line
-}
+/** The single business identity behind the sandbox line - used when the
+    contact card is shared into a chat. */
+const IDENTITY = {
+  business_name: "Clo Concierge",
+  contact_name: "Clo Agent",
+  phone_number: process.env.LINQ_BUSINESS_LINE || "+12125550141",
+};
 
 export type SandboxMessageKind = "text" | "voicememo" | "contact_card";
 
@@ -41,7 +41,6 @@ export interface SandboxMessage {
 
 export interface SandboxChat {
   id: string;
-  tenant_id: string;
   display_name: string;
   participants: string[]; // handles other than the line itself
   is_group: boolean;
@@ -55,43 +54,11 @@ export interface SandboxChat {
 }
 
 interface SandboxStore {
-  tenants: SandboxTenant[];
   chats: SandboxChat[];
   seq: number;
 }
 
 /* ------------------------------------------------------------------ seed */
-
-const TENANTS: SandboxTenant[] = [
-  {
-    id: "tn_luna_rooftop",
-    business_name: "Luna Rooftop Bar",
-    contact_name: "Maya Chen",
-    email: "maya@lunarooftop.example",
-    phone_number: "+12125550141",
-  },
-  {
-    id: "tn_casa_verde",
-    business_name: "Casa Verde Kitchen",
-    contact_name: "Diego Alvarez",
-    email: "diego@casaverde.example",
-    phone_number: "+13105550172",
-  },
-  {
-    id: "tn_velvet_room",
-    business_name: "The Velvet Room",
-    contact_name: "Priya Nair",
-    email: "priya@velvetroom.example",
-    phone_number: "+17185550119",
-  },
-  {
-    id: "tn_harbor_pine",
-    business_name: "Harbor & Pine",
-    contact_name: "Sam Whitfield",
-    email: "sam@harborpine.example",
-    phone_number: "+16175550163",
-  },
-];
 
 /** Minutes ago → ISO, so seeded threads always look recent. */
 function ago(minutes: number): string {
@@ -115,14 +82,12 @@ function seedMsg(
 }
 
 function seedChat(
-  tenantId: string,
   n: number,
   partial: Partial<SandboxChat> & { participants: string[]; messages: SandboxMessage[] }
 ): SandboxChat {
   const last = partial.messages[partial.messages.length - 1];
   return {
-    id: `chat_${tenantId.replace("tn_", "")}_${n}`,
-    tenant_id: tenantId,
+    id: `chat_seed_${n}`,
     display_name: partial.display_name ?? "",
     participants: partial.participants,
     is_group: partial.is_group ?? partial.participants.length > 1,
@@ -139,8 +104,8 @@ function seedChat(
 function buildSeed(): SandboxStore {
   const chats: SandboxChat[] = [];
 
-  // Every dummy tenant gets the same believable spread: two 1:1 booking
-  // threads (one with unread messages) and one group chat.
+  // A believable unified inbox: 1:1 booking threads (some with unread
+  // messages) and a few group chats, all on the one line.
   const SCRIPTS: Array<{
     solo1: string[];
     solo2: string[];
@@ -231,37 +196,37 @@ function buildSeed(): SandboxStore {
     },
   ];
 
-  TENANTS.forEach((t, i) => {
-    const s = SCRIPTS[i];
+  SCRIPTS.forEach((s, i) => {
     const [h1, h2, h3, h4] = s.handles;
+    const n = i * 3;
 
     chats.push(
-      seedChat(t.id, 1, {
+      seedChat(n + 1, {
         participants: [h1],
         messages: s.solo1.map((text, m) =>
-          seedMsg({ text, is_from_me: m % 2 === 1, minutesAgo: 60 * 26 - m * 9 })
+          seedMsg({ text, is_from_me: m % 2 === 1, minutesAgo: 60 * 26 - m * 9 - i * 30 })
         ),
       }),
-      seedChat(t.id, 2, {
+      seedChat(n + 2, {
         participants: [h2],
         unread_count: 1,
         health_status: { status: i === 2 ? "AT_RISK" : "HEALTHY" },
         messages: s.solo2.map((text, m) =>
-          seedMsg({ text, is_from_me: m % 2 === 1, minutesAgo: 60 * 3 - m * 12 })
+          seedMsg({ text, is_from_me: m % 2 === 1, minutesAgo: 60 * 3 - m * 12 - i * 15 })
         ),
       }),
-      seedChat(t.id, 3, {
+      seedChat(n + 3, {
         display_name: s.groupName,
         participants: [h3, h4, h1],
         is_group: true,
         messages: s.group.map((text, m) =>
-          seedMsg({ text, is_from_me: m % 2 === 1, minutesAgo: 60 * 49 - m * 14 })
+          seedMsg({ text, is_from_me: m % 2 === 1, minutesAgo: 60 * 49 - m * 14 - i * 45 })
         ),
       })
     );
   });
 
-  return { tenants: TENANTS, chats, seq: 1 };
+  return { chats, seq: 1 };
 }
 
 /* ------------------------------------------------------------------ store */
@@ -269,7 +234,10 @@ function buildSeed(): SandboxStore {
 const g = globalThis as typeof globalThis & { __linqSandbox?: SandboxStore };
 
 function store(): SandboxStore {
-  if (!g.__linqSandbox) g.__linqSandbox = buildSeed();
+  // Old dev-server state may still carry the tenant-scoped shape; reseed.
+  if (!g.__linqSandbox || !Array.isArray(g.__linqSandbox.chats)) {
+    g.__linqSandbox = buildSeed();
+  }
   return g.__linqSandbox;
 }
 
@@ -322,17 +290,6 @@ export class SandboxError extends Error {
   }
 }
 
-export function listTenants(): SandboxTenant[] {
-  return store().tenants;
-}
-
-export function resolveTenant(tenantId: string | null): SandboxTenant {
-  const tenants = store().tenants;
-  const t = tenantId ? tenants.find((x) => x.id === tenantId) : tenants[0];
-  if (!t) throw new SandboxError(404, `Unknown tenant: ${tenantId}`);
-  return t;
-}
-
 /** Chat without its message array - the list/detail envelope shape. */
 export function chatSummary(c: SandboxChat): Omit<SandboxChat, "messages"> {
   const { messages: _messages, ...rest } = c;
@@ -340,24 +297,25 @@ export function chatSummary(c: SandboxChat): Omit<SandboxChat, "messages"> {
 }
 
 /** GET /v3/chats */
-export function listChats(tenantId: string): SandboxChat[] {
+export function listChats(): SandboxChat[] {
   return store()
-    .chats.filter((c) => c.tenant_id === tenantId)
+    .chats.slice()
     .sort((a, b) => (b.updated_at > a.updated_at ? 1 : -1));
 }
 
 /** GET /v3/chats/{chatId} */
-export function getChat(tenantId: string, chatId: string): SandboxChat {
-  const chat = store().chats.find((c) => c.id === chatId && c.tenant_id === tenantId);
+export function getChat(chatId: string): SandboxChat {
+  const chat = store().chats.find((c) => c.id === chatId);
   if (!chat) throw new SandboxError(404, `Chat not found: ${chatId}`);
   return chat;
 }
 
 /** POST /v3/chats */
-export function createChat(
-  tenantId: string,
-  input: { participants: string[]; display_name?: string; message?: string }
-): SandboxChat {
+export function createChat(input: {
+  participants: string[];
+  display_name?: string;
+  message?: string;
+}): SandboxChat {
   const participants = (input.participants ?? [])
     .map((p) => String(p).trim())
     .filter(Boolean);
@@ -367,7 +325,6 @@ export function createChat(
   const now = new Date().toISOString();
   const chat: SandboxChat = {
     id: nextId("chat"),
-    tenant_id: tenantId,
     display_name: String(input.display_name ?? "").trim(),
     participants,
     is_group: participants.length > 1,
@@ -397,12 +354,8 @@ export function createChat(
 }
 
 /** PUT /v3/chats/{chatId} */
-export function updateChat(
-  tenantId: string,
-  chatId: string,
-  input: { display_name?: string }
-): SandboxChat {
-  const chat = getChat(tenantId, chatId);
+export function updateChat(chatId: string, input: { display_name?: string }): SandboxChat {
+  const chat = getChat(chatId);
   if (typeof input.display_name === "string") {
     chat.display_name = input.display_name.trim();
   }
@@ -411,8 +364,8 @@ export function updateChat(
 }
 
 /** POST /v3/chats/{chatId}/read */
-export function markChatRead(tenantId: string, chatId: string): SandboxChat {
-  const chat = getChat(tenantId, chatId);
+export function markChatRead(chatId: string): SandboxChat {
+  const chat = getChat(chatId);
   chat.unread_count = 0;
   chat.messages.forEach((m) => {
     if (!m.is_from_me) m.delivery_status = "read";
@@ -421,8 +374,8 @@ export function markChatRead(tenantId: string, chatId: string): SandboxChat {
 }
 
 /** POST /v3/chats/{chatId}/leave */
-export function leaveChat(tenantId: string, chatId: string): SandboxChat {
-  const chat = getChat(tenantId, chatId);
+export function leaveChat(chatId: string): SandboxChat {
+  const chat = getChat(chatId);
   if (!chat.is_group) {
     throw new SandboxError(422, "Only group chats can be left.");
   }
@@ -432,14 +385,13 @@ export function leaveChat(tenantId: string, chatId: string): SandboxChat {
 }
 
 /** POST /v3/chats/{chatId}/share_contact_card */
-export function shareContactCard(tenantId: string, chatId: string): SandboxMessage {
-  const chat = getChat(tenantId, chatId);
+export function shareContactCard(chatId: string): SandboxMessage {
+  const chat = getChat(chatId);
   if (chat.left) throw new SandboxError(422, "You have left this chat.");
-  const tenant = resolveTenant(tenantId);
   const msg: SandboxMessage = {
     id: nextId("msg"),
     kind: "contact_card",
-    text: `${tenant.business_name} · ${tenant.contact_name} · ${tenant.phone_number}`,
+    text: `${IDENTITY.business_name} · ${IDENTITY.contact_name} · ${IDENTITY.phone_number}`,
     duration_seconds: null,
     is_from_me: true,
     delivery_status: "delivered",
@@ -453,11 +405,10 @@ export function shareContactCard(tenantId: string, chatId: string): SandboxMessa
 
 /** POST /v3/chats/{chatId}/voicememo */
 export function sendVoiceMemo(
-  tenantId: string,
   chatId: string,
   input: { duration_seconds?: number; transcript?: string }
 ): SandboxMessage {
-  const chat = getChat(tenantId, chatId);
+  const chat = getChat(chatId);
   if (chat.left) throw new SandboxError(422, "You have left this chat.");
   const duration = Math.max(1, Math.min(300, Math.round(Number(input.duration_seconds) || 12)));
   const msg: SandboxMessage = {

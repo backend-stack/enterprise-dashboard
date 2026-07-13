@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Bell,
   Bookmark,
@@ -13,7 +13,6 @@ import {
   CreditCard,
   Footprints,
   LayoutDashboard,
-  Mail,
   Menu,
   MessageSquare,
   Share2,
@@ -23,10 +22,10 @@ import { useAuth } from "@/lib/auth-context";
 import { ACTIVITY } from "@/lib/mock-data";
 
 /* Slim breadcrumb topbar - Dashboard / <Section> on the left, a working
-   icon cluster on the right: Messages (goes to the iMessage inbox),
-   Calendar (month popover), Notifications (activity panel, badge clears on
-   read), Bookmark (saves the current page, localStorage), and Share
-   (copies the URL). Search lives in the sidebar, like the reference. */
+   icon cluster on the right: Calendar (month popover), Notifications
+   (activity panel, badge clears on read), Bookmark (saves the current
+   page, localStorage), and Share (copies the URL). Search lives in the
+   sidebar, like the reference. */
 
 const SECTION_LABELS: Record<string, string> = {
   messages: "Messages",
@@ -186,7 +185,6 @@ const KIND_ICON: Record<string, React.ReactNode> = {
 export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
   const { demoMode } = useAuth();
   const pathname = usePathname();
-  const router = useRouter();
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState<"calendar" | "notifications" | "bookmarks" | null>(null);
   const [notificationsRead, setNotificationsRead] = useState(false);
@@ -286,11 +284,6 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
           </span>
         ) : null}
         <div ref={clusterRef} className="relative hidden items-center gap-1 sm:flex">
-          {/* Messages -> the iMessage inbox */}
-          <IconButton label="Messages" onClick={() => router.push("/dashboard/imessage")}>
-            <Mail size={16} />
-          </IconButton>
-
           {/* Calendar popover */}
           <div className="relative">
             <IconButton

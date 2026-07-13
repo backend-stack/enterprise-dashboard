@@ -74,6 +74,8 @@ export function BusinessOverview() {
   const [data, setData] = useState<Analytics | null>(null);
   const [ci, setCi] = useState<CiBundle | null>(null);
   const [loading, setLoading] = useState(true);
+  const [tenants, setTenants] = useState<CiTenant[]>([]);
+  const [tenantId, setTenantId] = useState<string | null>(null);
 
   const authed = useCallback(
     async (path: string) => {
@@ -104,17 +106,16 @@ export function BusinessOverview() {
       }
     })();
 
-    // Assistant feed is optional - skip silently when unconfigured.
+    // Assistant feed is optional - skip silently when unconfigured. The
+    // account may own several tenants (locations); load the list once and
+    // default to the first.
     (async () => {
       try {
         const t = await authed("/api/ci/tenants");
-        const tenant: CiTenant | undefined = (t.tenants ?? [])[0];
-        if (!tenant) return;
-        const [d, s] = await Promise.all([
-          authed(`/api/ci/tenants/${tenant.id}/data`),
-          authed(`/api/ci/tenants/${tenant.id}/stats`),
-        ]);
-        if (alive) setCi({ data: d, stats: s, tenant });
+        const list: CiTenant[] = t.tenants ?? [];
+        if (!alive || !list.length) return;
+        setTenants(list);
+        setTenantId((prev) => prev ?? list[0].id);
       } catch {
         /* not connected */
       }
@@ -126,17 +127,62 @@ export function BusinessOverview() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [business?.id]);
 
+  // Load (and reload) the assistant feed for the selected tenant.
+  useEffect(() => {
+    const tenant = tenants.find((t) => t.id === tenantId);
+    if (!tenant) return;
+    let alive = true;
+    (async () => {
+      try {
+        const [d, s] = await Promise.all([
+          authed(`/api/ci/tenants/${tenant.id}/data`),
+          authed(`/api/ci/tenants/${tenant.id}/stats`),
+        ]);
+        if (alive) setCi({ data: d, stats: s, tenant });
+      } catch {
+        /* keep the previous tenant's data on transient failures */
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [tenantId, tenants, authed]);
+
   if (!business) return null;
 
   return (
-    <OverviewView
-      businessName={business.businessName}
-      approved={business.approved}
-      plan={business.plan}
-      data={data}
-      ci={ci}
-      loading={loading}
-    />
+    <>
+      {/* Location switcher - only when the account owns several tenants. */}
+      {tenants.length > 1 ? (
+        <div className="mb-4 flex flex-wrap items-center gap-2 sm:mb-6">
+          {tenants.map((t) => {
+            const active = t.id === tenantId;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setTenantId(t.id)}
+                className={`rounded-full border px-4 py-2 text-[13px] font-semibold transition-colors ${
+                  active
+                    ? "border-[var(--ad-ink)] bg-[var(--ad-ink)] text-white"
+                    : "border-[var(--ad-line)] bg-[var(--ad-paper)] text-[var(--ad-ink-soft)] hover:bg-[var(--ad-panel)]"
+                }`}
+              >
+                {t.name || t.id}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
+      <OverviewView
+        businessName={business.businessName}
+        approved={business.approved}
+        plan={business.plan}
+        data={data}
+        ci={ci}
+        loading={loading}
+      />
+    </>
   );
 }
 

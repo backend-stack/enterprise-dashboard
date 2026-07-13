@@ -1,18 +1,11 @@
 import "server-only";
 import { NextResponse } from "next/server";
-import { SandboxError, resolveTenant, type SandboxTenant } from "@/lib/linq-sandbox";
+import { SandboxError } from "@/lib/linq-sandbox";
 
-/* Shared plumbing for the /api/v3 sandbox routes: tenant resolution from the
-   ?tenant= query param (or x-tenant-id header) and uniform error envelopes.
-   These routes serve DUMMY data only, so they sit behind the dashboard's
-   page-level auth rather than Firebase bearer checks - they must keep
-   working in local demos with no Firebase configured. */
-
-export function tenantFrom(req: Request): SandboxTenant {
-  const url = new URL(req.url);
-  const id = url.searchParams.get("tenant") ?? req.headers.get("x-tenant-id");
-  return resolveTenant(id);
-}
+/* Shared plumbing for the /api/v3 sandbox routes: body parsing and uniform
+   error envelopes. These routes serve DUMMY data only, so they sit behind
+   the dashboard's page-level auth rather than Firebase bearer checks - they
+   must keep working in local demos with no Firebase configured. */
 
 export async function body(req: Request): Promise<Record<string, unknown>> {
   try {

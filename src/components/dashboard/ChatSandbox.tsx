@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  Building2,
   Check,
   Contact,
   DoorOpen,
@@ -18,20 +17,13 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { maskPhone } from "@/components/dashboard/AgentBubble";
 
 /* Interactive playground for the Linq v3 chats API, backed by the in-memory
-   sandbox at /api/v3 and its dummy tenant accounts. Every button maps 1:1 to
-   a real endpoint, and each call is appended to the API activity log below,
-   so the page doubles as living documentation of the surface:
+   sandbox at /api/v3 - one unified inbox, every conversation on the line in
+   a single list. Every button maps 1:1 to a real endpoint, and each call is
+   appended to the API activity log below, so the page doubles as living
+   documentation of the surface:
 
      POST /v3/chats · GET /v3/chats · GET|PUT /v3/chats/{id}
      POST /v3/chats/{id}/read · /leave · /share_contact_card · /voicememo */
-
-interface Tenant {
-  id: string;
-  business_name: string;
-  contact_name: string;
-  email: string;
-  phone_number: string;
-}
 
 interface Chat {
   id: string;
@@ -119,8 +111,6 @@ function ActionButton({
 }
 
 export function ChatSandbox() {
-  const [tenants, setTenants] = useState<Tenant[]>([]);
-  const [tenantId, setTenantId] = useState<string>("");
   const [chats, setChats] = useState<Chat[]>([]);
   const [chatId, setChatId] = useState<string>("");
   const [detail, setDetail] = useState<(Chat & { messages: Message[] }) | null>(null);
@@ -144,11 +134,9 @@ export function ChatSandbox() {
     async (
       method: string,
       specPath: string,
-      opts: { tenant?: string; body?: unknown } = {}
+      opts: { body?: unknown } = {}
     ): Promise<Record<string, unknown> | null> => {
-      const tenant = opts.tenant ?? tenantId;
-      const sep = specPath.includes("?") ? "&" : "?";
-      const res = await fetch(`/api${specPath}${tenant ? `${sep}tenant=${tenant}` : ""}`, {
+      const res = await fetch(`/api${specPath}`, {
         method,
         headers: opts.body !== undefined ? { "Content-Type": "application/json" } : undefined,
         body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
