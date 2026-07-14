@@ -18,9 +18,37 @@ export interface BookingBusiness {
   settings: BookingSettings;
 }
 
+/* The business's wall-clock. BOOKING_TZ (IANA name) pins it for deployments
+   whose server timezone differs from the business's; unset = server local. */
+function bookingTimeZone(): string | undefined {
+  return process.env.BOOKING_TZ || undefined;
+}
+
 export function todayStr(): string {
   // en-CA formats as YYYY-MM-DD.
-  return new Date().toLocaleDateString("en-CA");
+  try {
+    return new Date().toLocaleDateString("en-CA", { timeZone: bookingTimeZone() });
+  } catch {
+    return new Date().toLocaleDateString("en-CA");
+  }
+}
+
+/** "HH:mm" now, in the business's wall-clock. */
+export function nowStr(): string {
+  try {
+    return new Date().toLocaleTimeString("en-GB", {
+      hourCycle: "h23",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: bookingTimeZone(),
+    });
+  } catch {
+    return new Date().toLocaleTimeString("en-GB", {
+      hourCycle: "h23",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
 }
 
 export function newStatusToken(): string {

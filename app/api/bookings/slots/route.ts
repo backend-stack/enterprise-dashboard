@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdminDb } from "@/lib/firebase-admin";
 import { computeSlots } from "@/lib/booking";
-import { getBusinessById, takenBySlot, todayStr } from "@/lib/booking-server";
+import { getBusinessById, nowStr, takenBySlot, todayStr } from "@/lib/booking-server";
 
 export const runtime = "nodejs";
 
@@ -34,7 +34,8 @@ export async function GET(req: Request) {
         business.settings,
         date,
         todayStr(),
-        await takenBySlot(db, businessId, date)
+        await takenBySlot(db, businessId, date),
+        nowStr()
       )
     : [];
 

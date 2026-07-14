@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdminDb } from "@/lib/firebase-admin";
 import { validateBookingRequest } from "@/lib/booking";
-import { createBooking, getBusinessById, todayStr } from "@/lib/booking-server";
+import { createBooking, getBusinessById, nowStr, todayStr } from "@/lib/booking-server";
 import { sendBookingEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const v = validateBookingRequest(data, business.settings, todayStr());
+  const v = validateBookingRequest(data, business.settings, todayStr(), nowStr());
   if (!v.ok) return NextResponse.json({ error: v.error }, { status: 400 });
 
   const result = await createBooking(db, business, v.value);

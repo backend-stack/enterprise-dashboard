@@ -7,6 +7,7 @@ import { formatDay } from "@/lib/format";
 import type { BookingStatus } from "@/lib/booking";
 
 export const dynamic = "force-dynamic";
+export const metadata = { robots: { index: false, follow: false } };
 
 /* Public status page - the link customers get on screen and by email.
    Live status of one booking; refresh to see decision updates. */
