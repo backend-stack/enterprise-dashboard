@@ -10,6 +10,7 @@ import {
   // MessageSquare,
   MessagesSquare,
   // Footprints,
+  CalendarCheck,
   CreditCard,
   Settings,
   PanelLeftClose,
@@ -44,6 +45,7 @@ const ADMIN_NAV: NavItem[] = [
 const BUSINESS_NAV: NavItem[] = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "Messages", href: "/dashboard/chats", icon: MessagesSquare },
+  { label: "Bookings", href: "/dashboard/bookings", icon: CalendarCheck },
   { label: "Support", href: "/dashboard/support", icon: LifeBuoy },
   { label: "Billing", href: "/dashboard/billing", icon: CreditCard },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
