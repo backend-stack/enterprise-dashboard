@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BadgeCheck, Check, CreditCard, Download } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -10,26 +10,106 @@ import { INVOICES, PLANS } from "@/lib/mock-data";
 import { formatMoney } from "@/lib/format";
 import { useAuth } from "@/lib/auth-context";
 
+/* One dashboard row per Stripe invoice; pdf is the Stripe-hosted download. */
+interface InvoiceRow {
+  id: string;
+  number: string;
+  period: string;
+  amount: number;
+  status: "paid" | "due" | "void";
+  pdf: string | null;
+}
+
+const periodLabel = (unixSeconds: number) =>
+  new Date(unixSeconds * 1000).toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
+  });
+
 /* Billing - one enterprise plan: $2,000 one-time initiation + $499/month.
    The featured card starts Stripe Checkout (initiation fee rides the first
    invoice); the breakdown card spells out exactly what gets charged when.
-   Stripe buttons 503 with a friendly notice until keys are in .env. */
+   Every payment's invoice is mirrored server-side and listed below with a
+   downloadable PDF. Stripe buttons 503 with a friendly notice until keys
+   are in .env. */
 export default function BillingPage() {
-  const { business } = useAuth();
+  const { business, demoMode, getToken } = useAuth();
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  // null = loading; demo mode falls back to the sample table.
+  const [invoices, setInvoices] = useState<InvoiceRow[] | null>(null);
 
   const plan = PLANS[0];
   // planChosen on the business profile marks an already-subscribed account.
   const isCurrent = Boolean(business?.plan);
 
+  useEffect(() => {
+    if (demoMode) {
+      setInvoices(
+        INVOICES.map((inv) => ({
+          id: inv.id,
+          number: inv.id,
+          period: inv.period,
+          amount: inv.amount,
+          status: inv.status,
+          pdf: null,
+        }))
+      );
+      return;
+    }
+    let alive = true;
+    (async () => {
+      try {
+        const token = await getToken();
+        const res = await fetch("/api/stripe/invoices", {
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+          cache: "no-store",
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!alive) return;
+        const rows = Array.isArray(data.invoices) ? data.invoices : [];
+        setInvoices(
+          rows.map(
+            (inv: {
+              id: string;
+              number: string;
+              periodStart: number;
+              created: number;
+              amount: number;
+              status: "paid" | "due" | "void";
+              invoicePdf: string | null;
+              hostedInvoiceUrl: string | null;
+            }) => ({
+              id: inv.id,
+              number: inv.number,
+              period: periodLabel(inv.periodStart || inv.created),
+              amount: inv.amount,
+              status: inv.status,
+              pdf: inv.invoicePdf ?? inv.hostedInvoiceUrl,
+            })
+          )
+        );
+      } catch {
+        if (alive) setInvoices([]);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [demoMode, business?.id]);
+
   const callStripe = async (path: string, body?: object) => {
     setBusy(path + JSON.stringify(body ?? {}));
     setNotice(null);
     try {
+      const token = await getToken();
       const res = await fetch(path, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify(body ?? {}),
       });
       const data = await res.json();
@@ -211,31 +291,52 @@ export default function BillingPage() {
 
         <Card>
           <CardHeader title="Invoices" />
-          <DataTable headers={["Invoice", "Period", "Amount", "Status", ""]}>
-            {INVOICES.map((inv) => (
-              <Tr key={inv.id}>
-                <Td className="font-medium text-[var(--ad-ink)]">{inv.id}</Td>
-                <Td>{inv.period}</Td>
-                <Td className="font-semibold text-[var(--ad-ink)]">
-                  {formatMoney(inv.amount)}
-                </Td>
-                <Td>
-                  <StatusBadge tone={inv.status === "paid" ? "positive" : "pending"}>
-                    {inv.status}
-                  </StatusBadge>
-                </Td>
-                <Td>
-                  <button
-                    type="button"
-                    aria-label={`Download ${inv.id}`}
-                    className="flex h-8 w-8 items-center justify-center rounded-xl text-[var(--ad-muted)] hover:bg-[var(--ad-panel)] hover:text-[var(--ad-ink)]"
-                  >
-                    <Download size={15} />
-                  </button>
-                </Td>
-              </Tr>
-            ))}
-          </DataTable>
+          {invoices === null ? (
+            <p className="px-6 pb-6 text-sm text-[var(--ad-muted)]">Loading invoices…</p>
+          ) : invoices.length === 0 ? (
+            <p className="px-6 pb-6 text-sm leading-relaxed text-[var(--ad-muted)]">
+              No invoices yet. Your first invoice is generated the moment your
+              payment goes through, and every invoice lands here as a
+              downloadable PDF.
+            </p>
+          ) : (
+            <DataTable headers={["Invoice", "Period", "Amount", "Status", ""]}>
+              {invoices.map((inv) => (
+                <Tr key={inv.id}>
+                  <Td className="font-medium text-[var(--ad-ink)]">{inv.number}</Td>
+                  <Td>{inv.period}</Td>
+                  <Td className="font-semibold text-[var(--ad-ink)]">
+                    {formatMoney(inv.amount)}
+                  </Td>
+                  <Td>
+                    <StatusBadge tone={inv.status === "paid" ? "positive" : "pending"}>
+                      {inv.status}
+                    </StatusBadge>
+                  </Td>
+                  <Td>
+                    {inv.pdf ? (
+                      <a
+                        href={inv.pdf}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`Download ${inv.number} as PDF`}
+                        className="flex h-8 w-8 items-center justify-center rounded-xl text-[var(--ad-muted)] hover:bg-[var(--ad-panel)] hover:text-[var(--ad-ink)]"
+                      >
+                        <Download size={15} />
+                      </a>
+                    ) : (
+                      <span
+                        aria-hidden
+                        className="flex h-8 w-8 items-center justify-center rounded-xl text-[var(--ad-line-strong)]"
+                      >
+                        <Download size={15} />
+                      </span>
+                    )}
+                  </Td>
+                </Tr>
+              ))}
+            </DataTable>
+          )}
         </Card>
       </div>
     </>

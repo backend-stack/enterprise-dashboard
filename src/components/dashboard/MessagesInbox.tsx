@@ -189,13 +189,14 @@ export function MessagesInbox() {
   // Boot + live poll (paused while the tab is hidden). Waits for Firebase to
   // restore the session first - a fetch without an ID token is a guaranteed 401.
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading) return;
     void refresh();
     const id = setInterval(() => {
       if (document.visibilityState === "visible") void refresh();
     }, POLL_MS);
     return () => clearInterval(id);
   }, [refresh, authLoading, user]);
+
 
   const selected = convos?.find((c) => c.key === selectedKey) ?? null;
 
@@ -219,26 +220,28 @@ export function MessagesInbox() {
 
   if (notConfigured) {
     return (
-      <Card className="p-8 text-sm text-[var(--ad-muted)]">
-        The agent API isn&apos;t connected yet - set CI_API_BASE_URL and CI_API_TOKEN in .env
-        to stream live messages here.
-      </Card>
+      <div className="p-6 sm:p-8">
+        <Card className="p-8 text-sm text-[var(--ad-muted)]">
+          The agent API isn&apos;t connected yet - set CI_API_BASE_URL and CI_API_TOKEN in .env
+          to stream live messages here.
+        </Card>
+      </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-4 sm:gap-6">
+    <div className="flex h-full min-h-0 flex-col">
       {error ? (
-        <div className="rounded-[var(--ad-radius-sm)] bg-[var(--ad-critical-bg)] px-4 py-3 text-sm font-medium text-[var(--ad-critical-deep)]">
+        <div className="mx-4 mt-4 rounded-[var(--ad-radius-sm)] bg-[var(--ad-critical-bg)] px-4 py-3 text-sm font-medium text-[var(--ad-critical-deep)]">
           {error}
         </div>
       ) : null}
 
-      {/* Conversations + thread - fills the viewport below the header */}
-      <div className="grid gap-4 lg:h-[calc(100dvh-190px)] lg:min-h-[480px] lg:grid-cols-[380px_1fr]">
+      {/* Conversations + thread - the whole panel, edge to edge */}
+      <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,2fr)_minmax(0,3fr)] lg:grid-rows-1 lg:grid-cols-[380px_minmax(0,1fr)]">
         {/* Conversation list - every tenant, one unified feed */}
-        <Card className="flex max-h-[min(480px,calc(100dvh-220px))] flex-col overflow-hidden lg:h-full lg:max-h-none">
-          <div className="flex items-center justify-between gap-2 border-b border-[var(--ad-line)] px-4 py-3">
+        <div className="flex min-h-0 flex-col overflow-hidden border-b border-[var(--ad-line)] lg:border-b-0 lg:border-r">
+          <div className="flex items-center justify-between gap-2 border-b border-[var(--ad-line)] px-5 py-4">
             <p className="text-[13px] font-semibold text-[var(--ad-ink)]">
               Conversations{convos ? ` · ${convos.length}` : ""}
             </p>
@@ -295,13 +298,13 @@ export function MessagesInbox() {
               <p className="px-3 py-4 text-sm text-[var(--ad-muted)]">Loading conversations…</p>
             ) : null}
           </div>
-        </Card>
+        </div>
 
         {/* Thread */}
-        <Card className="flex max-h-[min(560px,calc(100dvh-220px))] min-h-[360px] flex-col overflow-hidden lg:h-full lg:max-h-none">
+        <div className="flex min-h-0 flex-col overflow-hidden">
           {selected ? (
             <>
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--ad-line)] px-4 py-3">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--ad-line)] px-5 py-4">
                 <div className="flex min-w-0 items-center gap-3">
                   <DigitAvatar handle={selected.phone} size={42} />
                   <div className="min-w-0">
@@ -316,7 +319,7 @@ export function MessagesInbox() {
                 </div>
               </div>
 
-              <div ref={threadRef} className="flex flex-1 flex-col gap-3 overflow-y-auto p-5">
+              <div ref={threadRef} className="flex flex-1 flex-col gap-3 overflow-y-auto p-5 sm:p-8">
                 {selected.messages.map((m, i) => {
                   const prev = selected.messages[i - 1];
                   const fromMe = m.role === "assistant";
@@ -332,9 +335,9 @@ export function MessagesInbox() {
                       ) : null}
                       <div className={`flex items-end gap-2 ${fromMe ? "justify-end" : "justify-start"}`}>
                         {!fromMe ? <DigitAvatar handle={selected.phone} size={28} /> : null}
-                        <div className={`flex max-w-[70%] flex-col ${fromMe ? "items-end" : "items-start"}`}>
+                        <div className={`flex max-w-[70%] flex-col lg:max-w-[62%] ${fromMe ? "items-end" : "items-start"}`}>
                           <div
-                            className={`whitespace-pre-wrap rounded-2xl px-4 py-3 text-[14px] leading-relaxed ${
+                            className={`whitespace-pre-wrap rounded-2xl px-4 py-3 text-[14.5px] leading-relaxed ${
                               fromMe
                                 ? "rounded-br-md bg-[var(--ad-slate)] text-white"
                                 : "rounded-bl-md border border-[var(--ad-line)] bg-[var(--ad-panel)] text-[var(--ad-ink)]"
@@ -363,7 +366,7 @@ export function MessagesInbox() {
               Pick a conversation to read the full thread.
             </div>
           )}
-        </Card>
+        </div>
       </div>
     </div>
   );
