@@ -74,6 +74,7 @@ export function BookingsManager() {
   }, [load]);
 
   const decide = async (id: string, decision: "approved" | "denied") => {
+    setError("");
     setDeciding(id);
     try {
       if (demoMode) {
@@ -101,6 +102,8 @@ export function BookingsManager() {
         return;
       }
       setBookings((prev) => prev.map((b) => (b.id === id ? data.booking : b)));
+    } catch {
+      setError("Action failed - check your connection and try again.");
     } finally {
       setDeciding(null);
     }
@@ -126,6 +129,8 @@ export function BookingsManager() {
         return;
       }
       setSettings(data.settings);
+    } catch {
+      setError("Save failed - check your connection and try again.");
     } finally {
       setSavingSettings(false);
     }

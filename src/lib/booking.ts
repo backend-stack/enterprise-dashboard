@@ -91,19 +91,24 @@ export function slotTimes(s: BookingSettings): string[] {
 }
 
 /** Slots for a date with remaining capacity, given taken counts per HH:mm.
-    Empty when the date is invalid, in the past, or the day is closed. */
+    Empty when the date is invalid, in the past, or the day is closed. When
+    `date` is today and `nowTime` is given, slots that have already started
+    are excluded. */
 export function computeSlots(
   s: BookingSettings,
   date: string,
   today: string,
-  takenBySlot: Record<string, number>
+  takenBySlot: Record<string, number>,
+  nowTime?: string
 ): Slot[] {
   if (!isValidDate(date) || date < today) return [];
   if (!s.daysOpen.includes(dayOfWeek(date))) return [];
-  return slotTimes(s).map((time) => ({
-    time,
-    remaining: Math.max(0, s.capacityPerSlot - (takenBySlot[time] ?? 0)),
-  }));
+  return slotTimes(s)
+    .filter((time) => !(date === today && nowTime && toMinutes(time) <= toMinutes(nowTime)))
+    .map((time) => ({
+      time,
+      remaining: Math.max(0, s.capacityPerSlot - (takenBySlot[time] ?? 0)),
+    }));
 }
 
 /** Reads a `booking` map off a lunaPartners doc, tolerating junk. */
@@ -132,7 +137,8 @@ export function parseBookingSettings(v: unknown): BookingSettings {
 export function validateBookingRequest(
   data: Record<string, unknown>,
   s: BookingSettings,
-  today: string
+  today: string,
+  nowTime?: string
 ): { ok: true; value: BookingRequestInput } | { ok: false; error: string } {
   const str = (v: unknown, cap: number) =>
     typeof v === "string" ? v.trim().slice(0, cap) : "";
@@ -155,5 +161,7 @@ export function validateBookingRequest(
     return { ok: false, error: "That day is not open for bookings." };
   if (!slotTimes(s).includes(time))
     return { ok: false, error: "That time is not an available slot." };
+  if (date === today && nowTime && toMinutes(time) <= toMinutes(nowTime))
+    return { ok: false, error: "That time has already passed today." };
   return { ok: true, value: { name, email, phone, partySize, date, time, note } };
 }

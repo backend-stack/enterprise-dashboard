@@ -1,6 +1,7 @@
 import { BookingRequestForm } from "@/components/booking/BookingRequestForm";
 
 export const dynamic = "force-dynamic";
+export const metadata = { robots: { index: false, follow: false } };
 
 /* Public booking page - the link a business shares with its customers. */
 export default async function BookPage({

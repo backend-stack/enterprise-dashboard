@@ -117,3 +117,20 @@ describe("validateBookingRequest", () => {
     expect(validateBookingRequest({ ...good, time: "10:15" }, SETTINGS, TODAY).ok).toBe(false);
   });
 });
+
+describe("same-day past-slot filtering", () => {
+  it("computeSlots hides slots at or before nowTime on today", () => {
+    const slots = computeSlots(SETTINGS, MONDAY, MONDAY, {}, "10:30");
+    expect(slots.map((s) => s.time)).toEqual(["11:00", "11:30"]);
+  });
+  it("computeSlots ignores nowTime for future dates", () => {
+    const slots = computeSlots(SETTINGS, MONDAY, TODAY, {}, "23:00");
+    expect(slots).toHaveLength(4);
+  });
+  it("validateBookingRequest rejects past times today, accepts future ones", () => {
+    const base = { name: "Ada", email: "ada@example.com", phone: "", partySize: 2, date: MONDAY, time: "10:00", note: "" };
+    expect(validateBookingRequest(base, SETTINGS, MONDAY, "10:30").ok).toBe(false);
+    expect(validateBookingRequest({ ...base, time: "11:00" }, SETTINGS, MONDAY, "10:30").ok).toBe(true);
+    expect(validateBookingRequest(base, SETTINGS, TODAY).ok).toBe(true); // no nowTime, future date
+  });
+});
