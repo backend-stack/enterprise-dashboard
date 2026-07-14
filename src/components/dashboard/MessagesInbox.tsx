@@ -78,6 +78,28 @@ function DigitAvatar({ handle, size = 34 }: { handle: string; size?: number }) {
   );
 }
 
+/* Three bouncing dots inside a bubble - shown while the next polled
+   message "arrives", before it pops into the thread. */
+function TypingBubble({ fromMe }: { fromMe: boolean }) {
+  return (
+    <div
+      className={`msg-in flex items-center gap-1.5 rounded-2xl px-4 py-3.5 ${
+        fromMe
+          ? "rounded-br-md bg-[var(--ad-slate)]"
+          : "rounded-bl-md border border-[var(--ad-line)] bg-[var(--ad-panel)]"
+      }`}
+    >
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          className={`typing-dot h-2 w-2 rounded-full ${fromMe ? "bg-white/80" : "bg-[var(--ad-muted)]"}`}
+          style={{ animationDelay: `${i * 0.16}s` }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function AgentAvatar({ size = 26 }: { size?: number }) {
   return (
     <span
@@ -200,6 +222,36 @@ export function MessagesInbox() {
 
   const selected = convos?.find((c) => c.key === selectedKey) ?? null;
 
+  /* How many of the selected thread's messages are revealed. New messages
+     from the live poll are revealed one at a time: typing dots first, then
+     the message pops in. */
+  const [shown, setShown] = useState(0);
+  const [typing, setTyping] = useState(false);
+  const revealKey = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!selected) return;
+    if (selected.key !== revealKey.current) {
+      // Thread switch: show the whole history instantly.
+      revealKey.current = selected.key;
+      setShown(selected.messages.length);
+      setTyping(false);
+      return;
+    }
+    if (selected.messages.length > shown) {
+      // New message(s) arrived: dots, then pop the next one in.
+      setTyping(true);
+      const t = setTimeout(() => {
+        setTyping(false);
+        setShown((n) => n + 1);
+      }, 1100);
+      return () => clearTimeout(t);
+    }
+  }, [selected, shown]);
+
+  const visible = selected ? selected.messages.slice(0, shown) : [];
+  const nextPending = selected?.messages[shown] ?? null;
+
   /* Auto-scroll: jump to the bottom when a thread opens, follow new messages
      only if the reader is already near the bottom. */
   useEffect(() => {
@@ -217,6 +269,14 @@ export function MessagesInbox() {
       if (nearBottom) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
     }
   }, [selected]);
+
+  // Keep the newest bubble (or the typing dots) in view as they appear.
+  useEffect(() => {
+    const el = threadRef.current;
+    if (!el) return;
+    const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 200;
+    if (nearBottom) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+  }, [shown, typing]);
 
   if (notConfigured) {
     return (
@@ -320,10 +380,11 @@ export function MessagesInbox() {
               </div>
 
               <div ref={threadRef} className="flex flex-1 flex-col gap-3 overflow-y-auto p-5 sm:p-8">
-                {selected.messages.map((m, i) => {
-                  const prev = selected.messages[i - 1];
+                {visible.map((m, i) => {
+                  const prev = visible[i - 1];
                   const fromMe = m.role === "assistant";
                   const newDay = !prev || dayKey(prev.created_at) !== dayKey(m.created_at);
+                  const justArrived = i === visible.length - 1 && i >= 0 && shown > 0 && revealKey.current === selected.key;
                   return (
                     <div key={`${m.created_at}_${i}`} className="flex flex-col gap-2.5">
                       {newDay ? (
@@ -335,7 +396,12 @@ export function MessagesInbox() {
                       ) : null}
                       <div className={`flex items-end gap-2 ${fromMe ? "justify-end" : "justify-start"}`}>
                         {!fromMe ? <DigitAvatar handle={selected.phone} size={28} /> : null}
-                        <div className={`flex max-w-[70%] flex-col lg:max-w-[62%] ${fromMe ? "items-end" : "items-start"}`}>
+                        <div
+                          className={`flex max-w-[70%] flex-col lg:max-w-[62%] ${fromMe ? "items-end" : "items-start"} ${
+                            justArrived ? "msg-in" : ""
+                          }`}
+                          style={justArrived ? { transformOrigin: fromMe ? "bottom right" : "bottom left" } : undefined}
+                        >
                           <div
                             className={`whitespace-pre-wrap rounded-2xl px-4 py-3 text-[14.5px] leading-relaxed ${
                               fromMe
@@ -354,6 +420,22 @@ export function MessagesInbox() {
                     </div>
                   );
                 })}
+
+                {/* Someone is "typing" - the next polled message on its way in. */}
+                {typing && nextPending ? (
+                  <div
+                    className={`flex items-end gap-2 ${
+                      nextPending.role === "assistant" ? "justify-end" : "justify-start"
+                    }`}
+                  >
+                    {nextPending.role !== "assistant" ? (
+                      <DigitAvatar handle={selected.phone} size={28} />
+                    ) : null}
+                    <TypingBubble fromMe={nextPending.role === "assistant"} />
+                    {nextPending.role === "assistant" ? <AgentAvatar /> : null}
+                  </div>
+                ) : null}
+
                 {!selected.messages.length ? (
                   <p className="py-6 text-center text-sm text-[var(--ad-muted)]">
                     No messages in this conversation yet.
