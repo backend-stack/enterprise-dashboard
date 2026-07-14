@@ -265,7 +265,19 @@ export default function BillingPage() {
       {/* Payment method + invoices */}
       <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_1.6fr] sm:mt-6 sm:gap-6">
         <Card>
-          <CardHeader title="Payment method" />
+          <CardHeader
+            title="Payment method"
+            action={
+              <button
+                type="button"
+                onClick={() => callStripe("/api/stripe/portal")}
+                disabled={busy !== null}
+                className="text-xs font-semibold text-[var(--ad-ink-soft)] transition-colors hover:text-[var(--ad-ink)] disabled:opacity-50"
+              >
+                Manage
+              </button>
+            }
+          />
           <div className="px-6 pb-6">
             <div className="flex items-center gap-4 rounded-[var(--ad-radius-sm)] border border-[var(--ad-line)] bg-[var(--ad-panel)] p-5">
               <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--ad-navy-bg)] text-[var(--ad-navy)]">
@@ -290,7 +302,19 @@ export default function BillingPage() {
         </Card>
 
         <Card>
-          <CardHeader title="Invoices" />
+          <CardHeader
+            title="Invoices"
+            action={
+              <button
+                type="button"
+                onClick={() => callStripe("/api/stripe/portal")}
+                disabled={busy !== null}
+                className="text-xs font-semibold text-[var(--ad-ink-soft)] transition-colors hover:text-[var(--ad-ink)] disabled:opacity-50"
+              >
+                View all in Stripe
+              </button>
+            }
+          />
           {invoices === null ? (
             <p className="px-6 pb-6 text-sm text-[var(--ad-muted)]">Loading invoices…</p>
           ) : invoices.length === 0 ? (
