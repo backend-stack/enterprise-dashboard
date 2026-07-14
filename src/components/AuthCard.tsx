@@ -10,10 +10,10 @@ import { HeroShader } from "@/components/ui/HeroShader";
 /* Sign-in - the contextualintelligence.co split layout: form on the left,
    the animated fluted-glass shader inset as a rounded panel on the right.
    Account creation lives on contextualintelligence.co/partners; this screen
-   only signs existing accounts in (email/password + Google, plus the
-   demo-mode shortcut for keyless local review). Spacing on an 8pt grid. */
+   only signs existing accounts in (email/password, plus the demo-mode
+   shortcut for keyless local review). Spacing on an 8pt grid. */
 export function AuthCard() {
-  const { demoMode, signInEmail, signInGoogle } = useAuth();
+  const { demoMode, signInEmail } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,23 +30,6 @@ export function AuthCard() {
     setBusy(true);
     try {
       await signInEmail(email, password);
-      router.push("/dashboard");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Authentication failed.");
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const google = async () => {
-    setError(null);
-    if (demoMode) {
-      router.push("/dashboard");
-      return;
-    }
-    setBusy(true);
-    try {
-      await signInGoogle();
       router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Authentication failed.");
@@ -139,21 +122,6 @@ export function AuthCard() {
                 </button>
               </form>
 
-              <div className="my-6 flex items-center gap-4 text-[11px] uppercase tracking-[0.14em] text-[var(--ad-muted)]">
-                <span className="h-px flex-1 bg-[var(--ad-line)]" />
-                or
-                <span className="h-px flex-1 bg-[var(--ad-line)]" />
-              </div>
-
-              <button
-                type="button"
-                onClick={google}
-                disabled={busy}
-                className="h-12 w-full rounded-full border border-[var(--ad-line)] text-sm font-semibold text-[var(--ad-ink-soft)] transition-colors hover:border-[var(--ad-ink-soft)] disabled:opacity-50"
-              >
-                Continue with Google
-              </button>
-
               {demoMode ? (
                 <button
                   type="button"
@@ -164,21 +132,11 @@ export function AuthCard() {
                 </button>
               ) : null}
 
-              <p className="mt-6 text-sm text-[var(--ad-muted)]">
-                New here?{" "}
-                <a
-                  href="https://www.contextualintelligence.co/partners"
-                  className="text-[var(--ad-ink)] underline underline-offset-2"
-                >
-                  Sign up as a partner
-                </a>
-              </p>
-
               <a
                 href="https://www.contextualintelligence.co/partners"
                 className="mt-6 flex h-12 w-full items-center justify-center rounded-full border border-dashed border-[var(--ad-line-strong)] text-sm font-semibold text-[var(--ad-navy)] transition-colors hover:bg-[var(--ad-navy-bg)]"
               >
-                Are you a business? Join the partner platform →
+                New here? Sign up as a partner →
               </a>
             </div>
           </div>
